@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
+    <PackageReference Include="IdentityServer4.EntityFramework.Storage" Version="4.1.2" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.7" />
   </ItemGroup>
 

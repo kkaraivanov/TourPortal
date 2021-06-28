@@ -5,10 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.2.0-dev-00272" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0-dev-00909" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TourPortal.Storage\TourPortal.Storage.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Reflection;
-    using IdentityServer4.EntityFramework.Extensions;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -60,13 +59,12 @@
                 }
             }
         }
-
-        private static readonly MethodInfo SetIsDeletedShadowPropertyMethodInfo = typeof(ModelBuilderExtensions).GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .Single(t => t.IsGenericMethod && t.Name == "SetIsSoftDeletableProperty");
-
         public static void SetIsSoftDeletableProperty<T>(ModelBuilder builder) where T : class, ISoftDelete
         {
             builder.Entity<T>().Property<bool>("IsDeleted");
         }
+
+        private static readonly MethodInfo SetIsDeletedShadowPropertyMethodInfo = typeof(SetTemplatePropertiesExtensions).GetMethods(BindingFlags.Public | BindingFlags.Static)
+            .Single(t => t.IsGenericMethod && t.Name == "SetIsSoftDeletableProperty");
     }
 }
