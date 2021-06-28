@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPortal.Server", "src\Se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPortal.Storage", "src\Server\TourPortal.Storage\TourPortal.Storage.csproj", "{846B9490-6947-49ED-A847-48F030224CE0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPortal.Infrastructure.Storage", "src\Shared\TourPortal.Infrastructure.Storage\TourPortal.Infrastructure.Storage.csproj", "{5DA841A5-6085-48FE-B553-CB10D5DBD5B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{846B9490-6947-49ED-A847-48F030224CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{846B9490-6947-49ED-A847-48F030224CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{846B9490-6947-49ED-A847-48F030224CE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DA841A5-6085-48FE-B553-CB10D5DBD5B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DA841A5-6085-48FE-B553-CB10D5DBD5B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DA841A5-6085-48FE-B553-CB10D5DBD5B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DA841A5-6085-48FE-B553-CB10D5DBD5B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,6 +47,7 @@ Global
 		{AEFE21A3-DCEC-4327-BB7A-897DDBD764A6} = {40C991EE-0C3D-428B-BF20-2085838E6F9B}
 		{D1F47E9B-44D8-4D10-9132-5D68BE8DC81E} = {840085E1-202A-4A68-B3E9-DF8C4FF5C4AD}
 		{846B9490-6947-49ED-A847-48F030224CE0} = {840085E1-202A-4A68-B3E9-DF8C4FF5C4AD}
+		{5DA841A5-6085-48FE-B553-CB10D5DBD5B4} = {680AE9C6-B592-4E3E-9118-5FF99056F425}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C450B454-D482-40F9-BD1D-CA318CDE6246}
