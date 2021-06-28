@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30803.129
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{680AE9C6-B592-4E3E-9118-5FF99056F425}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{840085E1-202A-4A68-B3E9-DF8C4FF5C4AD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{40C991EE-0C3D-428B-BF20-2085838E6F9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPortal.Client", "src\Client\TourPortal.Client\TourPortal.Client.csproj", "{AEFE21A3-DCEC-4327-BB7A-897DDBD764A6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AEFE21A3-DCEC-4327-BB7A-897DDBD764A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEFE21A3-DCEC-4327-BB7A-897DDBD764A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEFE21A3-DCEC-4327-BB7A-897DDBD764A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEFE21A3-DCEC-4327-BB7A-897DDBD764A6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AEFE21A3-DCEC-4327-BB7A-897DDBD764A6} = {40C991EE-0C3D-428B-BF20-2085838E6F9B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C450B454-D482-40F9-BD1D-CA318CDE6246}
+	EndGlobalSection
+EndGlobal
