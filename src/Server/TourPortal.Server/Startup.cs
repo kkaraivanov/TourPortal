@@ -1,5 +1,6 @@
 namespace TourPortal.Server
 {
+    using Infrastructure.Storage;
     using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -25,6 +26,7 @@ namespace TourPortal.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddStorageServices(Configuration);
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
             services
                 .AddIdentity<ApplicationUser, ApplicationRole>()
@@ -41,6 +43,11 @@ namespace TourPortal.Server
             }
 
             app.UseRouting();
+
+            // migrate database if have new migration
+            using var dbServicesScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            var databaseInitializer = dbServicesScope.ServiceProvider.GetService<IDatabaseInitializer>();
+            databaseInitializer.InitializeAsync().Wait();
 
             app.UseEndpoints(endpoints =>
             {
