@@ -14,20 +14,39 @@
 
     using GlobalTypes;
 
-    public class JwtTokenService : IJwtTokenService
+    public class JwtTokenService
     {
+        private readonly RequestDelegate _requestDelegate;
         private readonly Func<HttpContext, Task<GenericPrincipal>> _principalResolver;
         private readonly TokenProviderOptions _options;
 
         public JwtTokenService(
+            RequestDelegate requestDelegate,
             IOptions<TokenProviderOptions> options,
             Func<HttpContext, Task<GenericPrincipal>> principalResolver)
         {
+            _requestDelegate = requestDelegate;
             _principalResolver = principalResolver;
             _options = options.Value;
         }
 
-        public async Task BuildToken(HttpContext context)
+        public Task Invoke(HttpContext context)
+        {
+            if (!context.Request.Path.Equals(_options.Path, StringComparison.Ordinal))
+            {
+                return _requestDelegate(context);
+            }
+
+            if (context.Request.Method.Equals("POST") && context.Request.HasFormContentType)
+            {
+                return BuildToken(context);
+            }
+
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            return context.Response.WriteAsync("Bad request");
+        }
+
+        private async Task BuildToken(HttpContext context)
         {
             var principal = await _principalResolver(context);
 
@@ -89,7 +108,7 @@
             return (new JwtSecurityTokenHandler().WriteToken(jwt), claims);
         }
 
-        private int GetClaimIndex(List<Claim> claims, string jwtClaimType)
+        private static int GetClaimIndex(List<Claim> claims, string jwtClaimType)
         {
             for (int i = 0; i < claims.Count; i++)
             {

@@ -52,7 +52,6 @@ namespace TourPortal.Server
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddTransient<IJwtTokenService, JwtTokenService>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -67,6 +66,8 @@ namespace TourPortal.Server
                         IssuerSigningKey = jwtKey
                     };
                 });
+
+            services.AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -85,13 +86,16 @@ namespace TourPortal.Server
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseJwtBearerTokens();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                //endpoints.MapGet("/", async context =>
+                //{
+                //    await context.Response.WriteAsync("Hello World!");
+                //});
+                endpoints.MapControllerRoute("api", "api/{controller}/{action}/{id?}");
+                endpoints.MapFallbackToFile("index.html");
             });
         }
     }

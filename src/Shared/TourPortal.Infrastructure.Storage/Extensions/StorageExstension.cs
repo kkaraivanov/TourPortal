@@ -5,13 +5,14 @@
     using Microsoft.EntityFrameworkCore;
 
     using GlobalTypes;
+    using Models;
 
     public static class StorageExstension
     {
         public static ModelBuilder SeedRolesToDatabase(this ModelBuilder builder)
         {
-            builder.Entity<IdentityRole>()
-                .HasData(new IdentityRole
+            builder.Entity<ApplicationRole>()
+                .HasData(new ApplicationRole
                 {
                     Id = Guid.NewGuid().ToString(),
                     ConcurrencyStamp = Guid.NewGuid().ToString(),
@@ -19,8 +20,8 @@
                     NormalizedName = ApplicationRoles.Administrator.ToUpper()
                 });
 
-            builder.Entity<IdentityRole>()
-                .HasData(new IdentityRole
+            builder.Entity<ApplicationRole>()
+                .HasData(new ApplicationRole
                 {
                     Id = Guid.NewGuid().ToString(),
                     ConcurrencyStamp = Guid.NewGuid().ToString(),
@@ -28,8 +29,8 @@
                     NormalizedName = ApplicationRoles.User.ToUpper()
                 });
 
-            builder.Entity<IdentityRole>()
-                .HasData(new IdentityRole
+            builder.Entity<ApplicationRole>()
+                .HasData(new ApplicationRole
                 {
                     Id = Guid.NewGuid().ToString(),
                     ConcurrencyStamp = Guid.NewGuid().ToString(),
@@ -37,8 +38,8 @@
                     NormalizedName = ApplicationRoles.Owner.ToUpper()
                 });
 
-            builder.Entity<IdentityRole>()
-                .HasData(new IdentityRole
+            builder.Entity<ApplicationRole>()
+                .HasData(new ApplicationRole
                 {
                     Id = Guid.NewGuid().ToString(),
                     ConcurrencyStamp = Guid.NewGuid().ToString(),

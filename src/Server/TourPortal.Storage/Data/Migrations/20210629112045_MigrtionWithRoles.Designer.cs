@@ -10,8 +10,8 @@ using TourPortal.Storage;
 namespace TourPortal.Storage.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210628135351_FirstInitializeDatabase")]
-    partial class FirstInitializeDatabase
+    [Migration("20210629112045_MigrtionWithRoles")]
+    partial class MigrtionWithRoles
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -154,6 +154,36 @@ namespace TourPortal.Storage.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "dd1d3b5c-a748-434b-b229-19e1cee3d640",
+                            ConcurrencyStamp = "51a95120-df78-46a2-bf07-d3c3ffbf6c30",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        },
+                        new
+                        {
+                            Id = "b0825f7a-3b23-4e1b-af5c-eebf2a0596a6",
+                            ConcurrencyStamp = "cd57bbc5-b70d-473b-975f-299761e62319",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "fa437924-d2bb-44f1-ae61-d7d6a279cd83",
+                            ConcurrencyStamp = "5e9dcc6e-d306-4ad0-b673-a56985adf621",
+                            Name = "Owner",
+                            NormalizedName = "OWNER"
+                        },
+                        new
+                        {
+                            Id = "27e9500a-a0c4-4891-a3e9-e682bc65b442",
+                            ConcurrencyStamp = "05b9a051-c30d-43dc-bdb0-b043eb6ef87f",
+                            Name = "Employe",
+                            NormalizedName = "EMPLOYE"
+                        });
                 });
 
             modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.ApplicationUser", b =>

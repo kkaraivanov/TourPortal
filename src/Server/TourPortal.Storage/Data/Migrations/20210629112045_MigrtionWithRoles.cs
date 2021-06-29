@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TourPortal.Storage.Data.Migrations
 {
-    public partial class FirstInitializeDatabase : Migration
+    public partial class MigrtionWithRoles : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -202,6 +202,17 @@ namespace TourPortal.Storage.Data.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "dd1d3b5c-a748-434b-b229-19e1cee3d640", "51a95120-df78-46a2-bf07-d3c3ffbf6c30", "Administrator", "ADMINISTRATOR" },
+                    { "b0825f7a-3b23-4e1b-af5c-eebf2a0596a6", "cd57bbc5-b70d-473b-975f-299761e62319", "User", "USER" },
+                    { "fa437924-d2bb-44f1-ae61-d7d6a279cd83", "5e9dcc6e-d306-4ad0-b673-a56985adf621", "Owner", "OWNER" },
+                    { "27e9500a-a0c4-4891-a3e9-e682bc65b442", "05b9a051-c30d-43dc-bdb0-b043eb6ef87f", "Employe", "EMPLOYE" }
                 });
 
             migrationBuilder.CreateIndex(
