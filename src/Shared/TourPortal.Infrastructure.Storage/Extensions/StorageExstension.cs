@@ -4,6 +4,8 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
+    using GlobalTypes;
+
     public static class StorageExstension
     {
         public static ModelBuilder SeedRolesToDatabase(this ModelBuilder builder)

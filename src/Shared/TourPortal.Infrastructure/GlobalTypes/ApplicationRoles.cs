@@ -1,4 +1,4 @@
-﻿namespace TourPortal.Infrastructure
+﻿namespace TourPortal.Infrastructure.GlobalTypes
 {
     public class ApplicationRoles
     {
