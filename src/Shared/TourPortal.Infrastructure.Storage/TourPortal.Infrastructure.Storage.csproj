@@ -10,4 +10,8 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TourPortal.Infrastructure\TourPortal.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -9,6 +9,7 @@
     using Microsoft.EntityFrameworkCore;
 
     using Configurations;
+    using Infrastructure.Storage.Extensions;
     using Infrastructure.Storage.Models;
     using Infrastructure.Storage.Templates;
 
@@ -56,6 +57,7 @@
                     .IsRequired();
             });
 
+            builder.SeedRolesToDatabase();
             builder.SoftDeletableProperties();
             builder.Entity<Message>().ToTable("Messages");
             builder.ApplyConfiguration(new MessageConfiguration());

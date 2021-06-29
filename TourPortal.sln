@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPortal.Infrastructure.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPortal.Infrastructure.Security", "src\Shared\TourPortal.Infrastructure.Security\TourPortal.Infrastructure.Security.csproj", "{AE78FC8D-D39A-4CD8-9444-7EAAB60BE699}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPortal.Infrastructure", "src\Shared\TourPortal.Infrastructure\TourPortal.Infrastructure.csproj", "{73815069-F79F-4C2B-9D67-4C93D3B4E51D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{AE78FC8D-D39A-4CD8-9444-7EAAB60BE699}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE78FC8D-D39A-4CD8-9444-7EAAB60BE699}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE78FC8D-D39A-4CD8-9444-7EAAB60BE699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73815069-F79F-4C2B-9D67-4C93D3B4E51D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73815069-F79F-4C2B-9D67-4C93D3B4E51D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73815069-F79F-4C2B-9D67-4C93D3B4E51D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73815069-F79F-4C2B-9D67-4C93D3B4E51D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{846B9490-6947-49ED-A847-48F030224CE0} = {840085E1-202A-4A68-B3E9-DF8C4FF5C4AD}
 		{5DA841A5-6085-48FE-B553-CB10D5DBD5B4} = {680AE9C6-B592-4E3E-9118-5FF99056F425}
 		{AE78FC8D-D39A-4CD8-9444-7EAAB60BE699} = {680AE9C6-B592-4E3E-9118-5FF99056F425}
+		{73815069-F79F-4C2B-9D67-4C93D3B4E51D} = {680AE9C6-B592-4E3E-9118-5FF99056F425}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C450B454-D482-40F9-BD1D-CA318CDE6246}

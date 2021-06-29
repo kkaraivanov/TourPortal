@@ -12,9 +12,9 @@
 
         public string Audience { get; set; }
 
-        public TimeSpan Expiration { get; set; }
+        public TimeSpan Expiration { get; set; } = TimeSpan.FromDays(10);
 
-        public Func<Task<string>> SomeString { get; set; } = () => Task.FromResult(Guid.NewGuid().ToString());
+        public Func<Task<string>> UniqueIdentifierGenerator { get; set; } = () => Task.FromResult(Guid.NewGuid().ToString());
 
         public SigningCredentials SigningCredentials { get; set; }
     }
