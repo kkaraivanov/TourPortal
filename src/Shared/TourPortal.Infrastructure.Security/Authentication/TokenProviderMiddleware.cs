@@ -1,4 +1,4 @@
-﻿namespace TourPortal.Infrastructure.Security.Authentication.Service
+﻿namespace TourPortal.Infrastructure.Security.Authentication
 {
     using System;
     using System.Collections.Generic;
@@ -14,13 +14,13 @@
 
     using GlobalTypes;
 
-    public class JwtTokenService
+    public class TokenProviderMiddleware
     {
         private readonly RequestDelegate _requestDelegate;
         private readonly Func<HttpContext, Task<GenericPrincipal>> _principalResolver;
         private readonly TokenProviderOptions _options;
 
-        public JwtTokenService(
+        public TokenProviderMiddleware(
             RequestDelegate requestDelegate,
             IOptions<TokenProviderOptions> options,
             Func<HttpContext, Task<GenericPrincipal>> principalResolver)

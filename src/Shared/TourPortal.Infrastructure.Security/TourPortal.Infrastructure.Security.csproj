@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TourPortal.Infrastructure.Storage\TourPortal.Infrastructure.Storage.csproj" />
     <ProjectReference Include="..\TourPortal.Infrastructure\TourPortal.Infrastructure.csproj" />
   </ItemGroup>
 
