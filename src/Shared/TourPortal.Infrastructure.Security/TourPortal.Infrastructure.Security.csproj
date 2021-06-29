@@ -15,4 +15,8 @@
     <ProjectReference Include="..\TourPortal.Infrastructure\TourPortal.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Authorization\" />
+  </ItemGroup>
+
 </Project>

@@ -66,6 +66,11 @@ namespace TourPortal.Server
                     };
                 });
 
+            services.AddAuthorization(obtions =>
+            {
+
+            });
+
             services.AddControllers();
         }
 
