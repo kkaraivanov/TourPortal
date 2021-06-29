@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\TourPortal.Infrastructure.Security\TourPortal.Infrastructure.Security.csproj" />
     <ProjectReference Include="..\TourPortal.Storage\TourPortal.Storage.csproj" />
   </ItemGroup>
 

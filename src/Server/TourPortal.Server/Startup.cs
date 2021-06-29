@@ -2,6 +2,8 @@ namespace TourPortal.Server
 {
     using System;
     using System.Text;
+    using Infrastructure.Security.Authentication;
+    using Infrastructure.Security.Authentication.Service;
     using Infrastructure.Storage;
     using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,6 +33,16 @@ namespace TourPortal.Server
         public void ConfigureServices(IServiceCollection services)
         {
             var jwtKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecurity:JwtSecurityKey"]));
+            var expireTime = int.Parse(Configuration["JwtSecurity:JwtExpiryInDays"]);
+
+            services.Configure<TokenProviderOptions>(opts =>
+            {
+                opts.Audience = Configuration["JwtSecurity:JwtAudience"];
+                opts.Issuer = Configuration["JwtSecurity:JwtIssuer"];
+                opts.Path = "/api/account/login";
+                opts.Expiration = TimeSpan.FromDays(expireTime);
+                opts.SigningCredentials = new SigningCredentials(jwtKey, SecurityAlgorithms.HmacSha256);
+            });
             
             services.AddStorageServices(Configuration);
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
@@ -40,6 +52,7 @@ namespace TourPortal.Server
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddTransient<IJwtTokenService, JwtTokenService>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -69,6 +82,9 @@ namespace TourPortal.Server
             using var dbServicesScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
             var databaseInitializer = dbServicesScope.ServiceProvider.GetService<IDatabaseInitializer>();
             databaseInitializer.InitializeAsync().Wait();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
