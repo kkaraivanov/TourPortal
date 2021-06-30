@@ -46,9 +46,9 @@
 
         private async Task SeedApplicationUser()
         {
-            var roles = await _roleManager.FindByNameAsync(Security.Role.Administrator);
+            var role = await _roleManager.FindByNameAsync(Security.Role.Administrator);
 
-            if (roles == null)
+            if (role == null)
             {
                 _logger.LogError("The following role types are invalid: ");
                 throw new Exception("The following role types are invalid: ");
@@ -66,7 +66,7 @@
                         "Administrator",
                         "admin@test.com",
                         "555 555 555",
-                        new string[]{roles.ToString()});
+                        new string[] { role.Name });
                 }
                 else
                 {
@@ -164,7 +164,7 @@
 
                 index = 1;
 
-                _logger.LogInformation("Added Claims for user: {0}{1}{2}",
+                _logger.LogInformation("Added Claims for user {0}: {1}{2}",
                     user.UserName, Environment.NewLine, string.Join(
                         Environment.NewLine,
                         claims.Select(c =>

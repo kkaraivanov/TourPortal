@@ -17,6 +17,7 @@ namespace TourPortal.Server
     using Infrastructure.Storage;
     using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.Extensions.Logging;
     using Services;
     using Storage;
 
@@ -26,7 +27,8 @@ namespace TourPortal.Server
 
         public IConfiguration Configuration { get; }
 
-        public Startup(IWebHostEnvironment environment, IConfiguration configuration)
+        public Startup(IWebHostEnvironment environment, 
+            IConfiguration configuration)
         {
             Environment = environment;
             Configuration = configuration;
@@ -45,7 +47,7 @@ namespace TourPortal.Server
                 opts.Expiration = TimeSpan.FromDays(expireTime);
                 opts.SigningCredentials = new SigningCredentials(jwtKey, SecurityAlgorithms.HmacSha256);
             });
-            
+
             services.AddStorageServices(Configuration);
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
             services
@@ -56,8 +58,8 @@ namespace TourPortal.Server
 
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>,
                 AdditionalUserClaimsPrincipalFactory>();
-            services.SetCookiePolicy();
 
+            services.SetCookiePolicy();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -74,7 +76,6 @@ namespace TourPortal.Server
                 });
 
             services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
-
             services.AddControllers();
         }
 
@@ -95,7 +96,6 @@ namespace TourPortal.Server
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseJwtBearerTokens();
-
             app.UseEndpoints(endpoints =>
             {
                 //endpoints.MapGet("/", async context =>
