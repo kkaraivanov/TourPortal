@@ -9,6 +9,13 @@
 
     public class ApplicationUser : IdentityUser<string>, ISoftDelete
     {
+        public ApplicationUser()
+        {
+            Id = Guid.NewGuid().ToString();
+            UserRoles = new HashSet<ApplicationUserRole>();
+            Messages = new HashSet<Message>();
+        }
+
         [MaxLength(64)]
         public string FirstName { get; set; }
 

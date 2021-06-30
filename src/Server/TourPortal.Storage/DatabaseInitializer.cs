@@ -81,9 +81,18 @@
                 });
             }
 
+            _context.SaveChanges();
         }
 
-        private async Task<ApplicationUser> CreateUser(string userName, string password, string firstName, string midleName, string lastName, string email, string phoneNumber, string[] roles)
+        private async Task<ApplicationUser> CreateUser(
+            string userName,
+            string password, 
+            string firstName, 
+            string midleName, 
+            string lastName, 
+            string email, 
+            string phoneNumber, 
+            string[] roles)
         {
             var applicationUser = _userManager.FindByNameAsync(userName).Result;
 
@@ -135,6 +144,7 @@
                     await _userManager.DeleteAsync(user);
                 }
             }
+
             return applicationUser;
         }
     }
