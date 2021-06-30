@@ -1,6 +1,6 @@
 ﻿namespace TourPortal.Infrastructure.GlobalTypes
 {
-    public class Sequrity
+    public class Security
     {
         public const string Permision = "permission";
 

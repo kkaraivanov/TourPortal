@@ -37,22 +37,22 @@ namespace TourPortal.Infrastructure.Security.Authorization
         private async Task<(AuthorizationPolicy policy, bool isCreated)> AuthorizationBuilder(string policyName) =>
             policyName switch
             {
-                Sequrity.Policiy.IsAdministrator => (new AuthorizationPolicyBuilder()
+                Security.Policiy.IsAdministrator => (new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
-                    .RequireRole(Sequrity.Role.Administrator)
+                    .RequireRole(Security.Role.Administrator)
                     .Build(), true),
 
-                Sequrity.Policiy.IsUser => (new AuthorizationPolicyBuilder()
+                Security.Policiy.IsUser => (new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
-                    .RequireRole(new string[] { Sequrity.Role.User, Sequrity.Role.Owner, Sequrity.Role.Employe })
+                    .RequireRole(new string[] { Security.Role.User, Security.Role.Owner, Security.Role.Employe })
                     .Build(), true),
 
-                Sequrity.Policiy.IsOwner => (new AuthorizationPolicyBuilder()
+                Security.Policiy.IsOwner => (new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
                     .RequireAssertion(ctx => 
                         ctx.User.HasClaim(claim => claim.Type == "IsUser") || 
-                        (ctx.User.IsInRole(Sequrity.Role.Owner) || 
-                        ctx.User.IsInRole(Sequrity.Role.Employe)))
+                        (ctx.User.IsInRole(Security.Role.Owner) || 
+                        ctx.User.IsInRole(Security.Role.Employe)))
                     .Build(), true)
             };
 

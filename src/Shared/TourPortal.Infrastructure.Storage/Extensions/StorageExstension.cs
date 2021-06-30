@@ -15,8 +15,8 @@
                 {
                     Id = Guid.NewGuid().ToString(),
                     ConcurrencyStamp = Guid.NewGuid().ToString(),
-                    Name = Sequrity.Role.Administrator, 
-                    NormalizedName = Sequrity.Role.Administrator.ToUpper()
+                    Name = Security.Role.Administrator, 
+                    NormalizedName = Security.Role.Administrator.ToUpper()
                 });
 
             builder.Entity<ApplicationRole>()
@@ -24,8 +24,8 @@
                 {
                     Id = Guid.NewGuid().ToString(),
                     ConcurrencyStamp = Guid.NewGuid().ToString(),
-                    Name = Sequrity.Role.User,
-                    NormalizedName = Sequrity.Role.User.ToUpper()
+                    Name = Security.Role.User,
+                    NormalizedName = Security.Role.User.ToUpper()
                 });
 
             builder.Entity<ApplicationRole>()
@@ -33,8 +33,8 @@
                 {
                     Id = Guid.NewGuid().ToString(),
                     ConcurrencyStamp = Guid.NewGuid().ToString(),
-                    Name = Sequrity.Role.Owner,
-                    NormalizedName = Sequrity.Role.Owner.ToUpper()
+                    Name = Security.Role.Owner,
+                    NormalizedName = Security.Role.Owner.ToUpper()
                 });
 
             builder.Entity<ApplicationRole>()
@@ -42,8 +42,8 @@
                 {
                     Id = Guid.NewGuid().ToString(),
                     ConcurrencyStamp = Guid.NewGuid().ToString(),
-                    Name = Sequrity.Role.Employe,
-                    NormalizedName = Sequrity.Role.Employe.ToUpper()
+                    Name = Security.Role.Employe,
+                    NormalizedName = Security.Role.Employe.ToUpper()
                 });
 
             return builder;

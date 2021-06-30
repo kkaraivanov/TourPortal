@@ -49,7 +49,7 @@
             if (context.User == null)
                 return Task.CompletedTask;
 
-            if (context.User.Claims.Any(c => c.Type == Sequrity.Permision && c.Value == requirement.Permission))
+            if (context.User.Claims.Any(c => c.Type == Security.Permision && c.Value == requirement.Permission))
                 context.Succeed(requirement);
             else
                 context.Fail();

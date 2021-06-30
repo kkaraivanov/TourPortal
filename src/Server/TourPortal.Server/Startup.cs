@@ -17,6 +17,7 @@ namespace TourPortal.Server
     using Infrastructure.Storage;
     using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Authorization;
+    using Services;
     using Storage;
 
     public class Startup
@@ -55,6 +56,7 @@ namespace TourPortal.Server
 
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>,
                 AdditionalUserClaimsPrincipalFactory>();
+            services.SetCookiePolicy();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
