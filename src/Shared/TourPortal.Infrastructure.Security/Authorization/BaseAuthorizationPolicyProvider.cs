@@ -1,0 +1,60 @@
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace TourPortal.Infrastructure.Security.Authorization
+{
+    using System.Threading.Tasks;
+    using GlobalTypes;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.Extensions.Options;
+
+    public class BaseAuthorizationPolicyProvider : DefaultAuthorizationPolicyProvider
+    {
+        private readonly AuthorizationOptions _options;
+
+        public BaseAuthorizationPolicyProvider(IOptions<AuthorizationOptions> options)
+            : base(options) =>
+            _options = options.Value;
+
+        public override async Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
+        {
+            var policy = await base.GetPolicyAsync(policyName);
+
+            if (policy == null)
+            {
+                var builder = await AuthorizationBuilder(policyName);
+                bool isCreated = builder.isCreated;
+
+                if (isCreated)
+                {
+                    policy = builder.policy;
+                    _options.AddPolicy(policyName, policy);
+                }
+            }
+
+            return policy;
+        }
+
+        private async Task<(AuthorizationPolicy policy, bool isCreated)> AuthorizationBuilder(string policyName) =>
+            policyName switch
+            {
+                Sequrity.Policiy.IsAdministrator => (new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .RequireRole(Sequrity.Role.Administrator)
+                    .Build(), true),
+
+                Sequrity.Policiy.IsUser => (new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .RequireRole(new string[] { Sequrity.Role.User, Sequrity.Role.Owner, Sequrity.Role.Employe })
+                    .Build(), true),
+
+                Sequrity.Policiy.IsOwner => (new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .RequireAssertion(ctx => 
+                        ctx.User.HasClaim(claim => claim.Type == "IsUser") || 
+                        (ctx.User.IsInRole(Sequrity.Role.Owner) || 
+                        ctx.User.IsInRole(Sequrity.Role.Employe)))
+                    .Build(), true)
+            };
+
+    }
+}

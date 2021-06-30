@@ -16,6 +16,7 @@ namespace TourPortal.Server
     using Infrastructure.Security.Authorization;
     using Infrastructure.Storage;
     using Infrastructure.Storage.Models;
+    using Microsoft.AspNetCore.Authorization;
     using Storage;
 
     public class Startup
@@ -70,7 +71,7 @@ namespace TourPortal.Server
                     };
                 });
 
-            
+            services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
 
             services.AddControllers();
         }
