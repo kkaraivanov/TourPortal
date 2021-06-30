@@ -13,6 +13,7 @@ namespace TourPortal.Server
     using Microsoft.IdentityModel.Tokens;
 
     using Infrastructure.Security.Authentication;
+    using Infrastructure.Security.Authorization;
     using Infrastructure.Storage;
     using Infrastructure.Storage.Models;
     using Storage;
@@ -51,6 +52,9 @@ namespace TourPortal.Server
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>,
+                AdditionalUserClaimsPrincipalFactory>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -66,10 +70,7 @@ namespace TourPortal.Server
                     };
                 });
 
-            services.AddAuthorization(obtions =>
-            {
-
-            });
+            
 
             services.AddControllers();
         }

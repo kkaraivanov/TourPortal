@@ -1,7 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TourPortal.Infrastructure.Global\TourPortal.Infrastructure.Global.csproj" />
+    <ProjectReference Include="..\TourPortal.Infrastructure.Security\TourPortal.Infrastructure.Security.csproj" />
+    <ProjectReference Include="..\TourPortal.Infrastructure.Storage\TourPortal.Infrastructure.Storage.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
 
 </Project>

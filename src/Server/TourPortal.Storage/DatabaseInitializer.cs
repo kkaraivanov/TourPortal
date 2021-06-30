@@ -5,8 +5,8 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
 
-    using Infrastructure.Storage;
     using Infrastructure.Storage.Models;
+    using Infrastructure.Storage;
 
     public class DatabaseInitializer : IDatabaseInitializer
     {
