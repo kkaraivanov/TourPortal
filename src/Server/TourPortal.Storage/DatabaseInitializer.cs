@@ -70,6 +70,17 @@
             var user = await _userManager.FindByNameAsync(ApplicationConstants.DefaultAdministratorName);
             var userProfile = await _context.UserProfiles.FirstOrDefaultAsync(x => x.UserId == user.Id);
 
+            if (userProfile == null)
+            {
+                _context.UserProfiles.Add(new UserProfile
+                {
+                    UserId = user.Id,
+                    ApplicationUser = user,
+                    CreatedOn = DateTime.Now,
+                    ModifiedOn = DateTime.Now,
+                });
+            }
+
         }
 
         private async Task<ApplicationUser> CreateUser(string userName, string password, string firstName, string midleName, string lastName, string email, string phoneNumber, string[] roles)
