@@ -55,7 +55,7 @@
                 new Claim(JwtRegisteredClaimNames.Jti, await options.UniqueIdentifierGenerator()),
                 new Claim(JwtRegisteredClaimNames.Iat, timeSeconds.ToString(), ClaimValueTypes.Integer64)
             };
-
+            
             foreach (var jwtClaim in fwtClaims)
             {
                 var fwtClaimIndex = GetClaimIndex(claims, jwtClaim.Type);

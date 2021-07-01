@@ -52,8 +52,10 @@
             }
 
             var roles = await userManager.GetRolesAsync(user);
+            var claims = await userManager.GetClaimsAsync(user);
             var identity = new GenericIdentity(email, "Token");
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
+            identity.AddClaims(claims);
 
             return new GenericPrincipal(identity, roles.ToArray());
         }

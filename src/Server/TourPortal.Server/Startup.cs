@@ -17,7 +17,6 @@ namespace TourPortal.Server
     using Infrastructure.Storage;
     using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.Extensions.Logging;
     using Services;
     using Storage;
 
