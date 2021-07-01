@@ -95,6 +95,7 @@ namespace TourPortal.Server
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseJwtBearerTokens();
+
             app.UseEndpoints(endpoints =>
             {
                 //endpoints.MapGet("/", async context =>

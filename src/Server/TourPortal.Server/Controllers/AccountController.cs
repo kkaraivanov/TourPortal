@@ -2,16 +2,19 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class AccountController : Controller
     {
-        [HttpPost]
-        [Route("[controller]/[action]")]
-        public async Task<IActionResult> Login([FromBody] LoginModel login)
+        [HttpGet]
+        [Route("[action]")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> TestTocken()
         {
-            return Ok();
+            return Ok("Hallo from account controller");
         }
     }
 
