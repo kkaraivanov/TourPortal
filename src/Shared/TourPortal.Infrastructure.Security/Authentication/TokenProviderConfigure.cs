@@ -53,7 +53,7 @@
 
             var roles = await userManager.GetRolesAsync(user);
             var claims = await userManager.GetClaimsAsync(user);
-            var identity = new GenericIdentity(email, "Token");
+            var identity = new GenericIdentity(email, "jwt");
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
             identity.AddClaims(claims);
 
