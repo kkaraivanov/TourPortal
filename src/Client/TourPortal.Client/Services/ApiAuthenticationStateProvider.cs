@@ -9,6 +9,7 @@
     using System.Text.Json;
     using System.Threading.Tasks;
     using Blazored.LocalStorage;
+    using Infrastructure.GlobalTypes;
     using Microsoft.AspNetCore.Components.Authorization;
 
     public class ApiAuthenticationStateProvider : AuthenticationStateProvider
@@ -24,16 +25,21 @@
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var getSavedToken = await _localStorage.GetItemAsync<string>("tourPortalToken");
+            var getSavedToken = await _localStorage.GetItemAsync<string>(ApplicationConstants.TokenString);
 
             if (string.IsNullOrWhiteSpace(getSavedToken))
             {
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", getSavedToken);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(ApplicationConstants.TokenType, getSavedToken);
 
-            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(getSavedToken), "jwt")));
+            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(getSavedToken), ApplicationConstants.AuthenticationTokenType)));
+        }
+
+        public void SetUserAsAuthenticated(string email)
+        {
+
         }
 
         private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)

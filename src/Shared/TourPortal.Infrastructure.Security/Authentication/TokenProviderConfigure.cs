@@ -5,6 +5,7 @@
     using System.Security.Claims;
     using System.Security.Principal;
     using System.Threading.Tasks;
+    using GlobalTypes;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
@@ -53,7 +54,7 @@
 
             var roles = await userManager.GetRolesAsync(user);
             var claims = await userManager.GetClaimsAsync(user);
-            var identity = new GenericIdentity(email, "jwt");
+            var identity = new GenericIdentity(email, ApplicationConstants.AuthenticationTokenType);
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
             identity.AddClaims(claims);
 
