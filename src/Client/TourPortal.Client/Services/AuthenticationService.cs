@@ -29,8 +29,12 @@
         public async Task<ApplicationResponse<LoginResponseModel>> Login(LoginModel loginModel)
         {
             var loginAsJson = JsonSerializer.Serialize(loginModel);
-            var response = await _httpClient.PostAsync(ApplicationConstants.LoginUrl, new StringContent(loginAsJson, Encoding.UTF8, ApplicationConstants.JsonContentType));
-            var loginResult = JsonSerializer.Deserialize<ApplicationResponse<LoginResponseModel>>(await response.Content.ReadAsStringAsync(), 
+            var response = await _httpClient.PostAsync(
+                ApplicationConstants.LoginUrl, 
+                new StringContent(loginAsJson, Encoding.UTF8, 
+                    ApplicationConstants.JsonContentType));
+            var loginResult = JsonSerializer
+                .Deserialize<ApplicationResponse<LoginResponseModel>>(await response.Content.ReadAsStringAsync(), 
                 new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
@@ -42,10 +46,12 @@
             }
 
             await _localStorage.SetItemAsync(ApplicationConstants.TokenString, loginResult.ResponseData.Token);
-            var provaider = _authenticationStateProvider as ApiAuthenticationStateProvider;
 
-            provaider?.SetUserAsAuthenticated(loginModel.Email);
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(ApplicationConstants.TokenType, loginResult.ResponseData.Token);
+            // TODO: if have the error, can make ((ApiAuthenticationStateProvider)_authenticationStateProvider).SetUserAsAuthenticated(loginModel.Email);
+            (_authenticationStateProvider as ApiAuthenticationStateProvider)?.SetUserAsAuthenticatedState(loginModel.Email);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                ApplicationConstants.TokenType, 
+                loginResult.ResponseData.Token);
 
             return loginResult;
         }
