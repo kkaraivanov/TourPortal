@@ -16,13 +16,14 @@ namespace TourPortal.Client
             builder.Services
                 .AddScoped(sp =>
                 new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) })
-                .AddSingleton(async sp => 
+                .AddSingleton(async sp =>
                 {
-                var httpClient = sp.GetRequiredService<HttpClient>();
-                return await httpClient.GetStringAsync("appsettings.json")
-                    .ConfigureAwait(false);
+                    var httpClient = sp.GetRequiredService<HttpClient>();
+                    return await httpClient
+                        .GetStringAsync("appsettings.json")
+                        .ConfigureAwait(false);
                 });
-            
+
             await builder.Build().RunAsync();
         }
     }
