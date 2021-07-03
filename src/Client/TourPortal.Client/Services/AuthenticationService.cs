@@ -2,6 +2,7 @@
 {
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Net.Http.Json;
     using System.Text;
     using System.Text.Json;
     using System.Threading.Tasks;
@@ -64,9 +65,12 @@
             _httpClient.DefaultRequestHeaders.Authorization = null;
         }
 
-        public Task<ApplicationResponse<RegisterResponseModel>> Register(RegisterModel registerModel)
+        public async Task<ApplicationResponse<RegisterResponseModel>> Register(RegisterModel registerModel)
         {
-            throw new System.NotImplementedException();
+            var response = await _httpClient.PostAsJsonAsync("api/account/register", registerModel);
+            var responseResult = await response.Content.ReadFromJsonAsync<ApplicationResponse<RegisterResponseModel>>();
+
+            return responseResult;
         }
     }
 }
