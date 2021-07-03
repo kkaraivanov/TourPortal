@@ -45,10 +45,10 @@
                 return loginResult;
             }
 
-            await _localStorage.SetItemAsync(ApplicationConstants.TokenString, loginResult.ResponseData.Token);
+            await _localStorage.SetItemAsync(ApplicationConstants.AuthenticatedTokenString, loginResult.ResponseData.Token);
 
             // TODO: if have the error, can make ((ApiAuthenticationStateProvider)_authenticationStateProvider).SetUserAsAuthenticated(loginModel.Email);
-            (_authenticationStateProvider as ApiAuthenticationStateProvider)?.SetUserAsAuthenticatedState(loginModel.Email);
+            (_authenticationStateProvider as ApiAuthenticationStateProvider)?.SetUserAsAuthenticated(loginModel.Email);
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                 ApplicationConstants.TokenType, 
                 loginResult.ResponseData.Token);
@@ -56,9 +56,12 @@
             return loginResult;
         }
 
-        public Task Logout()
+        public async Task Logout()
         {
-            throw new System.NotImplementedException();
+            await _localStorage.RemoveItemAsync(ApplicationConstants.AuthenticatedTokenString);
+            (_authenticationStateProvider as ApiAuthenticationStateProvider)?.UserAsLoggedOut();
+
+            _httpClient.DefaultRequestHeaders.Authorization = null;
         }
 
         public Task<ApplicationResponse<RegisterResponseModel>> Register(RegisterModel registerModel)

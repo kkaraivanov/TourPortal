@@ -25,7 +25,7 @@
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var getSavedToken = await _localStorage.GetItemAsync<string>(ApplicationConstants.TokenString);
+            var getSavedToken = await _localStorage.GetItemAsync<string>(ApplicationConstants.AuthenticatedTokenString);
 
             if (string.IsNullOrWhiteSpace(getSavedToken))
             {
@@ -37,9 +37,20 @@
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(getSavedToken), ApplicationConstants.AuthenticationTokenType)));
         }
 
-        public void SetUserAsAuthenticatedState(string email)
+        public void SetUserAsAuthenticated(string email)
         {
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, email) }, ApplicationConstants.IsAuthenticationString));
+            var user = new ClaimsPrincipal(
+                new ClaimsIdentity(
+                    new[] { new Claim(ClaimTypes.Name, email) }, 
+                    ApplicationConstants.IsAuthenticationString));
+            var state = Task.FromResult(new AuthenticationState(user));
+
+            NotifyAuthenticationStateChanged(state);
+        }
+
+        public void UserAsLoggedOut()
+        {
+            var user = new ClaimsPrincipal(new ClaimsIdentity());
             var state = Task.FromResult(new AuthenticationState(user));
 
             NotifyAuthenticationStateChanged(state);
