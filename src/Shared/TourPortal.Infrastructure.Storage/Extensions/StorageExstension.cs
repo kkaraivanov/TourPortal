@@ -1,9 +1,9 @@
 ﻿namespace TourPortal.Infrastructure.Storage.Extensions
 {
     using System;
-    using GlobalTypes;
     using Microsoft.EntityFrameworkCore;
 
+    using Global.Types;
     using Models;
 
     public static class StorageExstension

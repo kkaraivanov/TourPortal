@@ -9,8 +9,9 @@
     using System.Text.Json;
     using System.Threading.Tasks;
     using Blazored.LocalStorage;
-    using Infrastructure.GlobalTypes;
     using Microsoft.AspNetCore.Components.Authorization;
+    
+    using Infrastructure.Global;
 
     public class ApiAuthenticationStateProvider : AuthenticationStateProvider
     {

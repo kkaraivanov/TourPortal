@@ -1,4 +1,4 @@
-﻿namespace TourPortal.Infrastructure.GlobalTypes
+﻿namespace TourPortal.Infrastructure.Global
 {
     public static class ApplicationConstants
     {
@@ -9,6 +9,7 @@
         public const string AuthenticatedTokenString = "tourPortalToken";
 
         public const string LoginUrl = "api/account/Login";
+        public const string RegisterUrl = "api/account/register";
 
         public const string DefaultAdministratorName = "admin";
         public const string DefaultAdministratorPassword = "Admin!23";

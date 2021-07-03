@@ -5,7 +5,7 @@
     using System.Security.Claims;
     using System.Security.Principal;
     using System.Threading.Tasks;
-    using GlobalTypes;
+    using Global;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;

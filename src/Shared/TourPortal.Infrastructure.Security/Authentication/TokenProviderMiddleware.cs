@@ -7,7 +7,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Options;
 
-    using GlobalTypes;
+    using Global.Types;
 
     public class TokenProviderMiddleware
     {

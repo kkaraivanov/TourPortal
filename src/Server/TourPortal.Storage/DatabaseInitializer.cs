@@ -4,14 +4,15 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using IdentityModel;
-    using Infrastructure.GlobalTypes;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
 
     using Infrastructure.Storage.Models;
     using Infrastructure.Storage;
+    using Infrastructure.Global;
+    using Infrastructure.Global.Types;
+    using IdentityModel;
 
     public class DatabaseInitializer : IDatabaseInitializer
     {

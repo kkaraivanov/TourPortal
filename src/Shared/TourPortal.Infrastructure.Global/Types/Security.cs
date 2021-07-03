@@ -1,4 +1,4 @@
-﻿namespace TourPortal.Infrastructure.GlobalTypes
+﻿namespace TourPortal.Infrastructure.Global.Types
 {
     public class Security
     {

@@ -7,7 +7,8 @@
     using System.Text.Json;
     using System.Threading.Tasks;
     using Blazored.LocalStorage;
-    using Infrastructure.GlobalTypes;
+
+    using Infrastructure.Global;
     using Infrastructure.Models.Authentication;
     using Infrastructure.Models.Response;
     using Microsoft.AspNetCore.Components.Authorization;
@@ -67,7 +68,7 @@
 
         public async Task<ApplicationResponse<RegisterResponseModel>> Register(RegisterModel registerModel)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/account/register", registerModel);
+            var response = await _httpClient.PostAsJsonAsync(ApplicationConstants.RegisterUrl, registerModel);
             var responseResult = await response.Content.ReadFromJsonAsync<ApplicationResponse<RegisterResponseModel>>();
 
             return responseResult;

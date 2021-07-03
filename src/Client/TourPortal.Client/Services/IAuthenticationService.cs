@@ -1,6 +1,7 @@
 ﻿namespace TourPortal.Client.Services
 {
     using System.Threading.Tasks;
+
     using Infrastructure.Models.Authentication;
     using Infrastructure.Models.Response;
 

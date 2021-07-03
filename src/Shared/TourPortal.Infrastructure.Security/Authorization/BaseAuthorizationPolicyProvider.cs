@@ -3,9 +3,10 @@
 namespace TourPortal.Infrastructure.Security.Authorization
 {
     using System.Threading.Tasks;
-    using GlobalTypes;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.Extensions.Options;
+
+    using Global.Types;
 
     public class BaseAuthorizationPolicyProvider : DefaultAuthorizationPolicyProvider
     {

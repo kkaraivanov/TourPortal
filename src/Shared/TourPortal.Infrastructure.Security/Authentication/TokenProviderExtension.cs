@@ -11,7 +11,7 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
 
-    using GlobalTypes;
+    using Global;
 
     public static class TokenProviderExtension
     {
