@@ -6,8 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TourPortal.Infrastructure.Global\TourPortal.Infrastructure.Global.csproj" />
-    <ProjectReference Include="..\TourPortal.Infrastructure.Security\TourPortal.Infrastructure.Security.csproj" />
-    <ProjectReference Include="..\TourPortal.Infrastructure.Storage\TourPortal.Infrastructure.Storage.csproj" />
   </ItemGroup>
 
   <ItemGroup>
