@@ -14,7 +14,12 @@
         public static AuthorizationPolicy IsUserPolicy() =>
             new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
-                .RequireRole(new string[] {Security.Role.User, Security.Role.Owner, Security.Role.Employe})
+                .RequireRole(new string[]
+                {
+                    Security.Role.User, 
+                    Security.Role.Owner, 
+                    Security.Role.Employe
+                })
                 .Build();
 
         public static AuthorizationPolicy IsOwnerPolicy() =>

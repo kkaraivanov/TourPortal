@@ -1,13 +1,15 @@
 ﻿namespace TourPortal.Server.Controllers
 {
     using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    
+    using Infrastructure.Shared.Models.Authentication;
+    using Infrastructure.Shared.Models.Response;
 
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class AccountController : Controller
+    [AllowAnonymous]
+    public class AccountController : ApiController
     {
         [HttpGet]
         [Route("[action]")]
@@ -15,10 +17,19 @@
         //[Authorize(Roles = "Employe")]
         //[Authorize(Policy = "IsUser")]
         //[Authorize(Policy = "IsAdministrator")]
-        public async Task<IActionResult> TestTocken()
+        public async Task<IActionResult> TestToken()
         {
             return Ok("Hallo from account controller");
         }
+
+        [HttpPost]
+        public async Task<ApplicationResponse<RegisterResponseModel>> Register([FromBody] RegisterModel model)
+        {
+            if (model is null)
+            {
+                
+            }
+            return new ApplicationResponse<RegisterResponseModel>();
+        }
     }
-    
 }

@@ -1,4 +1,4 @@
-﻿namespace TourPortal.Infrastructure.Models.Authentication
+﻿namespace TourPortal.Infrastructure.Shared.Models.Authentication
 {
     public class RegisterResponseModel
     {

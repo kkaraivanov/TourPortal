@@ -2,8 +2,8 @@
 {
     using System.Threading.Tasks;
 
-    using Infrastructure.Models.Authentication;
-    using Infrastructure.Models.Response;
+    using Infrastructure.Shared.Models.Authentication;
+    using Infrastructure.Shared.Models.Response;
 
     public interface IAuthenticationService
     {

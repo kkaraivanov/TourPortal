@@ -1,4 +1,4 @@
-﻿namespace TourPortal.Infrastructure.Models.Response
+﻿namespace TourPortal.Infrastructure.Shared.Models.Response
 
 {
     using System.Collections.Generic;
