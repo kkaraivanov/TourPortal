@@ -6,9 +6,9 @@
         public const string TokenType = "bearer";
         public const string AuthenticationTokenType = "jwt";
         public const string IsAuthenticationString = "authUserMail";
-        public const string AuthenticatedTokenString = "tourPortalToken";
+        public const string AuthenticatedTokenString = "tour_portal_token";
 
-        public const string LoginUrl = "api/account/Login";
+        public const string LoginUrl = "api/account/login";
         public const string RegisterUrl = "api/account/register";
 
         public const string DefaultAdministratorName = "admin";

@@ -1,5 +1,7 @@
 ﻿namespace TourPortal.Client.Services
 {
+    using System;
+    using System.Collections.Generic;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Net.Http.Json;
@@ -12,13 +14,14 @@
     using Infrastructure.Models.Authentication;
     using Infrastructure.Models.Response;
     using Microsoft.AspNetCore.Components.Authorization;
+    using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
     class AuthenticationService : IAuthenticationService
     {
         private readonly HttpClient _httpClient;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly ILocalStorageService _localStorage;
-        
+
         public AuthenticationService(HttpClient httpClient,
             AuthenticationStateProvider authenticationStateProvider,
             ILocalStorageService localStorage)
@@ -30,32 +33,42 @@
 
         public async Task<ApplicationResponse<LoginResponseModel>> Login(LoginModel loginModel)
         {
-            var loginAsJson = JsonSerializer.Serialize(loginModel);
-            var response = await _httpClient.PostAsync(
-                ApplicationConstants.LoginUrl, 
-                new StringContent(loginAsJson, Encoding.UTF8, 
-                    ApplicationConstants.JsonContentType));
-            var loginResult = JsonSerializer
-                .Deserialize<ApplicationResponse<LoginResponseModel>>(await response.Content.ReadAsStringAsync(), 
-                new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                return loginResult;
+                var response = await _httpClient.PostAsync(ApplicationConstants.LoginUrl,
+                    new FormUrlEncodedContent(
+                        new List<KeyValuePair<string, string>>
+                        {
+                            new KeyValuePair<string, string>("email", loginModel.Email),
+                            new KeyValuePair<string, string>("password", loginModel.Password),
+                        }));
+
+                var loginResult = JsonSerializer
+                    .Deserialize<LoginResponseModel>(await response.Content.ReadAsStringAsync(), 
+                        new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new ApplicationResponse<LoginResponseModel>(new ApplicationError("Model", "Response is not success."));
+                }
+
+                await _localStorage.SetItemAsync(ApplicationConstants.AuthenticatedTokenString, loginResult.access_token);
+
+                // TODO: if have the error, can make ((ApiAuthenticationStateProvider)_authenticationStateProvider).SetUserAsAuthenticated(loginModel.Email);
+                (_authenticationStateProvider as ApiAuthenticationStateProvider)?.SetUserAsAuthenticated(loginModel.Email);
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                    ApplicationConstants.TokenType, 
+                    loginResult.access_token);
+
+                return new ApplicationResponse<LoginResponseModel>(loginResult);
             }
-
-            await _localStorage.SetItemAsync(ApplicationConstants.AuthenticatedTokenString, loginResult.ResponseData.Token);
-
-            // TODO: if have the error, can make ((ApiAuthenticationStateProvider)_authenticationStateProvider).SetUserAsAuthenticated(loginModel.Email);
-            (_authenticationStateProvider as ApiAuthenticationStateProvider)?.SetUserAsAuthenticated(loginModel.Email);
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                ApplicationConstants.TokenType, 
-                loginResult.ResponseData.Token);
-
-            return loginResult;
+            catch (Exception e)
+            {
+                return new ApplicationResponse<LoginResponseModel>(new ApplicationError("Exception for login", e.Message));
+            }
         }
 
         public async Task Logout()
@@ -69,9 +82,9 @@
         public async Task<ApplicationResponse<RegisterResponseModel>> Register(RegisterModel registerModel)
         {
             var response = await _httpClient.PostAsJsonAsync(ApplicationConstants.RegisterUrl, registerModel);
-            var responseResult = await response.Content.ReadFromJsonAsync<ApplicationResponse<RegisterResponseModel>>();
+            var responseResult = await response.Content.ReadFromJsonAsync<RegisterResponseModel>();
 
-            return responseResult;
+            return new ApplicationResponse<RegisterResponseModel>(responseResult);
         }
     }
 }

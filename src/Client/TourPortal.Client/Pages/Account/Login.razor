@@ -1,0 +1,57 @@
+﻿@page "/account/login"
+@using TourPortal.Infrastructure.Models.Authentication
+
+<h3>Login</h3>
+
+@if (ShowErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@Error</p>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Please enter your details</h5>
+        <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <InputText Id="email" Class="form-control" @bind-Value="loginModel.Email" />
+                <ValidationMessage For="@(() => loginModel.Email)" />
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <InputText Id="password" type="password" Class="form-control" @bind-Value="loginModel.Password" />
+                <ValidationMessage For="@(() => loginModel.Password)" />
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+    private bool ShowErrors;
+    private string Error = "";
+
+    private async Task HandleLogin()
+    {
+        ShowErrors = false;
+
+        var result = await AuthenticationService.Login(loginModel);
+        //var result = await HttpClient.PostAsJsonAsync("https://localhost:5000/api/account/login",loginModel);
+        ;
+        if (result.IsOk)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            Error = string.Join(Environment.NewLine, result.Errors);
+            ShowErrors = true;
+        }
+    }
+}

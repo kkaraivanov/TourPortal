@@ -9,4 +9,9 @@
 @using Microsoft.JSInterop
 
 @using TourPortal.Client
+@using TourPortal.Client.Services
 @using TourPortal.Client.Shared
+
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient

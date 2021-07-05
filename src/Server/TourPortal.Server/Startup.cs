@@ -17,6 +17,7 @@ namespace TourPortal.Server
     using Infrastructure.Storage;
     using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Services;
     using Storage;
 
@@ -26,7 +27,7 @@ namespace TourPortal.Server
 
         public IConfiguration Configuration { get; }
 
-        public Startup(IWebHostEnvironment environment, 
+        public Startup(IWebHostEnvironment environment,
             IConfiguration configuration)
         {
             Environment = environment;
@@ -37,6 +38,25 @@ namespace TourPortal.Server
         {
             var jwtKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecurity:JwtSecurityKey"]));
             var expireTime = int.Parse(Configuration["JwtSecurity:JwtExpiryInDays"]);
+
+            if (Environment.IsDevelopment())
+            {
+                services.AddHttpsRedirection(options =>
+                {
+                    options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
+                    options.HttpsPort = 44340;
+                });
+            }
+            else
+            {
+                services.AddHttpsRedirection(options =>
+                {
+                    options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
+                    options.HttpsPort = 443;
+                });
+            }
+
+            services.AddCors();
 
             services.Configure<TokenProviderOptions>(opts =>
             {
@@ -86,6 +106,13 @@ namespace TourPortal.Server
             }
 
             app.UseRouting();
+            app.UseCors(cors => cors
+                .WithOrigins("https://localhost:44378", "http://localhost:49996", "*")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true)
+                .AllowCredentials()
+            );
 
             // migrate database if have new migration
             using var dbServicesScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();

@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPortal.Infrastructure",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPortal.Infrastructure.Global", "src\Shared\TourPortal.Infrastructure.Global\TourPortal.Infrastructure.Global.csproj", "{072BC962-7B9D-4322-B9C6-C39DFB3BF69F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPortal.Client", "src\Client\TourPortal.Client\TourPortal.Client.csproj", "{66DA097B-37F0-4D55-BD9B-DA2C031C9706}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPortal.Client", "src\Client\TourPortal.Client\TourPortal.Client.csproj", "{66DA097B-37F0-4D55-BD9B-DA2C031C9706}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
