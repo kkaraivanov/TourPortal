@@ -1,12 +1,24 @@
 ﻿@page "/"
 
-<AuthorizeView>
+<AuthorizeView Roles = "User">
     <Authorized>
         <h1 class="text-center">Hello</h1>
         <br>
-        <p>Welcom to authorized zone</p>
+        <p>Welcom to authorized User zone</p>
         <br/>
     </Authorized>
+</AuthorizeView>
+
+<AuthorizeView Policy = "IsAdministrator">
+    <Authorized>
+        <h1 class="text-center">Hello</h1>
+        <br>
+        <p>Welcom to authorized Administrator zone</p>
+        <br/>
+    </Authorized>
+</AuthorizeView>
+
+<AuthorizeView>
     <NotAuthorized>
         <h1>Hello, world!</h1>
 
@@ -15,3 +27,8 @@
         <SurveyPrompt Title="How is Blazor working for you?"/>
     </NotAuthorized>
 </AuthorizeView>
+
+@code
+{
+    
+}

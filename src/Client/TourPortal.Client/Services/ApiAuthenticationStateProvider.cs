@@ -38,14 +38,11 @@
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(getSavedToken), ApplicationConstants.AuthenticationTokenType)));
         }
 
-        public void SetUserAsAuthenticated(string email)
-        {
-            var user = new ClaimsPrincipal(
-                new ClaimsIdentity(
-                    new[] { new Claim(ClaimTypes.Name, email) }, 
-                    ApplicationConstants.IsAuthenticationString));
+        public void SetUserAsAuthenticated(string token)
+        { 
+            var user = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt"));
             var state = Task.FromResult(new AuthenticationState(user));
-
+            
             NotifyAuthenticationStateChanged(state);
         }
 

@@ -33,42 +33,37 @@
 
         public async Task<ApplicationResponse<LoginResponseModel>> Login(LoginModel loginModel)
         {
-            try
+            var response = await _httpClient.PostAsync(ApplicationConstants.LoginUrl,
+                new FormUrlEncodedContent(
+                    new List<KeyValuePair<string, string>>
+                    {
+                        new KeyValuePair<string, string>("email", loginModel.Email),
+                        new KeyValuePair<string, string>("password", loginModel.Password),
+                    }));
+
+            var request = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
             {
-                var response = await _httpClient.PostAsync(ApplicationConstants.LoginUrl,
-                    new FormUrlEncodedContent(
-                        new List<KeyValuePair<string, string>>
-                        {
-                            new KeyValuePair<string, string>("email", loginModel.Email),
-                            new KeyValuePair<string, string>("password", loginModel.Password),
-                        }));
-
-                var loginResult = JsonSerializer
-                    .Deserialize<LoginResponseModel>(await response.Content.ReadAsStringAsync(), 
-                        new JsonSerializerOptions
-                        {
-                            PropertyNameCaseInsensitive = true
-                        });
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    return new ApplicationResponse<LoginResponseModel>(new ApplicationError("Model", "Response is not success."));
-                }
-
-                await _localStorage.SetItemAsync(ApplicationConstants.AuthenticatedTokenString, loginResult.access_token);
-
-                // TODO: if have the error, can make ((ApiAuthenticationStateProvider)_authenticationStateProvider).SetUserAsAuthenticated(loginModel.Email);
-                (_authenticationStateProvider as ApiAuthenticationStateProvider)?.SetUserAsAuthenticated(loginModel.Email);
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                    ApplicationConstants.TokenType, 
-                    loginResult.access_token);
-
-                return new ApplicationResponse<LoginResponseModel>(loginResult);
+                return new ApplicationResponse<LoginResponseModel>(new ApplicationError("Login failed", request));
             }
-            catch (Exception e)
-            {
-                return new ApplicationResponse<LoginResponseModel>(new ApplicationError("Exception for login", e.Message));
-            }
+
+            var loginResult = JsonSerializer
+                .Deserialize<LoginResponseModel>(await response.Content.ReadAsStringAsync(),
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+            
+            await _localStorage.SetItemAsync(ApplicationConstants.AuthenticatedTokenString, loginResult.access_token);
+
+            // TODO: if have the error, can make ((ApiAuthenticationStateProvider)_authenticationStateProvider).SetUserAsAuthenticated(loginModel.Email);
+            (_authenticationStateProvider as ApiAuthenticationStateProvider)?.SetUserAsAuthenticated(loginResult.access_token);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                ApplicationConstants.TokenType,
+                loginResult.access_token);
+
+            return new ApplicationResponse<LoginResponseModel>(loginResult);
         }
 
         public async Task Logout()

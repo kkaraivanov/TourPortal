@@ -7,6 +7,9 @@ namespace TourPortal.Client
     using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.DependencyInjection;
+
+    using Infrastructure.Global.Types;
+    using Infrastructure.Services;
     using Services;
 
     public class Program
@@ -15,11 +18,18 @@ namespace TourPortal.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-            
+
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services
                 .AddBlazoredLocalStorage()
-                .AddAuthorizationCore()
+                .AddAuthorizationCore(config =>
+                {
+                    config.AddPolicy(Security.Policiy.IsAdministrator, Policies.IsAdministratorPolicy());
+                    config.AddPolicy(Security.Policiy.IsUser, Policies.IsUserPolicy());
+                    config.AddPolicy(Security.Policiy.IsOwner, Policies.IsOwnerPolicy());
+                });
+
+            builder.Services
                 .AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>()
                 .AddScoped<IAuthenticationService, AuthenticationService>();
 

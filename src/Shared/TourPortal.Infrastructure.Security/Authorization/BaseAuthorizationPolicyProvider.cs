@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
-
-namespace TourPortal.Infrastructure.Security.Authorization
+﻿namespace TourPortal.Infrastructure.Security.Authorization
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.Extensions.Options;
 
     using Global.Types;
+    using Services;
 
     public class BaseAuthorizationPolicyProvider : DefaultAuthorizationPolicyProvider
     {
@@ -38,23 +37,11 @@ namespace TourPortal.Infrastructure.Security.Authorization
         private async Task<(AuthorizationPolicy policy, bool isCreated)> AuthorizationBuilder(string policyName) =>
             policyName switch
             {
-                Security.Policiy.IsAdministrator => (new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .RequireRole(Security.Role.Administrator)
-                    .Build(), true),
+                Security.Policiy.IsAdministrator => (Policies.IsAdministratorPolicy(), true),
 
-                Security.Policiy.IsUser => (new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .RequireRole(new string[] { Security.Role.User, Security.Role.Owner, Security.Role.Employe })
-                    .Build(), true),
+                Security.Policiy.IsUser => (Policies.IsUserPolicy(), true),
 
-                Security.Policiy.IsOwner => (new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .RequireAssertion(ctx => 
-                        ctx.User.HasClaim(claim => claim.Type == "IsUser") || 
-                        (ctx.User.IsInRole(Security.Role.Owner) || 
-                        ctx.User.IsInRole(Security.Role.Employe)))
-                    .Build(), true)
+                Security.Policiy.IsOwner => (Policies.IsOwnerPolicy(), true)
             };
 
     }

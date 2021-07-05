@@ -29,6 +29,7 @@
                 return;
             }
 
+            ;
             var token = await BuildToken(principal, options);
             var response = new
             {

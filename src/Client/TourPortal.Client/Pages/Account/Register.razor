@@ -1,7 +1,54 @@
-﻿@page "/account.register"
+﻿@page "/account/register"
+@using TourPortal.Infrastructure.Models.Authentication
 
 <h3>Register</h3>
+<AuthorizeView>
+    <Authorized>
+        @GoTOhome()
+    </Authorized>
+    <NotAuthorized>
+        <EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="register" Context="RegisterForm">
+            <DataAnnotationsValidator />
+            <label for="inputUsername" class="sr-only">User Name</label>
+            <InputText id="inputUsername" class="form-control" placeholder="Username" autofocus @bind-Value="@register.UserName" />
+            <ValidationMessage For="@(() => register.UserName)" />
+    
+            <label for="inputUsername" class="sr-only">Email</label>
+            <InputText id="inputEmail" class="form-control" placeholder="Email" autofocus @bind-Value="@register.Email" />
+            <ValidationMessage For="@(() => register.Email)" />
+
+            <label for="inputPassword" class="sr-only">Password</label>
+            <InputText type="password" id="inputPassword" class="form-control" placeholder="Password" @bind-Value="@register.Password" />
+            <ValidationMessage For="@(() => register.Password)" />
+
+            <label for="inputPasswordConfirm" class="sr-only">Password Confirmation</label>
+            <InputText type="password" id="inputPasswordConfirm" class="form-control" placeholder="Password Confirmation" @bind-Value="@register.ConfirmPassword" />
+            <ValidationMessage For="@(() => register.ConfirmPassword)" />
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Create account</button>
+            <label class="text-danger">@Error</label>
+            <NavLink href="login">
+                <h6 class="font-weight-normal text-center">Already have an account? Click here to login</h6>
+            </NavLink>
+        </EditForm>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
+    private RegisterModel register = new RegisterModel();
+    private bool ShowErrors;
+    private string Error = "";
 
+    private async Task OnSubmit()
+    {
+        ShowErrors = false;
+        var result = await AuthenticationService.Register(register);
+
+
+    }
+
+    private async Task GoTOhome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
 }
