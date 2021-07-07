@@ -1,5 +1,42 @@
-﻿
-
-@code {
-    
-}
+﻿<div class="main_nav_menu">
+    <div class="fk_width">
+        <div class="custom_menu-btn">
+            <button onclick="openNav()">
+                <span class="s-1"> </span>
+                <span class="s-2"> </span>
+                <span class="s-3"> </span>
+            </button>
+        </div>
+        <div id="myNav" class="overlay">
+            <div class="overlay-content">
+                <AuthorizeView>
+                    <NotAuthorized>
+                        <DisplayNotAuthorized />
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
+        </div>
+    </div>
+    <a class="navbar-brand" href="/">
+        <span>
+            Tour Portal
+        </span>
+    </a>
+    <div class="user_option">
+        <AuthorizeView>
+            <NotAuthorized>
+                <NavLink class="nav-link" href="/account/login">
+                    <span aria-hidden="true"></span> Вход
+                </NavLink>
+            </NotAuthorized>
+            <Authorized>
+                <NavLink class="nav-link" href="/account/logout">
+                    <span aria-hidden="true"></span> Изход
+                </NavLink>
+            </Authorized>
+        </AuthorizeView>
+        <form class="form-inline ">
+            <button class="btn  nav_search-btn" type="submit"></button>
+        </form>
+    </div>
+</div>

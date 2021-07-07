@@ -1,13 +1,25 @@
 ﻿@inherits LayoutComponentBase
+<RadzenDialog />
+<RadzenNotification />
+<RadzenContextMenu />
+<RadzenTooltip />
+
 
 <div>
-    <div class="main">
-        <div class="top-row px-12">
-            <NavMenu/>
-        </div>
-
-        <div class="content px-4">
+    <div class="hero_area">
+        <header class="header_section">
+            <SiteHeader />
+        </header>
+        <div>
             @Body
         </div>
     </div>
+    <SiteInfo />
 </div>
+@code
+{
+	protected override async Task OnInitializedAsync()
+	{
+
+	}
+}

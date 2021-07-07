@@ -10,6 +10,7 @@ namespace TourPortal.Client
 
     using Infrastructure.Global.Types;
     using Infrastructure.Services;
+    using Radzen;
     using Services;
 
     public class Program
@@ -19,7 +20,8 @@ namespace TourPortal.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services
+                .AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services
                 .AddBlazoredLocalStorage()
                 .AddAuthorizationCore(config =>
@@ -33,8 +35,14 @@ namespace TourPortal.Client
                 .AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>()
                 .AddScoped<IAuthenticationService, AuthenticationService>();
 
-            builder.Services.AddHttpClient<IAuthenticationService, AuthenticationService>(x =>
-            x.BaseAddress = new Uri(builder.Configuration["apiUrl"]));
+            builder.Services
+                .AddHttpClient<IAuthenticationService, AuthenticationService>(x =>
+                    x.BaseAddress = new Uri(builder.Configuration["apiUrl"]));
+
+            builder.Services.AddScoped<DialogService>();
+            builder.Services.AddScoped<NotificationService>();
+            builder.Services.AddScoped<TooltipService>();
+            builder.Services.AddScoped<ContextMenuService>();
 
             await builder.Build().RunAsync();
         }

@@ -6,20 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Tour Portal</title>
     <base href="/" />
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/default-base.css">
+
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
     <link href="css/app.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/responsive.css" rel="stylesheet" />
 </head>
 
 <body>
     <div id="app">Loading...</div>
 
-    <div class="footer text-center rol-12">Tour Portal by 2021</div>
+    <footer class="footer_section" style="bottom: 0">
+        <div class="container">
+            <p>
+                &copy; <span id="displayYear">
+                    <script type="text/javascript">
+                        document.write(new Date().getFullYear());
+                    </script>
+                </span> All Rights Reserved. Tour Portal
+            </p>
+        </div>
+    </footer>
     <div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
 
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="js/custom.js"></script>
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
 

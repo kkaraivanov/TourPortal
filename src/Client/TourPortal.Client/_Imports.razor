@@ -9,10 +9,15 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.JSInterop
 
+@using Radzen
+@using Radzen.Blazor
+
 @using TourPortal.Client
 @using TourPortal.Client.Services
 @using TourPortal.Client.Shared
+@using TourPortal.Client.Shared.DisplayMenu
 
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
+@inject IJSRuntime JsRuntime

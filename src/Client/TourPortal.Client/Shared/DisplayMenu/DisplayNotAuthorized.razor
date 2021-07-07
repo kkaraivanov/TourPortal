@@ -1,0 +1,18 @@
+﻿<NavLink class="nav-link" href="/" Match="NavLinkMatch.All" @onclick="CloseNav">
+    <span aria-hidden="true"></span> Начало
+</NavLink>
+<NavLink class="nav-link" href="/about" @onclick="CloseNav">
+    <span aria-hidden="true"></span> За мен
+</NavLink>
+<NavLink class="nav-link" href="/contact" @onclick="CloseNav">
+    <span aria-hidden="true"></span> Контакти
+</NavLink>
+
+@code{
+
+    private async Task CloseNav()
+    {
+        await JsRuntime.InvokeVoidAsync("openNav","");
+    }
+
+}

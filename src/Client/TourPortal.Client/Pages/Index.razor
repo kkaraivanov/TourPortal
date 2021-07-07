@@ -1,5 +1,11 @@
 ﻿@page "/"
 
+<section class=" slider_section position-relative">
+    <div class="container-fluid">
+        <SiteSlider />
+    </div>
+</section>
+
 <AuthorizeView Roles = "User">
     <Authorized>
         <h1 class="text-center">Hello</h1>
