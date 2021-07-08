@@ -6,41 +6,29 @@
     </div>
 </section>
 
-<AuthorizeView Roles = "User">
-    <Authorized>
-        <h1 class="text-center">Hello</h1>
-        <br>
-        <p>Welcom to authorized User zone</p>
-        <br/>
-    </Authorized>
-</AuthorizeView>
-
-<AuthorizeView Policy = "IsAdministrator">
-    <Authorized>
-        <h1 class="text-center">Hello</h1>
-        <br>
-        <p>Welcom to authorized Administrator with Policy zone</p>
-        <br/>
-    </Authorized>
-</AuthorizeView>
-<AuthorizeView Roles = "Administrator">
-    <Authorized>
-        <h1 class="text-center">Hello</h1>
-        <br>
-        <p>Welcom to authorized Administrator with Roles zone</p>
-        <br/>
-    </Authorized>
-</AuthorizeView>
-
 <AuthorizeView>
     <NotAuthorized>
-        <h1>Hello, world!</h1>
+        <section class="about_section layout_padding-bottom">
+            <DubaiViewComponent />
+        </section>
+        <section class="client_section layout_padding">
+            <AboutMe />
+        </section>
 
-        Welcome to your new app.
-
-        <SurveyPrompt Title="How is Blazor working for you?"/>
     </NotAuthorized>
 </AuthorizeView>
+<AuthorizeView Policy = "IsAdministrator">
+    <Authorized>
+        
+    </Authorized>
+</AuthorizeView>
+<AuthorizeView Policy = "IsUser">
+    <Authorized>
+        
+    </Authorized>
+</AuthorizeView>
+
+<SiteInfo />
 
 @code
 {

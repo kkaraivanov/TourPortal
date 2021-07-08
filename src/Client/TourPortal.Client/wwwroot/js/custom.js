@@ -1,3 +1,8 @@
+document.body.onload = function () {
+    var textcontrol = document.getElementById("app");
+    textcontrol.style.height = (window.HEIGHT) + 'px';
+}
+
 // navigation  menu js
 function openNav() {
     document.getElementById("myNav").classList.toggle("menu_width");

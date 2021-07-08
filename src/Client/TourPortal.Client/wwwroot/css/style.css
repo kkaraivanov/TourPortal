@@ -959,6 +959,7 @@ a:focus {
         -webkit-box-align: center;
         -ms-flex-align: center;
         align-items: center;
+        justify-content: space-around;
     }
 
     .info_section .info_logo {
@@ -1061,6 +1062,8 @@ a:focus {
 .footer_section {
     color: #ffffff;
     text-align: center;
+    position: static;
+    bottom: 0;
 }
 
     .footer_section p {
