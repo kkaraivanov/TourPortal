@@ -20,4 +20,8 @@
     <ProjectReference Include="..\..\Shared\TourPortal.Infrastructure\TourPortal.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\User\" />
+  </ItemGroup>
+
 </Project>

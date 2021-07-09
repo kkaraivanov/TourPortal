@@ -1,9 +1,16 @@
 ﻿@inherits LayoutComponentBase
 @layout MainLayout
 
-<header class="header_section">
-    <SiteHeader />
-</header>
-<div>
-    @Body
+<link href="css/style.css" rel="stylesheet" />
+<link href="css/responsive.css" rel="stylesheet" />
+
+<div style="padding-bottom: 100px;">
+    <div class="hero_area">
+        <header class="header_section">
+            <SiteHeader />
+        </header>
+        <div>
+            @Body
+        </div>
+    </div>
 </div>
