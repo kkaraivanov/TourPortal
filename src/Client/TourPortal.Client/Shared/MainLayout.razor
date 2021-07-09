@@ -4,22 +4,22 @@
 <RadzenContextMenu />
 <RadzenTooltip />
 
-
-<div style="padding-bottom: 100px;">
-	<div class="hero_area">
-		<header class="header_section">
-			<SiteHeader />
-		</header>
-		<div>
-			@Body
-		</div>
-	</div>
-</div>
-
-@code
-{
-	protected override async Task OnInitializedAsync()
-	{
-
-	}
-}
+<AuthorizeView>
+    <NotAuthorized>
+        <div style="padding-bottom: 100px;">
+            <div class="hero_area">
+                @*<header class="header_section">
+                    <SiteHeader />
+                </header>*@
+                <div>
+                    @Body
+                </div>
+            </div>
+        </div>
+    </NotAuthorized>
+    <Authorized>
+        <div>
+            @Body
+        </div>
+    </Authorized>
+</AuthorizeView>

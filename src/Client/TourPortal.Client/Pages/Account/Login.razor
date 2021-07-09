@@ -1,66 +1,66 @@
-﻿@page "/account/login"
-@using TourPortal.Infrastructure.Shared.Models.Authentication
-
-<h3>Login</h3>
-<AuthorizeView>
-    <Authorized>
-        @GoTOhome()
-    </Authorized>
-    <NotAuthorized>
-        @if (ShowErrors)
-        {
-            <div class="alert alert-danger" role="alert">
-                <p>@Error</p>
-            </div>
-        }
-
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Please enter your details</h5>
-                <EditForm Model="loginModel" OnValidSubmit="HandleLogin" Context="LoginForm">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
-
+﻿<div id="loginModal" class="panel-login">
+    <div class="panel-body">
+        <h3 class="text-center heading-text">Login</h3>
+        <EditForm Model="loginModel" OnValidSubmit="HandleLogin" Context="LoginForm" style="height: 400px">
+            <DataAnnotationsValidator/>
+            <div class="d-flex flex-column justify-content-between h-100">
+                <div>
                     <div class="form-group">
-                        <label for="email">Email address</label>
-                        <InputText Id="email" Class="form-control" @bind-Value="@loginModel.Email" />
-                        <ValidationMessage For="@(() => loginModel.Email)" />
+                        <label for="username"></label>
+                        <InputText Id="username" type="text" Class="form-control" tabindex="1" placeholder="Email address" @bind-Value="@loginModel.Email"/>
+                        <ValidationMessage For="@(() => loginModel.Email)"/>
                     </div>
                     <div class="form-group">
-                        <label for="password">Password</label>
-                        <InputText Id="password" type="password" Class="form-control" @bind-Value="@loginModel.Password" />
-                        <ValidationMessage For="@(() => loginModel.Password)" />
+                        <label for="password"></label>
+                        <InputText Id="password" type="password" Class="form-control" tabindex="2" placeholder="Password" @bind-Value="@loginModel.Password"/>
+                        <ValidationMessage For="@(() => loginModel.Password)"/>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </EditForm>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6 offset-sm-3">
+                            <button type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login">Влез</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </NotAuthorized>
-</AuthorizeView>
+        </EditForm>
+    </div>
+</div>
+
+@if (ShowErrors)
+{
+	<div class="alert alert-danger" role="alert">
+	 <p>@Error</p>
+	</div>
+}
 
 @code {
-    private LoginModel loginModel = new LoginModel();
-    private bool ShowErrors;
-    private string Error = "";
+	[CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
 
-    private async Task HandleLogin()
-    {
-        ShowErrors = false;
-        var result = await AuthenticationService.Login(loginModel);
-        
-        if (result.IsOk)
-        {
-            NavigationManager.NavigateTo("/");
-        }
-        else
-        {
-            Error = string.Join(Environment.NewLine, result.Errors);
-            ShowErrors = true;
-        }
-    }
+	private LoginModel loginModel = new LoginModel();
+	private bool ShowErrors;
+	private string Error = "";
 
-    private async Task GoTOhome()
-    {
-        NavigationManager.NavigateTo("/");
-    }
+	private async Task HandleLogin()
+	{
+		ShowErrors = false;
+		var result = await AuthenticationService.Login(loginModel);
+
+		if (result.IsOk)
+		{
+			await Close();
+			NavigationManager.NavigateTo("/");
+		}
+		else
+		{
+			Error = string.Join(Environment.NewLine, result.Errors);
+			ShowErrors = true;
+		}
+	}
+
+	private async Task Close()
+	{
+	    await BlazoredModal.CloseAsync();
+	}
 }

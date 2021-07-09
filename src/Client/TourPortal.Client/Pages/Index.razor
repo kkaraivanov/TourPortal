@@ -14,23 +14,27 @@
         <section class="client_section layout_padding">
             <AboutMe />
         </section>
-
+        
+        <SiteInfo />
     </NotAuthorized>
 </AuthorizeView>
+
 <AuthorizeView Policy = "IsAdministrator">
     <Authorized>
-        
+        @GoToAdministrator()
     </Authorized>
 </AuthorizeView>
+
 <AuthorizeView Policy = "IsUser">
     <Authorized>
         
     </Authorized>
 </AuthorizeView>
 
-<SiteInfo />
-
 @code
 {
-    
+    private async Task GoToAdministrator()
+    {
+        NavigationManager.NavigateTo("administrator/");
+    }
 }

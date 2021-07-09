@@ -4,6 +4,7 @@ namespace TourPortal.Client
     using System.Net.Http;
     using System.Threading.Tasks;
     using Blazored.LocalStorage;
+    using Blazored.Modal;
     using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.DependencyInjection;
@@ -39,10 +40,12 @@ namespace TourPortal.Client
                 .AddHttpClient<IAuthenticationService, AuthenticationService>(x =>
                     x.BaseAddress = new Uri(builder.Configuration["apiUrl"]));
 
-            builder.Services.AddScoped<DialogService>();
-            builder.Services.AddScoped<NotificationService>();
-            builder.Services.AddScoped<TooltipService>();
-            builder.Services.AddScoped<ContextMenuService>();
+            builder.Services
+                .AddScoped<DialogService>()
+                .AddScoped<NotificationService>()
+                .AddScoped<TooltipService>()
+                .AddScoped<ContextMenuService>()
+                .AddBlazoredModal();
 
             await builder.Build().RunAsync();
         }

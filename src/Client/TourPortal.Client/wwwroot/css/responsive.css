@@ -17,6 +17,16 @@
 
 @media (max-width: 1120px) {}
 
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .or {
+        left: 204px;
+    }
+
+    .panel-login .panel-body form ul li {
+        margin: 5px 5px;
+    }
+}
+
 @media (max-width: 992px) {
     .main_nav_menu {
         justify-content: space-between;
@@ -100,6 +110,13 @@
 
 }
 
+@media (min-width: 768px) and (max-width: 991px) {
+    .or {
+        top: 14px;
+        left: 143px;
+    }
+}
+
 @media (max-width: 856px) {
 
     .client_section .carousel-control-prev,
@@ -181,6 +198,11 @@
     .info_section .heading_container {
         align-items: center;
     }
+
+    .or {
+        top: 14px;
+        left: 234px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -208,6 +230,26 @@
 
     .blog_section .box {
         border-radius: 25px;
+    }
+}
+
+@media only screen and (min-width: 280px) and (max-width: 575px) {
+    .logo-top a img {
+        max-width: 140px;
+    }
+
+    .or {
+        top: 34px;
+        right: 5px;
+        left: auto;
+    }
+
+    .panel-login .panel-body form ul li {
+        margin: 5px 5px;
+    }
+
+    .che-box .checkbox-in {
+        font-size: 12px;
     }
 }
 
