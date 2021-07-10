@@ -1,54 +1,75 @@
-﻿@page "/account/register"
-@using TourPortal.Infrastructure.Shared.Models.Authentication
+﻿@inject IModalService ModalService
 
-<h3>Register</h3>
-<AuthorizeView>
-    <Authorized>
-        @GoTOhome()
-    </Authorized>
-    <NotAuthorized>
-        <EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="register" Context="RegisterForm">
-            <DataAnnotationsValidator />
-            <label for="inputUsername" class="sr-only">User Name</label>
-            <InputText id="inputUsername" class="form-control" placeholder="Username" autofocus @bind-Value="@register.UserName" />
-            <ValidationMessage For="@(() => register.UserName)" />
-    
-            <label for="inputUsername" class="sr-only">Email</label>
-            <InputText id="inputEmail" class="form-control" placeholder="Email" autofocus @bind-Value="@register.Email" />
-            <ValidationMessage For="@(() => register.Email)" />
+<div id="loginModal" class="modal-form-panel">
+	<div class="panel-body">
+		<h3 class="text-center heading-text">Вход</h3>
+		<EditForm OnValidSubmit="OnSubmit" Model="register" Context="RegisterForm" style="height: 400px">
+			<DataAnnotationsValidator />
+			<div class="d-flex flex-column justify-content-between h-100">
+				<div>
+					<div class="form-group">
+						<label for="username" class="sr-only">User Name</label>
+						<InputText id="username" type="text" class="form-control" placeholder="Username" autofocus @bind-Value="@register.UserName" />
+						<ValidationMessage For="@(() => register.UserName)" />
+					</div>
+					<div class="form-group">
+						<label for="email" class="sr-only">Email</label>
+						<InputText id="email" type="text" class="form-control" placeholder="Email" autofocus @bind-Value="@register.Email" />
+						<ValidationMessage For="@(() => register.Email)" />
+					</div>
 
-            <label for="inputPassword" class="sr-only">Password</label>
-            <InputText type="password" id="inputPassword" class="form-control" placeholder="Password" @bind-Value="@register.Password" />
-            <ValidationMessage For="@(() => register.Password)" />
+					<div class="form-group">
+						<label for="password" class="sr-only">Password</label>
+						<InputText type="password" id="password" class="form-control" placeholder="Password" @bind-Value="@register.Password" />
+						<ValidationMessage For="@(() => register.Password)" />
+					</div>
 
-            <label for="inputPasswordConfirm" class="sr-only">Password Confirmation</label>
-            <InputText type="password" id="inputPasswordConfirm" class="form-control" placeholder="Password Confirmation" @bind-Value="@register.ConfirmPassword" />
-            <ValidationMessage For="@(() => register.ConfirmPassword)" />
-
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Create account</button>
-            <label class="text-danger">@Error</label>
-            <NavLink href="login">
-                <h6 class="font-weight-normal text-center">Already have an account? Click here to login</h6>
-            </NavLink>
-        </EditForm>
-    </NotAuthorized>
-</AuthorizeView>
+					<div class="form-group">
+						<label for="passwordConfirm" class="sr-only">Password Confirmation</label>
+						<InputText type="password" id="passwordConfirm" class="form-control" placeholder="Password Confirmation" @bind-Value="@register.ConfirmPassword" />
+						<ValidationMessage For="@(() => register.ConfirmPassword)" />
+					</div>
+				</div>
+				<div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-sm-6 offset-sm-3">
+								<button class="form-control btn btn-login" type="submit">Регистриране</button>
+							</div>
+						</div>
+					</div>
+					<label class="text-danger">@Error</label>
+					<NavLink class="nav-link" href="" @onclick=@(() => OpenLoginForm())>
+						<span class="text-center" aria-hidden="true"></span>
+						Вече имате акаунт? Щракнете тук, за да влезете
+					</NavLink>
+				</div>
+			</div>
+		</EditForm>
+	</div>
+</div>
 
 @code {
-    private RegisterModel register = new RegisterModel();
-    private bool ShowErrors;
-    private string Error = "";
+	[CascadingParameter] 
+	BlazoredModalInstance ModalForm { get; set; }
+	[Parameter]
+	public SiteSlider saitSlider {get; set; }
 
-    private async Task OnSubmit()
-    {
-        ShowErrors = false;
-        var result = await AuthenticationService.Register(register);
+    private double duration = 1.0;
+	private RegisterModel register = new RegisterModel();
+	private bool ShowErrors;
+	private string Error = "";
 
+	private async Task OnSubmit()
+	{
+		ShowErrors = false;
+		//var result = await AuthenticationService.Register(register);
+	    // TODO: set if result
+	    await ModalForm.CloseAsync();
+	}
 
-    }
-
-    private async Task GoTOhome()
-    {
-        NavigationManager.NavigateTo("/");
-    }
+	private async Task OpenLoginForm()
+	{
+	    saitSlider.ShowForm("login");
+	}
 }

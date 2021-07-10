@@ -67,7 +67,8 @@
 
 @code
 {
-	[CascadingParameter] public IModalService Modal { get; set; }
+	[CascadingParameter] 
+	public IModalService ModalForm { get; set; }
 	private double duration = 1.0;
 
 	public void ShowForm(string formName)
@@ -76,18 +77,18 @@
 		{
 			Animation = ModalAnimation.FadeInOut(duration),
 			HideCloseButton = true,
-			Class = "panel-login",
+			Class = "modal-form-panel",
 			HideHeader = true
 		};
 
 		switch (formName)
 		{
 			case "login":
-				Modal.Show<Login>("", options);
+				ModalForm.Show<Login>("", options);
 				return;
 
 			case "register":
-				Modal.Show<Register>("Register", options);
+			    ModalForm.Show<Register>("Register", options);
 				return;
 		}
 	}

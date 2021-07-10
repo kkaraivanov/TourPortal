@@ -15,23 +15,13 @@
     vertical-align: middle;
 }
 
-#particles-js .particles-js-canvas-el {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    left: 0px;
-    top: 0px;
-}
-
-.panel-login {
+.modal-form-panel {
     position: relative;
     z-index: 102;
-    border: 1px solid #755c9e;
+    border: 1px solid #fad932;
     border-radius: 15px;
-    -webkit-box-shadow: 0px 2px 3px 0px rgba(255,255,255,0.2);
-    -moz-box-shadow: 0px 2px 3px 0px rgba(255,255,255,0.2);
-    box-shadow: 0px 2px 3px 0px rgba(255,255,255,0.2);
+    -webkit-box-shadow: inset 0px -5px 25px 12px rgba(250,217,50,0.49);
+    box-shadow: inset 0px -5px 25px 12px rgba(250,217,50,0.49);
     min-width: 400px;
 }
 
@@ -42,21 +32,21 @@
     border-top-right-radius: 3px;
 }
 
-.panel-login > .panel-heading {
+.modal-form-panel > .panel-heading {
     color: #00415d;
-    background: rgba(255,255,255,0.5);
-    border-color: #755c9e;
+    background: rgba(0,0,0,0.5);
+    border-color: #fad932;
     text-align: center;
     position: relative;
     border-radius: 0;
 }
 
-    .panel-login > .panel-heading a {
+    .modal-form-panel > .panel-heading a {
         text-decoration: none;
         color: #ffffff;
         font-weight: bold;
         font-size: 15px;
-        background: #755c9e;
+        background: #fad932;
         padding: 10px 16px;
         border-radius: 50px;
         display: block;
@@ -65,22 +55,22 @@
         transition: all 0.1s linear;
     }
 
-        .panel-login > .panel-heading a.active {
+        .modal-form-panel > .panel-heading a.active {
             color: #222222;
             background: #ffffff;
             font-size: 15px;
         }
 
-.panel-login .panel-body {
+.modal-form-panel .panel-body {
     padding: 15px;
-    background: rgba(255,255,255,0.8);
+    background: rgba(0,0,0,0.8);
     border-radius: 15px;
     min-height: 400px;
 }
 
-.panel-login input[type="text"], .panel-login input[type="email"], .panel-login input[type="password"] {
+.modal-form-panel input[type="text"], .modal-form-panel input[type="email"], .modal-form-panel input[type="password"] {
     padding: 16px 20px 16px 50px;
-    border: 1px solid #755c9e;
+    border: 1px solid #fad932;
     font-size: 16px;
     border-radius: 50px;
     -webkit-transition: all 0.1s linear;
@@ -88,23 +78,23 @@
     transition: all 0.1s linear;
 }
 
-.panel-login input:hover,
-.panel-login input:focus {
+.modal-form-panel input:hover,
+.modal-form-panel input:focus {
     outline: none;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
-    border-color: #755c9e;
+    border-color: #fad932;
 }
 
-.panel-login .form-group.addcolor .icon-lp {
+.modal-form-panel .form-group.addcolor .icon-lp {
     color: #755c9e;
 }
 
 .btn-login {
-    background-color: #755c9e;
+    background-color: #fad932;
     outline: none;
-    color: #fff;
+    color: #000000;
     font-size: 14px;
     height: auto;
     font-weight: normal;
@@ -112,13 +102,15 @@
     text-transform: uppercase;
     border-color: #755c9e;
     border-radius: 50px;
+    -webkit-box-shadow: inset 0px -5px 25px 12px rgba(117,92,158,0.49);
+    box-shadow: inset 0px -5px 25px 12px rgba(117,92,158,0.49);
 }
 
     .btn-login:hover,
     .btn-login:focus {
-        color: #fff;
-        background-color: #222222;
-        border-color: #222222;
+        color: #000000;
+        background-color: #cbb962;
+        border-color: #cbb962;
     }
 
 .forgot-password {
@@ -133,9 +125,9 @@
     }
 
 .btn-register {
-    background-color: #755c9e;
+    background-color: #fad932;
     outline: none;
-    color: #fff;
+    color: #000000;
     font-size: 14px;
     height: auto;
     font-weight: normal;
@@ -143,13 +135,15 @@
     text-transform: uppercase;
     border-color: #755c9e;
     border-radius: 50px;
+    -webkit-box-shadow: inset 0px -5px 25px 12px rgba(117,92,158,0.49);
+    box-shadow: inset 0px -5px 25px 12px rgba(117,92,158,0.49);
 }
 
     .btn-register:hover,
     .btn-register:focus {
-        color: #fff;
-        background-color: #222222;
-        border-color: #222222;
+        color: #000000;
+        background-color: #cbb962;
+        border-color: #cbb962;
     }
 
 form .form-group {
@@ -178,18 +172,18 @@ form .form-group {
     text-align: center;
 }
 
-.panel-login .panel-body form ul {
+.modal-form-panel .panel-body form ul {
     display: block;
     text-align: center;
     margin: 30px 0px;
 }
 
-    .panel-login .panel-body form ul li {
+    .modal-form-panel .panel-body form ul li {
         display: inline-block;
         margin: 0px 5px;
     }
 
-        .panel-login .panel-body form ul li .fb {
+        .modal-form-panel .panel-body form ul li .fb {
             background: #3b5998;
             display: block;
             margin: 0 auto;
@@ -205,15 +199,15 @@ form .form-group {
             transition: all 150ms ease-out;
         }
 
-            .panel-login .panel-body form ul li .fb i {
+            .modal-form-panel .panel-body form ul li .fb i {
                 padding-right: 10px;
             }
 
-            .panel-login .panel-body form ul li .fb:hover {
+            .modal-form-panel .panel-body form ul li .fb:hover {
                 background: #755c9e;
             }
 
-        .panel-login .panel-body form ul li .tw {
+        .modal-form-panel .panel-body form ul li .tw {
             background: #00aced;
             display: block;
             margin: 0 auto;
@@ -229,11 +223,11 @@ form .form-group {
             transition: all 150ms ease-out;
         }
 
-            .panel-login .panel-body form ul li .tw i {
+            .modal-form-panel .panel-body form ul li .tw i {
                 padding-right: 10px;
             }
 
-            .panel-login .panel-body form ul li .tw:hover {
+            .modal-form-panel .panel-body form ul li .tw:hover {
                 background: #755c9e;
             }
 
@@ -306,5 +300,5 @@ form .form-group {
 }
 
 .heading-text {
-    color: #000000;
+    color: #ffffff;
 }

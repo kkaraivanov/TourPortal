@@ -22,7 +22,7 @@
         left: 204px;
     }
 
-    .panel-login .panel-body form ul li {
+    .modal-form-panel .panel-body form ul li {
         margin: 5px 5px;
     }
 }
@@ -244,7 +244,7 @@
         left: auto;
     }
 
-    .panel-login .panel-body form ul li {
+    .modal-form-panel .panel-body form ul li {
         margin: 5px 5px;
     }
 
