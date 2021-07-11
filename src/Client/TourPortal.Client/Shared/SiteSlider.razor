@@ -65,13 +65,14 @@
 	</AuthorizeView>
 </div>
 
+@inject IModalService ModalService
 @code
 {
 	[CascadingParameter] 
 	public IModalService ModalForm { get; set; }
 	private double duration = 1.0;
 
-	public void ShowForm(string formName)
+	public async Task ShowForm(string formName)
 	{
 		var options = new ModalOptions
 		{
@@ -88,8 +89,18 @@
 				return;
 
 			case "register":
-			    ModalForm.Show<Register>("Register", options);
-				return;
+			    var message = ModalForm.Show<Register>("Register", options);
+			    var result = await message.Result;
+
+			    if (!result.Cancelled)
+			    {
+			        if (result.Data != null && result.Data.Equals("07b613fa8fbf"))
+			        {
+			            ModalService.Show<Login>("", options);
+			        }
+			    }
+
+			    return;
 		}
 	}
 }

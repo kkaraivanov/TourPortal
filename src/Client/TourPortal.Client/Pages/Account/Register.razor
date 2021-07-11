@@ -1,6 +1,4 @@
-﻿@inject IModalService ModalService
-
-<div id="loginModal" class="modal-form-panel">
+﻿<div id="loginModal" class="modal-form-panel">
 	<div class="panel-body">
 		<h3 class="text-center heading-text">Вход</h3>
 		<EditForm OnValidSubmit="OnSubmit" Model="register" Context="RegisterForm" style="height: 400px">
@@ -37,12 +35,15 @@
 								<button class="form-control btn btn-login" type="submit">Регистриране</button>
 							</div>
 						</div>
+						<label class="text-danger">@Error</label>
 					</div>
-					<label class="text-danger">@Error</label>
-					<NavLink class="nav-link" href="" @onclick=@(() => OpenLoginForm())>
-						<span class="text-center" aria-hidden="true"></span>
-						Вече имате акаунт? Щракнете тук, за да влезете
-					</NavLink>
+				</div>
+			</div>
+		</EditForm>
+		<EditForm OnValidSubmit="OpenLoginForm" Model="Message" Context="SendMessageForm">@*<InputText type="text" class="form-control" @bind-Value="@Message.Message" />*@
+            <div class="row">
+				<div class="col-12">
+					<button style="border: 0; background-color: transparent; color: white;" type="submit">Вече имате акаунт? Щракнете тук, за да влезете</button>
 				</div>
 			</div>
 		</EditForm>
@@ -50,26 +51,31 @@
 </div>
 
 @code {
-	[CascadingParameter] 
+	[CascadingParameter]
 	BlazoredModalInstance ModalForm { get; set; }
-	[Parameter]
-	public SiteSlider saitSlider {get; set; }
 
-    private double duration = 1.0;
+	private double duration = 1.0;
 	private RegisterModel register = new RegisterModel();
 	private bool ShowErrors;
 	private string Error = "";
+	private SendMessage Message = new SendMessage();
 
 	private async Task OnSubmit()
 	{
 		ShowErrors = false;
 		//var result = await AuthenticationService.Register(register);
-	    // TODO: set if result
-	    await ModalForm.CloseAsync();
+		// TODO: set if result
+		await ModalForm.CloseAsync();
 	}
 
 	private async Task OpenLoginForm()
 	{
-	    saitSlider.ShowForm("login");
+	    Message.Message = "07b613fa8fbf";
+		await ModalForm.CloseAsync(ModalResult.Ok(Message.Message));
+	}
+
+	internal class SendMessage
+	{
+		public string Message { get; set; }
 	}
 }
