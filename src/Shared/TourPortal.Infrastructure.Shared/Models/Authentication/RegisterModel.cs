@@ -13,6 +13,10 @@
         [Display(Name = "Email")]
         public string Email { get; set; }
 
+        [Required]
+        [Display(Name = "Role Name")]
+        public string RoleId { get; set; }
+
         // TODO: can be set required password length in server options
         [Required]
         [StringLength(16, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]

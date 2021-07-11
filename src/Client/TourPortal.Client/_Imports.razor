@@ -20,9 +20,11 @@
 @using TourPortal.Client.Services
 @using TourPortal.Client.Shared
 @using TourPortal.Client.Shared.DisplayMenu
+@using TourPortal.Infrastructure.Services
 @using TourPortal.Infrastructure.Shared.Models.Authentication
 
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 @inject IJSRuntime JsRuntime
+@inject IClientServices ClientServices

@@ -68,8 +68,20 @@
     min-height: 400px;
 }
 
-.modal-form-panel input[type="text"], .modal-form-panel input[type="email"], .modal-form-panel input[type="password"] {
+.modal-form-panel input[type="text"],
+.modal-form-panel input[type="email"],
+.modal-form-panel input[type="password"] {
     padding: 16px 20px 16px 50px;
+    border: 1px solid #fad932;
+    font-size: 16px;
+    border-radius: 50px;
+    -webkit-transition: all 0.1s linear;
+    -moz-transition: all 0.1s linear;
+    transition: all 0.1s linear;
+}
+
+.modal-form-panel select {
+    padding: 0px 20px 0px 45px;
     border: 1px solid #fad932;
     font-size: 16px;
     border-radius: 50px;

@@ -19,7 +19,8 @@
         private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly ILocalStorageService _localStorage;
 
-        public AuthenticationService(HttpClient httpClient,
+        public AuthenticationService(
+            HttpClient httpClient,
             AuthenticationStateProvider authenticationStateProvider,
             ILocalStorageService localStorage)
         {
@@ -37,7 +38,7 @@
                         new KeyValuePair<string, string>("email", loginModel.Email),
                         new KeyValuePair<string, string>("password", loginModel.Password),
                     }));
-
+            ;
             var request = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)

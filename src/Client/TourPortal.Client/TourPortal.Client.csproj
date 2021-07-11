@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\TourPortal.Infrastructure.Shared\TourPortal.Infrastructure.Shared.csproj" />
     <ProjectReference Include="..\..\Shared\TourPortal.Infrastructure\TourPortal.Infrastructure.csproj" />
   </ItemGroup>
 
