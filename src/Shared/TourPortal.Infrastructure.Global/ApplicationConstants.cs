@@ -8,9 +8,6 @@
         public const string IsAuthenticationString = "authUserMail";
         public const string AuthenticatedTokenString = "tour_portal_token";
 
-        public const string LoginUrl = "api/account/login";
-        public const string RegisterUrl = "api/account/register";
-
         public const string DefaultAdministratorName = "admin";
         public const string DefaultAdministratorPassword = "Admin!23";
     }

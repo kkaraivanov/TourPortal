@@ -30,6 +30,7 @@
 
             if (string.IsNullOrWhiteSpace(getSavedToken))
             {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(ApplicationConstants.TokenType, getSavedToken);
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
 

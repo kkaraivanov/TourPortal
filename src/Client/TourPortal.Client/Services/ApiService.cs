@@ -1,5 +1,6 @@
 ﻿namespace TourPortal.Client.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Net.Http.Headers;
@@ -32,7 +33,7 @@
 
         public async Task<ApplicationResponse<LoginResponseModel>> Login(LoginModel loginModel)
         {
-            var response = await _httpClient.PostAsync(ApplicationConstants.LoginUrl,
+            var response = await _httpClient.PostAsync(Global.Routes.Login,
                 new FormUrlEncodedContent(
                     new List<KeyValuePair<string, string>>
                     {
@@ -73,19 +74,26 @@
             _httpClient.DefaultRequestHeaders.Authorization = null;
         }
 
-        public async Task<ApplicationResponse<RegisterResponseModel>> Register(RegisterModel registerModel)
+        public async Task<ApplicationResponse<RegisterResponseModel>> Register(RegisterModel registerModel) =>
+            await Post<RegisterModel, RegisterResponseModel>(Global.Routes.Register, registerModel);
+
+        public async Task<ApplicationResponse<UserRolesRespons>> GetUserRoles() =>
+        await _httpClient.GetFromJsonAsync<ApplicationResponse<UserRolesRespons>>(Global.Routes.GetRoles);
+
+        private async Task<ApplicationResponse<TResponse>> Post<TRequest, TResponse>(string url, TRequest request)
         {
-            var response = await _httpClient.PostAsJsonAsync(ApplicationConstants.RegisterUrl, registerModel);
-            var responseResult = await response.Content.ReadFromJsonAsync<RegisterResponseModel>();
+            (_authenticationStateProvider as ApiAuthenticationStateProvider)?.GetAuthenticationStateAsync();
 
-            return new ApplicationResponse<RegisterResponseModel>(responseResult);
-        }
-
-        public async Task<ApplicationResponse<UserRolesRespons>> GetUserRoles()
-        {
-            var response = await _httpClient.GetFromJsonAsync<ApplicationResponse<UserRolesRespons>>("api/account");
-
-            return response;
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync(url, request);
+                var responseObject = await response.Content.ReadFromJsonAsync<ApplicationResponse<TResponse>>();
+                return responseObject;
+            }
+            catch (Exception ex)
+            {
+                return new ApplicationResponse<TResponse>(new ApplicationError("HTTP Client", ex.Message));
+            }
         }
     }
 }
