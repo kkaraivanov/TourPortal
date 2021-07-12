@@ -1,11 +1,2 @@
 ﻿@page "/account/logout"
 
-@code {
-    protected override async Task OnInitializedAsync()
-    {
-        await ApiService.Logout();
-        StateHasChanged();
-        NavigationManager.NavigateTo("/");
-    }
-
-}
