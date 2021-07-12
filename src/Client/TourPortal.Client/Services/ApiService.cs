@@ -7,19 +7,20 @@
     using System.Text.Json;
     using System.Threading.Tasks;
     using Blazored.LocalStorage;
-
-    using Infrastructure.Global;
-    using Infrastructure.Shared.Models.Authentication;
-    using Infrastructure.Shared.Models.Response;
     using Microsoft.AspNetCore.Components.Authorization;
 
-    class AuthenticationService : IAuthenticationService
+    using Infrastructure.Global;
+    using Infrastructure.Services;
+    using Infrastructure.Shared.Models.Authentication;
+    using Infrastructure.Shared.Models.Response;
+
+    class ApiService : IApiService
     {
         private readonly HttpClient _httpClient;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly ILocalStorageService _localStorage;
 
-        public AuthenticationService(
+        public ApiService(
             HttpClient httpClient,
             AuthenticationStateProvider authenticationStateProvider,
             ILocalStorageService localStorage)
@@ -38,7 +39,7 @@
                         new KeyValuePair<string, string>("email", loginModel.Email),
                         new KeyValuePair<string, string>("password", loginModel.Password),
                     }));
-            ;
+            
             var request = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
@@ -78,6 +79,13 @@
             var responseResult = await response.Content.ReadFromJsonAsync<RegisterResponseModel>();
 
             return new ApplicationResponse<RegisterResponseModel>(responseResult);
+        }
+
+        public async Task<ApplicationResponse<UserRolesRespons>> GetUserRoles()
+        {
+            var response = await _httpClient.GetFromJsonAsync<ApplicationResponse<UserRolesRespons>>("api/account");
+
+            return response;
         }
     }
 }

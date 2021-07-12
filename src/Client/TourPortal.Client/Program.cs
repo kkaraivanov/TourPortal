@@ -34,14 +34,11 @@ namespace TourPortal.Client
 
             builder.Services
                 .AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>()
-                .AddScoped<IAuthenticationService, AuthenticationService>()
+                .AddScoped<IApiService, ApiService>()
                 .AddScoped<IClientServices, ClientServices>();
 
             builder.Services
-                .AddHttpClient<IAuthenticationService, AuthenticationService>(x =>
-                    x.BaseAddress = new Uri(builder.Configuration["apiUrl"]));
-            builder.Services
-                .AddHttpClient<IClientServices, ClientServices>(x =>
+                .AddHttpClient<IApiService, ApiService>(x =>
                     x.BaseAddress = new Uri(builder.Configuration["apiUrl"]));
 
             builder.Services

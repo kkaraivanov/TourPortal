@@ -3,7 +3,7 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await AuthenticationService.Logout();
+        await ApiService.Logout();
         StateHasChanged();
         NavigationManager.NavigateTo("/");
     }

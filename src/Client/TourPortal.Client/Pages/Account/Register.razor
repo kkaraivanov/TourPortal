@@ -18,17 +18,17 @@
 					</div>
 
 					<div class="form-group">
-                        <InputSelect @bind-Value="@register.RoleId" class="form-control">
-                            @if (UserTypes.Count > 0)
-                            {
-                                <option value="" disabled selected hidden>Избери роля</option>
-                                @foreach (var role in UserTypes)
-                                {
-                                    <option class="form-control" value="@role.RoleId">@role.RoleName</option>
-                                }
-                            }
-                        </InputSelect>
-                        <ValidationMessage For="@(() => register.RoleId)" />
+						<InputSelect @bind-Value="@register.RoleId" class="form-control">
+							@if (UserTypes.Count > 0)
+							{
+		   <option value="" disabled selected hidden>Избери роля</option>
+								@foreach (var role in UserTypes)
+								{
+			   <option class="form-control" value="@role.RoleId">@role.RoleName</option>
+								}
+							}
+	  </InputSelect>
+	  <ValidationMessage For="@(() => register.RoleId)" />
 	 </div>
 
 	 <div class="form-group">
@@ -69,26 +69,30 @@
 	[CascadingParameter]
 	BlazoredModalInstance ModalForm { get; set; }
 
-	private double duration = 1.0;
 	private RegisterModel register = new RegisterModel();
 	private List<UserRoleModel> UserTypes = new List<UserRoleModel>();
-	private string roleId;
 	private bool ShowErrors;
 	private string Error = "";
 	private SendMessage Message = new SendMessage();
 
-	private string RoleId { get; set; }
-
 	protected override async Task OnInitializedAsync()
 	{
-		var request = await ClientServices.GetUserRoles();
+		var request = await ApiService.GetUserRoles();
+
 		if (request.IsOk)
 		{
 			UserTypes = request
-			    .ResponseData
-			    .UserRoles
-			    .Where(r => r.RoleName != Security.Role.Administrator && r.RoleName != Security.Role.Employe)
-			    .ToList();
+				.ResponseData
+				.UserRoles
+				.Where(r => r.RoleName != Security.Role.Administrator && r.RoleName != Security.Role.Employe)
+				.Select(x => new UserRoleModel
+				{
+					RoleName = x.RoleName.Contains("User") ?
+						x.RoleName.Replace("User", "Юзър") :
+						x.RoleName.Contains("Owner") ?
+						x.RoleName.Replace("Owner", "Собственик на хотел") : null
+				})
+				.ToList();
 		}
 	}
 

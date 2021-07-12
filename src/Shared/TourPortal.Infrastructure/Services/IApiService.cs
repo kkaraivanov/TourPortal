@@ -1,16 +1,18 @@
-﻿namespace TourPortal.Client.Services
+﻿namespace TourPortal.Infrastructure.Services
 {
     using System.Threading.Tasks;
 
-    using Infrastructure.Shared.Models.Authentication;
-    using Infrastructure.Shared.Models.Response;
+    using Shared.Models.Authentication;
+    using Shared.Models.Response;
 
-    public interface IAuthenticationService
+    public interface IApiService
     {
         Task<ApplicationResponse<LoginResponseModel>> Login(LoginModel loginModel);
 
         Task Logout();
 
         Task<ApplicationResponse<RegisterResponseModel>> Register(RegisterModel registerModel);
+
+        Task<ApplicationResponse<UserRolesRespons>> GetUserRoles();
     }
 }

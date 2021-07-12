@@ -20,8 +20,7 @@
         public async Task<ApplicationResponse<UserRolesRespons>> GetUserRoles()
         {
             var response = await _client.GetFromJsonAsync<ApplicationResponse<UserRolesRespons>>("api/account");
-            //var resposneResult = 
-            ;
+            
             return response;
         }
     }

@@ -45,7 +45,7 @@
 	private async Task HandleLogin()
 	{
 		ShowErrors = false;
-		var result = await AuthenticationService.Login(loginModel);
+		var result = await ApiService.Login(loginModel);
 
 		if (result.IsOk)
 		{
