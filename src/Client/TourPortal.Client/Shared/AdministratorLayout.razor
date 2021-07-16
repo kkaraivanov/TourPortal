@@ -3,18 +3,38 @@
 
 <AreaLayoutComponent>
     <VerticalMenueRenderer>
-        <VerticalMenuComponent>
-            <NavigationItem>
-                <NavigationComponent NavigationLink="/administrator/test">
-                    <Item>
+        <VerticalMenuComponent HomeUrl="@HomeUrl" ProfileName="@ProfileName" ProfileImage="@ProfileImage" UserRole="@UserRole">
+            <NavigationItem >
+                <NavigationComponent NavigationLink="/user/">
+                    <NavigationContent>
                         <i class="mdi mdi-home menu-icon"></i>
-                    </Item>
+                        <span class="menu-title">Начало</span>
+                    </NavigationContent>
+                </NavigationComponent>
+                <NavigationComponent NavigationLink="/user/test">
+                    <NavigationContent>
+                        <i class="mdi mdi-home menu-icon"></i>
+                        <span class="menu-title">Тест страница</span>
+                    </NavigationContent>
                 </NavigationComponent>
             </NavigationItem>
         </VerticalMenuComponent>
     </VerticalMenueRenderer>
-
+    <HorisontalMenueRenderer>
+        <HorisontalMenuComponent HomeUrl="@HomeUrl" ProfileName="@ProfileName" ProfileImage="@ProfileImage" Id="@Id" />
+    </HorisontalMenueRenderer>
     <BodyRederer>
         @Body
     </BodyRederer>
 </AreaLayoutComponent>
+
+@code
+{
+    private string HomeUrl = "/administrator/";
+    private string ProfileImage = string.Empty;
+    private string ProfileName = string.Empty;
+    private string UserRole = string.Empty;
+    private string Id = string.Empty;
+
+
+}
