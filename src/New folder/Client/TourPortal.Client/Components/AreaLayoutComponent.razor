@@ -1,0 +1,92 @@
+﻿<nav class="navbar header-navbar pcoded-header">
+	<div class="navbar-wrapper">
+		<HeaderLogoComponent />
+		<div class="navbar-container container-fluid">
+			<ul class="nav-left">
+				<li>
+					<div class="sidebar_toggle"><a href="javascript:void(0)"><i class="ti-menu"></i></a></div>
+				</li>
+				<li class="header-search">
+					<div class="main-search morphsearch-search">
+						<div class="input-group">
+							<span class="input-group-addon search-close"><i class="ti-close"></i></span>
+							<input type="text" class="form-control">
+							<span class="input-group-addon search-btn"><i class="ti-search"></i></span>
+						</div>
+					</div>
+				</li>
+				<li>
+					<a href="#!" onclick="javascript:toggleFullScreen()" class="waves-effect waves-light">
+						<i class="ti-fullscreen"></i>
+					</a>
+				</li>
+			</ul>
+			<ul class="nav-right">
+				<li class="user-profile header-notification">
+					<a href="#!" class="waves-effect waves-light">
+						<img src="images/faces/face5.jpg" class="img-radius" alt="User-Profile-Image">
+						<span>John Doe</span>
+						<i class="ti-angle-down"></i>
+					</a>
+					<ul class="show-notification profile-notification">
+						<li class="waves-effect waves-light">
+							<a href="#!">
+								<i class="ti-settings"></i> Settings
+							</a>
+						</li>
+						<li class="waves-effect waves-light">
+							<a href="user-profile.html">
+								<i class="ti-user"></i> Profile
+							</a>
+						</li>
+						<li class="waves-effect waves-light">
+							<a href="email-inbox.html">
+								<i class="ti-email"></i> My Messages
+							</a>
+						</li>
+						<li class="waves-effect waves-light">
+							<a href="auth-lock-screen.html">
+								<i class="ti-lock"></i> Lock Screen
+							</a>
+						</li>
+						<li class="waves-effect waves-light">
+							<a href="auth-normal-sign-in.html">
+								<i class="ti-layout-sidebar-left"></i> Logout
+							</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<div id="sidebar" class="sidebar sidebar-offcanvas">
+	@VerticalMenueRenderer
+</div>
+<div class="container-fluid page-body-wrapper">
+	<div class="navbar col-lg-12 col-12 p-lg-0 fixed-top d-flex flex-row">
+		<div class="navbar-menu-wrapper d-flex align-items-stretch justify-content-between">
+			<a class="navbar-brand brand-logo-mini align-self-center d-lg-none" href="@NavigationManager.BaseUri/">
+				<img src="/images/logo-mini.svg" alt="logo">
+			</a>
+		</div>
+		<button class="navbar-toggler navbar-toggler align-self-center mr-2" type="button" data-toggle="minimize">
+			<i class="mdi mdi-menu"></i>
+		</button>
+	</div>
+	<div class="main-panel">
+		@BodyRederer
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public RenderFragment HeaderRenderer { get; set; }
+
+	[Parameter]
+	public RenderFragment VerticalMenueRenderer { get; set; }
+
+	[Parameter]
+	public RenderFragment BodyRederer { get; set; }
+}

@@ -1,0 +1,13 @@
+﻿<li>
+    <a class="nav-link" href=@NavigationLink>
+        @NavigationContent
+    </a>
+</li>
+
+@code {
+	[Parameter]
+	public RenderFragment NavigationContent { get; set; }
+
+	[Parameter]
+	public string NavigationLink { get; set; }
+}

@@ -3,29 +3,43 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui" />
+    <meta http-equiv="Cache-Control" CONTENT="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     <title>Tour Portal</title>
     <base href="/" />
     <link href="_content/Radzen.Blazor/css/default-base.css" rel="stylesheet" />
     <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
-    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
-    <link type="text/css" href="css/bootstrap/bootstrap.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
-
     <link href="css/external/all.min.css" rel="stylesheet" />
+    <!-- Required css for home layout-->
+    <link class="default-css" href="css/bootstrap.css" rel="stylesheet" />
+    <link class="default-css" href="css/style.css" rel="stylesheet" />
+    <link class="default-css" href="css/responsive.css" rel="stylesheet" />
+    <link class="default-css" href="css/style_authentication.css" rel="stylesheet" />
+
+    <!--<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>-->
 </head>
 
 <body>
-    <div id="app">Loading...</div>
+    <div id="app">
+        <div id="nb-global-spinner" class="spinner">
+            <div class="blob blob-0"></div>
+        </div>
+    </div>
 
     <footer class="footer_section">
         <div class="container">
             <p>
-                &copy; <span id="displayYear">
+                &copy;
+                <span id="displayYear">
                     <script type="text/javascript">
                         document.write(new Date().getFullYear());
                     </script>
-                </span> All Rights Reserved. Tour Portal
+                </span> All Rights Reserved by Tour Portal
             </p>
         </div>
     </footer>
@@ -35,9 +49,13 @@
         <a class="dismiss">🗙</a>
     </div>
 
-    <script src="js/jquery-3.4.1.min.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="js/custom.js"></script>
+    <!-- Required js for home layout-->
+    <script class="default-script" type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script class="default-script" type="text/javascript" src="js/bootstrap.js"></script>
+    <script class="default-script" type="text/javascript" src="js/custom.js"></script>
+
+    <!-- Required js for Blazor areas -->
+    <script src="_content/BlazorStrap/blazorStrap.js"></script>
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
     <script src="_content/Blazored.Modal/blazored.modal.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>

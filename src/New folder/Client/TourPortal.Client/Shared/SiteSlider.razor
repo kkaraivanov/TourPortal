@@ -1,0 +1,106 @@
+﻿@using TourPortal.Client.Pages.Account
+
+<div class="row slider-row">
+	<AuthorizeView>
+		<NotAuthorized>
+			<div class="col-lg-3 offset-lg-1">
+				<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+					<div class="carousel-inner">
+						<div class="carousel-item active">
+							<div class="detail-box">
+								<h1>
+									Добре <br />
+									дошли
+								</h1>
+								<p>
+									Искате да си върнете онова чувство на удивление, но не знаете как?
+								</p>
+								<div>
+									<NavLink class="nav-link" href="" @onclick=@(() => ShowForm("register"))>
+										<span aria-hidden="true"></span> Регистрирай се!
+									</NavLink>
+								</div>
+							</div>
+						</div>
+						<div class="carousel-item">
+							<div class="detail-box">
+								<h1>
+									Tour <br />
+									Portal
+								</h1>
+								<p>
+									Намери дестинация или промотирай своя туристически бизнес.
+								</p>
+								<div>
+									<NavLink class="nav-link" href="" @onclick=@(() => ShowForm("login"))>
+										<span aria-hidden="true"></span> Вход
+									</NavLink>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="carousel_control-box">
+						<div class="carousel_btn-container">
+							<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+								<span class="sr-only">Previous</span>
+							</a>
+							<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+								<span class="sr-only">Next</span>
+							</a>
+						</div>
+						<ol class="carousel-indicators">
+							<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active li_one">01</li>
+							<li data-target="#carouselExampleIndicators" data-slide-to="1" class="li_two">02</li>
+							<li class="ol_design"></li>
+						</ol>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-8 px-0">
+				<div class="img-box">
+					<img src="images/slider.png" alt="" />
+				</div>
+			</div>
+		</NotAuthorized>
+	</AuthorizeView>
+</div>
+
+@inject IModalService ModalService
+@code
+{
+	[CascadingParameter] 
+	public IModalService ModalForm { get; set; }
+	private double duration = 1.0;
+
+	public async Task ShowForm(string formName)
+	{
+		var options = new ModalOptions
+		{
+			Animation = ModalAnimation.FadeInOut(duration),
+			HideCloseButton = true,
+			Class = "modal-form-panel",
+			HideHeader = true
+		};
+
+		switch (formName)
+		{
+			case "login":
+				ModalForm.Show<Login>("", options);
+				return;
+
+			case "register":
+			    var message = ModalForm.Show<Register>("Register", options);
+			    var result = await message.Result;
+
+			    if (!result.Cancelled)
+			    {
+			        if (result.Data != null && result.Data.Equals("07b613fa8fbf"))
+			        {
+			            ModalService.Show<Login>("", options);
+			        }
+			    }
+
+			    return;
+		}
+	}
+}

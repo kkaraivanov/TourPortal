@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using System.Threading
+@inherits LayoutComponentBase
+@inject IBootstrapCss BootstrapCss
+
 <RadzenDialog />
 <RadzenNotification />
 <RadzenContextMenu />
@@ -6,13 +9,68 @@
 
 <AuthorizeView>
     <NotAuthorized>
-        <div>
-            @Body
-        </div>
+        @Body
     </NotAuthorized>
     <Authorized>
-        <div>
-            @Body
-        </div>
+        @Body
     </Authorized>
 </AuthorizeView>
+@*@code {
+	private string[] homeCssIds = new string[] {@"home-bootstrap", @"home-style", @"home-responsive", @"home-security"};
+	private string[] homeCssPaths = new string[] {@"css/bootstrap.css", @"css/style.css", @"css/responsive.css", @"css/style_authentication.css"};
+	private string[] areaCssIds = new string[] {@"area-wendor", @"area-waves", @"area-icons", @"area-awesome", @"area-jquery", @"area-style"};
+	private string[] areaCssPaths = new string[] {@"https://fonts.googleapis.com/css?family=Roboto:400,500", @"css/area-style/pages/waves/css/waves.min.css", @"css/area-style/icon/themify-icons/themify-icons.css", @"css/area-style/icon/font-awesome/css/font-awesome.min.css", @"css/area-style/css/jquery.mCustomScrollbar.css", @"css/area-style/css/style.css"};
+	
+    private bool defaultIsReady = false;
+	private bool areaIsReady = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (!areaIsReady)
+            {
+                await AddAreaCss();
+				areaIsReady = true;
+            }
+        }
+    }
+
+    private async Task AddAreaCss()
+	{
+		var module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
+
+		foreach (var currentId in homeCssIds)
+		{
+			await module.InvokeVoidAsync("removeCss", currentId);
+		}
+		
+		for (int i = 0; i < areaCssIds.Length; i++)
+		{
+			await module.InvokeVoidAsync("addCss", areaCssIds[i], areaCssPaths[i]);
+		}
+		
+	    Thread.Sleep(1000);
+	    areaIsReady = true;
+		StateHasChanged();
+	}
+
+	private async Task AddDefaultCss()
+	{
+		var module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
+
+		foreach (var currentId in areaCssIds)
+		{
+			await module.InvokeVoidAsync("removeCss", currentId);
+		}
+
+		Thread.Sleep(1000);
+
+		for (int i = 0; i < homeCssIds.Length; i++)
+		{
+			await module.InvokeVoidAsync("addCss", homeCssIds[i], homeCssPaths[i]);
+		}
+
+		StateHasChanged();
+	}
+}*@

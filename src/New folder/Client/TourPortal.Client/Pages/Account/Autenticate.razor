@@ -1,0 +1,76 @@
+﻿@page "/authenticate"
+<div id="particles-js" class="main-form-box">
+	<div class="md-form">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 offset-md-3">
+					<div class="panel modal-form-panel">
+						<div class="panel-heading">
+							<div class="row">
+								<div class="col-lg-6 col-sm-6 col-xl-6">
+									<a href="#" class="active" id="login-form-link">Вход</a>
+								</div>
+								<div class="col-lg-6 col-sm-6 col-xl-6">
+									<a href="#" id="register-form-link">Регистрация</a>
+								</div>
+								<div class="or">OR</div>
+							</div>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-lg-12">
+									
+									<form id="register-form" action="#" method="post" role="form" style="display: none;">
+										<div class="form-group">
+											<label class="icon-lp"><i class="fas fa-user-tie"></i></label>
+											<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="" required="">
+										</div>
+										<div class="form-group">
+											<label class="icon-lp"><i class="fas fa-envelope"></i></label>
+											<input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email Address" value="" required="">
+										</div>
+										<div class="form-group">
+											<label class="icon-lp"><i class="fas fa-key"></i></label>
+											<input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password" required="">
+										</div>
+										<div class="form-group">
+											<label class="icon-lp"><i class="fas fa-key"></i></label>
+											<input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirm Password" required="">
+										</div>
+										<ul>
+											<li>
+												<button class="fb"><i class="fab fa-facebook-f"></i> Connect with Facebook</button>
+											</li>
+											<li>
+												<button class="tw"><i class="fab fa-twitter"></i> Connect with Twitter</button>
+											</li>
+										</ul>
+
+										<div class="che-box">
+											<label class="checkbox-in">
+												<input name="checkbox" type="checkbox"> <span></span>I agree to the <a href="#"> Terms and Conditions </a> and <a href="#">Privacy Policy </a>
+											</label>
+										</div>
+
+										<div class="form-group">
+											<div class="row">
+												<div class="col-sm-6 offset-sm-3">
+													<input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Register Now">
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@code {
+
+}

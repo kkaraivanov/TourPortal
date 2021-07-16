@@ -1,0 +1,11 @@
+﻿<a class="nav-link" href=@NavigationLink>
+	@Item
+</a>
+
+@code {
+	[Parameter]
+	public RenderFragment Item { get; set; }
+
+	[Parameter]
+	public string NavigationLink { get; set; }
+}

@@ -1,0 +1,24 @@
+﻿<div class="row column_title">
+	<div class="col-md-12">
+		<div class="page_title">
+			<h2>@PageHeader</h2>
+		</div>
+	</div>
+</div>
+<div class="row column@ColNumber @Css">
+	@PageBody
+</div>
+
+@code {
+	[Parameter]
+	public RenderFragment PageHeader { get; set; }
+
+	[Parameter]
+	public RenderFragment PageBody { get; set; }
+
+    [Parameter]
+    public int ColNumber { get; set; } = 1;
+
+    [Parameter]
+    public string Css { get; set; }
+}

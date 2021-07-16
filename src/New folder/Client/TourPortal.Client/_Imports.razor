@@ -1,0 +1,30 @@
+﻿@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.JSInterop
+
+@using Radzen
+@using Radzen.Blazor
+@using Blazored
+@using Blazored.Modal
+@using Blazored.Modal.Services
+@using BlazorStrap@using BlazorStrap
+
+@using TourPortal.Client
+@using TourPortal.Client.Components
+@using TourPortal.Client.Services
+@using TourPortal.Client.Shared
+@using TourPortal.Client.Shared.DisplayMenu
+@using TourPortal.Infrastructure.Services
+@using TourPortal.Infrastructure.Shared.Models.Authentication
+
+@inject IApiService ApiService
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+@inject IJSRuntime JsRuntime

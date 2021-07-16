@@ -71,7 +71,7 @@
 .modal-form-panel input[type="text"],
 .modal-form-panel input[type="email"],
 .modal-form-panel input[type="password"] {
-    padding: 16px 20px 16px 50px;
+    padding: 10px 20px 10px 50px;
     border: 1px solid #fad932;
     font-size: 16px;
     border-radius: 50px;
@@ -81,7 +81,7 @@
 }
 
 .modal-form-panel select {
-    padding: 0px 20px 0px 45px;
+    padding: 10px 20px 10px 50px;
     border: 1px solid #fad932;
     font-size: 16px;
     border-radius: 50px;
@@ -90,14 +90,18 @@
     transition: all 0.1s linear;
 }
 
-.modal-form-panel input:hover,
-.modal-form-panel input:focus {
-    outline: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    border-color: #fad932;
+.modal-form-panel select:after {
+    color: #000000;
 }
+
+    .modal-form-panel input:hover,
+    .modal-form-panel input:focus {
+        outline: none;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        border-color: #fad932;
+    }
 
 .modal-form-panel .form-group.addcolor .icon-lp {
     color: #755c9e;
@@ -160,6 +164,7 @@
 
 form .form-group {
     position: relative;
+    padding: 5px;
 }
 
     form .form-group .icon-lp {

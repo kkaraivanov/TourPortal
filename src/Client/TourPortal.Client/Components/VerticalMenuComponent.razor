@@ -1,0 +1,48 @@
+﻿<div class="sidebar_blog_1">
+	<div class="sidebar-header">
+		<div class="logo_section">
+			<a href="@HomeUrl"><img class="logo_icon img-responsive" src="images/logo/logo_icon.png" alt="#" /></a>
+		</div>
+	</div>
+	<div class="sidebar_user_info">
+		<div class="icon_setting"></div>
+		<div class="user_profle_side">
+			@if (string.IsNullOrEmpty(ProfileImage))
+			{
+	   <div class="user_img"><img class="img-responsive" src="./images/user_img.jpg" alt="#" /></div>
+			}
+			else
+			{
+	   <div class="user_img"><img class="img-responsive" src="@ProfileImage" alt="#" /></div>
+			}
+   <div class="user_info">
+	<h6>@ProfileName</h6>
+	<p><span class="online_animation"></span> Online</p>
+   </div>
+  </div>
+ </div>
+</div>
+<div class="sidebar_blog_2">
+ <h4>@UserRole</h4>
+ <ul class="list-unstyled components">
+		@NavigationItem
+ </ul>
+</div>
+
+@code
+{
+	[Parameter]
+	public RenderFragment NavigationItem { get; set; }
+
+	[Parameter]
+	public string HomeUrl { get; set; }
+
+	[Parameter]
+	public string ProfileImage { get; set; }
+
+	[Parameter]
+	public string ProfileName { get; set; }
+
+	[Parameter]
+	public string UserRole { get; set; }
+}

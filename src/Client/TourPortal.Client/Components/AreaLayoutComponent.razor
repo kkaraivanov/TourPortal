@@ -1,0 +1,39 @@
+﻿<div class="inner_container">
+    <nav id="sidebar">
+        @VerticalMenueRenderer
+    </nav>
+    <div id="content">
+        <div class="topbar">
+			@HorisontalMenueRenderer
+        </div>
+        <div class="midde_cont">
+            <div class="container-fluid">
+                @BodyRederer
+            </div>
+            <div class="container-fluid">
+                <div class="footer">
+                    <p>Copyright &copy; <span>@year</span> All Rights Reserved by Tour Portal.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+	public RenderFragment HorisontalMenueRenderer { get; set; }
+
+	[Parameter]
+	public RenderFragment VerticalMenueRenderer { get; set; }
+
+	[Parameter]
+	public RenderFragment BodyRederer { get; set; }
+
+    private int year;
+
+    protected override async Task OnInitializedAsync()
+    {
+        year = await _jsRuntime.InvokeAsync<int>("getYear");
+    }
+
+}
