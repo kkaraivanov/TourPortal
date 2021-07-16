@@ -1,9 +1,34 @@
-﻿@page "/profile"
-@page "/profile/{id}"
+﻿@page "/{homeUrl}/profile"
+@page "/{homeUrl}/profile/{id}"
+@layout AreaLayout
 
-<h3>ProfileSettings</h3>
+<AuthorizeView Policy = "IsAdministrator">
+    <PageModelComponent>
+        <PageHeader>
+            <h3>Admin Profile Settings</h3>
+        </PageHeader>
+        <PageBody>
+            <h4>Welcom from admin Layout</h4>
+        </PageBody>
+    </PageModelComponent>
+</AuthorizeView>
+
+<AuthorizeView Policy="IsUser">
+    <PageModelComponent>
+        <PageHeader>
+            <h3>User Profile Settings</h3>
+        </PageHeader>
+        <PageBody>
+            <h4>Welcom from user Layout</h4>
+        </PageBody>
+    </PageModelComponent>
+</AuthorizeView>
 
 @code {
 	[Parameter]
+	public string HomeUrl { get; set; }
+
+	[Parameter]
 	public string Id { get; set; }
+
 }

@@ -6,7 +6,7 @@
 
     public partial class AreaLayout
     {
-		private string[] scriptPaths = new string[]
+        private string[] scriptPaths = new string[]
         {
             "css/area-style/js/animate.js",
             "css/area-style/js/bootstrap-select.js",
@@ -24,6 +24,10 @@
             "css/area-style/css/custom.css"
         };
         private bool areaIsReady = false;
+        private string ProfileImage = string.Empty;
+        private string ProfileName = string.Empty;
+        private string UserRole = string.Empty;
+        private string Id = string.Empty;
 
         protected override async Task OnInitializedAsync()
         {

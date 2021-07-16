@@ -4,6 +4,61 @@
 @if (areaIsReady)
 {
     <div class="full_container">
-        @Body
+        <AreaLayoutComponent>
+            <VerticalMenueRenderer>
+                <AuthorizeView Policy="IsUser">
+                    <VerticalMenuComponent HomeUrl="/user" ProfileName="@ProfileName" ProfileImage="@ProfileImage" UserRole="@UserRole">
+                        <NavigationItem >
+                            <UserMenuComponent />
+                        </NavigationItem>
+                    </VerticalMenuComponent>
+                </AuthorizeView>
+                <AuthorizeView Policy="IsAdministrator">
+                    <Authorized>
+                        <VerticalMenuComponent HomeUrl="/Administrator" ProfileName="@ProfileName" ProfileImage="@ProfileImage" UserRole="@UserRole">
+                            <NavigationItem >
+                                <AdminMenuComponent />
+                            </NavigationItem>
+                        </VerticalMenuComponent>
+                    </Authorized>
+                    <NotAuthorized>
+                        <p> Test </p>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </VerticalMenueRenderer>
+            <HorisontalMenueRenderer>
+                <AuthorizeView Policy="IsUser">
+                    <HorisontalMenuComponent HomeUrl="/user" ProfileName="@ProfileName" ProfileImage="@ProfileImage" Id="@Id"/>
+                </AuthorizeView>
+                <AuthorizeView Policy="IsAdministrator">
+                    <HorisontalMenuComponent HomeUrl="/Administrator" ProfileName="@ProfileName" ProfileImage="@ProfileImage" Id="@Id"/>
+                </AuthorizeView>
+            </HorisontalMenueRenderer>
+            <BodyRederer>
+                <AuthorizeView>
+                    <Authorized>
+                        @Body
+                    </Authorized>
+                </AuthorizeView>
+            </BodyRederer>
+        </AreaLayoutComponent>
     </div>
+}
+
+@code
+{
+    [CascadingParameter] 
+    public IModalService ModalForm { get; set; }
+
+    public async Task ShowForm()
+    {
+        var options = new ModalOptions
+        {
+            HideCloseButton = true,
+            Class = "modal-form-panel",
+            HideHeader = true
+        };
+
+        ModalForm.Show<ErrorPage>("", options);
+    }
 }
