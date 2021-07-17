@@ -1,18 +1,51 @@
 ﻿@page "/{incomeUrl}/error"
+@page "/{incomeUrl}/error/{message}"
 @layout AreaLayout
 
-<PageModelComponent>
-    <PageHeader>
-        <h3>Получи се грешка</h3>
-    </PageHeader>
-    <PageBody>
-        <h4>Търсеният от ваз адрез не съществува</h4>
-    </PageBody>
-</PageModelComponent>
+@if(!string.IsNullOrEmpty(Message))
+{
+    if (Message.Contains("error"))
+    {
+        <PageModelComponent>
+            <PageHeader>
+                <h3>Получи се грешка</h3>
+            </PageHeader>
+            <PageBody>
+                <h4>Търсеният от ваз адрез не съществува</h4>
+            </PageBody>
+        </PageModelComponent>
+    }
+    else
+    {
+        <PageModelComponent>
+            <PageHeader>
+                <h3>Получи се грешка</h3>
+            </PageHeader>
+            <PageBody>
+                <h4>Нямате необходимите права за достъп до търсения ресурс.</h4>
+            </PageBody>
+        </PageModelComponent>
+    }
+}
+else
+{
+    @GotToIndex()
+}
 
 @code {
     [Parameter]
     public string IncomeUrl { get; set; }
+
+    [Parameter]
+    public string Message { get; set; }
+
+    private async Task GotToIndex()
+    {
+        var uri = NavigationManager.Uri;
+        var defaultAddress = uri.Replace("error", "");
+
+        NavigationManager.NavigateTo($"{defaultAddress}");
+    }
 
     protected override async Task OnInitializedAsync()
     {

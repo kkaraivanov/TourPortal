@@ -4,16 +4,14 @@
 			<Found Context="routeData">
 				<AuthorizeRouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)">
 					<NotAuthorized>
-                        <NoAuthorizedMessage />
+						<NoAuthorizedError />
 					</NotAuthorized>
 				</AuthorizeRouteView>
 			</Found>
 			<NotFound>
-				<CascadingAuthenticationState>
-					<LayoutView Layout="@typeof(MainLayout)">
-						<ErrorPageComponent />
-					</LayoutView>
-				</CascadingAuthenticationState>
+				<LayoutView Layout="@typeof(MainLayout)">
+					<NotFoundError />
+				</LayoutView>
 			</NotFound>
 		</Router>
 	</CascadingBlazoredModal>

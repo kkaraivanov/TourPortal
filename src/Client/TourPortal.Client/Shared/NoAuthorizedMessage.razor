@@ -1,18 +1,14 @@
-﻿<h3>NoAuthorizedMessage</h3>
+﻿@layout AreaLayout
+
+<PageModelComponent>
+    <PageHeader>
+        <h3>Получи се грешка</h3>
+    </PageHeader>
+    <PageBody>
+        <h4>Нямате необходимите права за достъп до търсения ресурс.</h4>
+    </PageBody>
+</PageModelComponent>
 
 @code {
-    [CascadingParameter] 
-    public IModalService ModalForm { get; set; }
-
-    public async Task ShowForm()
-    {
-        var options = new ModalOptions
-        {
-            HideCloseButton = true,
-            Class = "modal-form-panel",
-            HideHeader = true
-        };
-
-    //ModalForm.Show<ErrorPage>("", options);
-    }
+	
 }

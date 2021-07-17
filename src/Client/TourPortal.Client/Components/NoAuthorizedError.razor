@@ -1,15 +1,14 @@
-﻿
-@code {
+﻿@code {
     protected override async Task OnInitializedAsync()
     {
         var uri = NavigationManager.Uri.ToLower();
         if (uri.Contains("administrator"))
         {
-            NavigationManager.NavigateTo("administrator/error");
+            NavigationManager.NavigateTo("user/error/unauthorized");
         }
         else if (uri.Contains("user"))
         {
-            NavigationManager.NavigateTo("user/error");
+            NavigationManager.NavigateTo("administrator/error/unauthorized");
         }
         else
         {
