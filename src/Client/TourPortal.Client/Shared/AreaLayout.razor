@@ -36,6 +36,11 @@
             </HorisontalMenueRenderer>
             <BodyRederer>
                 <AuthorizeView>
+                    <Authorizing>
+                        <div id="nb-global-spinner" class="spinner">
+                            <div class="blob blob-0"></div>
+                        </div>
+                    </Authorizing>
                     <Authorized>
                         @Body
                     </Authorized>
@@ -47,18 +52,6 @@
 
 @code
 {
-    [CascadingParameter] 
-    public IModalService ModalForm { get; set; }
 
-    public async Task ShowForm()
-    {
-        var options = new ModalOptions
-        {
-            HideCloseButton = true,
-            Class = "modal-form-panel",
-            HideHeader = true
-        };
-
-        ModalForm.Show<ErrorPage>("", options);
-    }
+    
 }

@@ -1,0 +1,18 @@
+﻿<h3>NoAuthorizedMessage</h3>
+
+@code {
+    [CascadingParameter] 
+    public IModalService ModalForm { get; set; }
+
+    public async Task ShowForm()
+    {
+        var options = new ModalOptions
+        {
+            HideCloseButton = true,
+            Class = "modal-form-panel",
+            HideHeader = true
+        };
+
+    //ModalForm.Show<ErrorPage>("", options);
+    }
+}

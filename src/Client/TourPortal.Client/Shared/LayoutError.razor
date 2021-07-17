@@ -1,0 +1,21 @@
+﻿@page "/{incomeUrl}/error"
+@layout AreaLayout
+
+<PageModelComponent>
+    <PageHeader>
+        <h3>Получи се грешка</h3>
+    </PageHeader>
+    <PageBody>
+        <h4>Търсеният от ваз адрез не съществува</h4>
+    </PageBody>
+</PageModelComponent>
+
+@code {
+    [Parameter]
+    public string IncomeUrl { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+    }
+}
