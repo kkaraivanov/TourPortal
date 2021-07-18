@@ -16,7 +16,6 @@
     using Storage;
 
     [Route("api/[controller]")]
-    [AllowAnonymous]
     public class AccountController : ApiController
     {
         private readonly ApplicationDbContext _context;
@@ -44,8 +43,9 @@
             return Ok("Hallo from account controller");
         }
 
-        [Route("[action]")]
         [HttpPost]
+        [AllowAnonymous]
+        [Route("[action]")]
         public async Task<ApplicationResponse<RegisterResponseModel>> Register([FromBody] RegisterModel model)
         {
             var respons = new RegisterResponseModel();
@@ -140,7 +140,10 @@
             return respons.ToResponse();
         }
 
+
         [HttpGet]
+        [AllowAnonymous]
+        [Route("[action]")]
         public async Task<ApplicationResponse<UserRolesRespons>> GetUserRoles()
         {
             var response = new UserRolesRespons();
@@ -154,6 +157,44 @@
                 .ToList();
 
             return new ApplicationResponse<UserRolesRespons>(response);
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<UserInfoResponse>> GetUserInfo(string userEmail)
+        {
+            if (userEmail is null)
+            {
+                return new ApplicationResponse<UserInfoResponse>(new ApplicationError("", "Parameter can't by null"));
+            }
+
+            var user = await _userManager
+                .FindByEmailAsync(userEmail);
+
+            if (user is null)
+            {
+                return new ApplicationResponse<UserInfoResponse>(new ApplicationError("", "User can't by null"));
+            }
+
+            var roles = _context.UserRoles
+                .Where(x => x.UserId == user.Id);
+
+            if (!roles.Any())
+            {
+                return new ApplicationResponse<UserInfoResponse>(new ApplicationError("", "Roles can't by empty"));
+            }
+
+            var role = await _roleManager
+                .FindByIdAsync(roles.FirstOrDefault()?.RoleId);
+            var response = new UserInfoResponse
+            {
+                Id = user.Id,
+                ProfileImage = "",
+                ProfileName = $"{user.FirstName} {user.LastName}",
+                UserRole = role.Name,
+            };
+
+            return new ApplicationResponse<UserInfoResponse>(response);
         }
     }
 }

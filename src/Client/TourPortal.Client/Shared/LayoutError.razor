@@ -29,7 +29,7 @@
 }
 else
 {
-    @GotToIndex()
+    @GotToHome()
 }
 
 @code {
@@ -39,16 +39,17 @@ else
     [Parameter]
     public string Message { get; set; }
 
-    private async Task GotToIndex()
+    private async Task GotToHome()
     {
         var uri = NavigationManager.Uri;
         var defaultAddress = uri.Replace("error", "");
 
-        NavigationManager.NavigateTo($"{defaultAddress}");
+        NavigationManager.NavigateTo($"{defaultAddress.TrimEnd('/')}");
     }
 
     protected override async Task OnInitializedAsync()
     {
-        
+        @*var correctMessage = Message?.ToLower() == "error" || Message?.ToLower() == "notauthorized";
+        NavigationManager.NavigateTo($"/{IncomeUrl}/error");*@
     }
 }

@@ -21,9 +21,6 @@
                             </NavigationItem>
                         </VerticalMenuComponent>
                     </Authorized>
-                    <NotAuthorized>
-                        <p> Test </p>
-                    </NotAuthorized>
                 </AuthorizeView>
             </VerticalMenueRenderer>
             <HorisontalMenueRenderer>
@@ -34,7 +31,7 @@
                     <HorisontalMenuComponent HomeUrl="/Administrator" ProfileName="@ProfileName" ProfileImage="@ProfileImage" Id="@Id"/>
                 </AuthorizeView>
             </HorisontalMenueRenderer>
-            <BodyRederer>
+            <BodyRenderer>
                 <AuthorizeView>
                     <Authorizing>
                         <div id="nb-global-spinner" class="spinner">
@@ -45,7 +42,7 @@
                         @Body
                     </Authorized>
                 </AuthorizeView>
-            </BodyRederer>
+            </BodyRenderer>
         </AreaLayoutComponent>
     </div>
 }
@@ -53,5 +50,4 @@
 @code
 {
 
-    
 }

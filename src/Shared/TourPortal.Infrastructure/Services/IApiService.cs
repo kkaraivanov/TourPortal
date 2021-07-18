@@ -14,5 +14,7 @@
         Task<ApplicationResponse<RegisterResponseModel>> Register(RegisterModel registerModel);
 
         Task<ApplicationResponse<UserRolesRespons>> GetUserRoles();
+
+        Task<ApplicationResponse<UserInfoResponse>> GetUserInfo(string userEmail);
     }
 }

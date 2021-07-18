@@ -42,6 +42,21 @@
                 await AddScripts(module);
                 areaIsReady = true;
             }
+
+            ;
+            var state = await _state.GetAuthenticationStateAsync();
+            var userData = state.User.Identity.Name;
+            var request = await ApiService.GetUserInfo(userData);
+
+            if (request.IsOk)
+            {
+                var responseData = request.ResponseData;
+
+                Id = responseData.Id;
+                ProfileName = responseData.ProfileName;
+                ProfileImage = responseData.ProfileImage;
+                UserRole = responseData.UserRole;
+            }
         }
 
         private async Task AddStyles(IJSObjectReference module)

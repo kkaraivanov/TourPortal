@@ -4,11 +4,11 @@
         var uri = NavigationManager.Uri.ToLower();
         if (uri.Contains("administrator"))
         {
-            NavigationManager.NavigateTo("user/error/unauthorized");
+            NavigationManager.NavigateTo("user/error/notauthorized");
         }
         else if (uri.Contains("user"))
         {
-            NavigationManager.NavigateTo("administrator/error/unauthorized");
+            NavigationManager.NavigateTo("administrator/error/notauthorized");
         }
         else
         {

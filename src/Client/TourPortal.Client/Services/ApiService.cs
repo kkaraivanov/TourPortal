@@ -80,6 +80,10 @@
         public async Task<ApplicationResponse<UserRolesRespons>> GetUserRoles() =>
         await _httpClient.GetFromJsonAsync<ApplicationResponse<UserRolesRespons>>(Global.Routes.GetRoles);
 
+        public async Task<ApplicationResponse<UserInfoResponse>> GetUserInfo(string userEmail) =>
+            await _httpClient.GetFromJsonAsync<ApplicationResponse<UserInfoResponse>>(Global.Routes.GetUserInfo);
+
+
         private async Task<ApplicationResponse<TResponse>> Post<TRequest, TResponse>(string url, TRequest request)
         {
             (_authenticationStateProvider as ApiAuthenticationStateProvider)?.GetAuthenticationStateAsync();
