@@ -34,8 +34,6 @@
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(ApplicationConstants.TokenType, getSavedToken);
-
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(getSavedToken), ApplicationConstants.AuthenticationTokenType)));
         }
 

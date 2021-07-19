@@ -156,29 +156,29 @@ namespace TourPortal.Storage.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "dd1d3b5c-a748-434b-b229-19e1cee3d640",
-                            ConcurrencyStamp = "51a95120-df78-46a2-bf07-d3c3ffbf6c30",
+                            Id = "093bb895-83e0-4944-a1d9-548f7d48ff2b",
+                            ConcurrencyStamp = "64e2cd95-26c8-4590-863c-4578fc0569e0",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "b0825f7a-3b23-4e1b-af5c-eebf2a0596a6",
-                            ConcurrencyStamp = "cd57bbc5-b70d-473b-975f-299761e62319",
+                            Id = "497568cf-d146-4dbb-8ac0-692ebd7c1815",
+                            ConcurrencyStamp = "6b18bee5-cd97-4a41-9c2c-0b1ddaa7803d",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "fa437924-d2bb-44f1-ae61-d7d6a279cd83",
-                            ConcurrencyStamp = "5e9dcc6e-d306-4ad0-b673-a56985adf621",
+                            Id = "9a43e17e-43e4-4744-a320-e6f57518927e",
+                            ConcurrencyStamp = "b198a2db-ccfb-43f1-9bf0-ea334faa3c90",
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
-                            Id = "27e9500a-a0c4-4891-a3e9-e682bc65b442",
-                            ConcurrencyStamp = "05b9a051-c30d-43dc-bdb0-b043eb6ef87f",
+                            Id = "65df8aff-c2b9-4f27-9b98-cee6ce630b69",
+                            ConcurrencyStamp = "892f37c0-deeb-485f-920a-d8885305b924",
                             Name = "Employe",
                             NormalizedName = "EMPLOYE"
                         });
@@ -267,6 +267,57 @@ namespace TourPortal.Storage.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Employe", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("HotelId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProfileId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HotelId");
+
+                    b.HasIndex("ProfileId")
+                        .IsUnique()
+                        .HasFilter("[ProfileId] IS NOT NULL");
+
+                    b.ToTable("Employes");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Hotel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Sity")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId")
+                        .IsUnique()
+                        .HasFilter("[OwnerId] IS NOT NULL");
+
+                    b.ToTable("Hotels");
+                });
+
             modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -307,16 +358,148 @@ namespace TourPortal.Storage.Data.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Owner", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProfileId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileId")
+                        .IsUnique()
+                        .HasFilter("[ProfileId] IS NOT NULL");
+
+                    b.ToTable("Owners");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Reservation", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("FromDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HotelId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("NumberOfNights")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProfileId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoomId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ToDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HotelId");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("Reservations");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Room", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("HotelId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("NumberOfBeds")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HotelId");
+
+                    b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.RoomInType", b =>
+                {
+                    b.Property<string>("RoomId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoomTypeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("RoomId", "RoomTypeId");
+
+                    b.HasIndex("RoomTypeId");
+
+                    b.ToTable("RoomsInType");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.RoomType", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoomTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "d29efb5d-6eb4-4522-ae04-956e4168deb6",
+                            Type = "Single"
+                        },
+                        new
+                        {
+                            Id = "bb7bb90d-ccd4-42f9-b86e-f3a35d16e20d",
+                            Type = "Double"
+                        },
+                        new
+                        {
+                            Id = "0d64c8ae-40d6-4ea2-ae2a-fd9618fa3aeb",
+                            Type = "Double with 2 single beds"
+                        },
+                        new
+                        {
+                            Id = "944ea5d6-e7b7-4bf4-a59f-24c173192229",
+                            Type = "Apartment"
+                        });
+                });
+
             modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.UserProfile", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Sity")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -375,6 +558,30 @@ namespace TourPortal.Storage.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Employe", b =>
+                {
+                    b.HasOne("TourPortal.Infrastructure.Storage.Models.Hotel", "Hotel")
+                        .WithMany("Employes")
+                        .HasForeignKey("HotelId");
+
+                    b.HasOne("TourPortal.Infrastructure.Storage.Models.UserProfile", "Profile")
+                        .WithOne("Employe")
+                        .HasForeignKey("TourPortal.Infrastructure.Storage.Models.Employe", "ProfileId");
+
+                    b.Navigation("Hotel");
+
+                    b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Hotel", b =>
+                {
+                    b.HasOne("TourPortal.Infrastructure.Storage.Models.Owner", "Owner")
+                        .WithOne("Hotel")
+                        .HasForeignKey("TourPortal.Infrastructure.Storage.Models.Hotel", "OwnerId");
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Message", b =>
                 {
                     b.HasOne("TourPortal.Infrastructure.Storage.Models.ApplicationUser", "Sender")
@@ -382,6 +589,58 @@ namespace TourPortal.Storage.Data.Migrations
                         .HasForeignKey("UserID");
 
                     b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Owner", b =>
+                {
+                    b.HasOne("TourPortal.Infrastructure.Storage.Models.UserProfile", "Profile")
+                        .WithOne("Owner")
+                        .HasForeignKey("TourPortal.Infrastructure.Storage.Models.Owner", "ProfileId");
+
+                    b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Reservation", b =>
+                {
+                    b.HasOne("TourPortal.Infrastructure.Storage.Models.Hotel", "Hotel")
+                        .WithMany("Reservations")
+                        .HasForeignKey("HotelId");
+
+                    b.HasOne("TourPortal.Infrastructure.Storage.Models.UserProfile", "Profile")
+                        .WithMany("Reservations")
+                        .HasForeignKey("ProfileId");
+
+                    b.Navigation("Hotel");
+
+                    b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Room", b =>
+                {
+                    b.HasOne("TourPortal.Infrastructure.Storage.Models.Hotel", "Hotel")
+                        .WithMany("Rooms")
+                        .HasForeignKey("HotelId");
+
+                    b.Navigation("Hotel");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.RoomInType", b =>
+                {
+                    b.HasOne("TourPortal.Infrastructure.Storage.Models.Room", "Room")
+                        .WithMany("RoomInTypes")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TourPortal.Infrastructure.Storage.Models.RoomType", "RoomType")
+                        .WithMany("RoomInTypes")
+                        .HasForeignKey("RoomTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+
+                    b.Navigation("RoomType");
                 });
 
             modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.UserProfile", b =>
@@ -424,6 +683,39 @@ namespace TourPortal.Storage.Data.Migrations
                     b.Navigation("Profile");
 
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Hotel", b =>
+                {
+                    b.Navigation("Employes");
+
+                    b.Navigation("Reservations");
+
+                    b.Navigation("Rooms");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Owner", b =>
+                {
+                    b.Navigation("Hotel");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Room", b =>
+                {
+                    b.Navigation("RoomInTypes");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.RoomType", b =>
+                {
+                    b.Navigation("RoomInTypes");
+                });
+
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.UserProfile", b =>
+                {
+                    b.Navigation("Employe");
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

@@ -5,6 +5,7 @@
     public class RegisterModel
     {
         [Required]
+        [StringLength(16, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 5)]
         [Display(Name = "UserName")]
         public string UserName { get; set; }
 
@@ -28,5 +29,24 @@
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [StringLength(64, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+        [Display(Name = "FirstName")]
+        public string FirstName { get; set; }
+        
+        [Required]
+        [StringLength(64, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+        [Display(Name = "MidleName")]
+        public string MidleName { get; set; }
+        
+        [Required]
+        [StringLength(64, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+        [Display(Name = "LastName")]
+        public string LastName { get; set; }
+
+        [StringLength(64, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+        [Display(Name = "PhoneNumber")]
+        public string PhoneNumber { get; set; }
     }
 }

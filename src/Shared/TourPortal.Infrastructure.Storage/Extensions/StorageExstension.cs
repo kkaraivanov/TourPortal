@@ -46,6 +46,15 @@
                     NormalizedName = Security.Role.Employe.ToUpper()
                 });
 
+            builder.Entity<RoomType>()
+                .HasData(new RoomType[]
+                {
+                    new RoomType{Id = Guid.NewGuid().ToString(), Type = "Single"},
+                    new RoomType{Id = Guid.NewGuid().ToString(), Type = "Double"},
+                    new RoomType{Id = Guid.NewGuid().ToString(), Type = "Double with 2 single beds"},
+                    new RoomType{Id = Guid.NewGuid().ToString(), Type = "Apartment"},
+                });
+
             return builder;
         }
     }

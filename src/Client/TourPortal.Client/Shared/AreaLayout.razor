@@ -6,22 +6,22 @@
     <div class="full_container">
         <AreaLayoutComponent>
             <VerticalMenueRenderer>
-                <AuthorizeView Policy="IsUser">
-                    <VerticalMenuComponent HomeUrl="/user" ProfileName="@ProfileName" ProfileImage="@ProfileImage" UserRole="@UserRole">
-                        <NavigationItem >
-                            <UserMenuComponent />
-                        </NavigationItem>
-                    </VerticalMenuComponent>
-                </AuthorizeView>
-                <AuthorizeView Policy="IsAdministrator">
-                    <Authorized>
-                        <VerticalMenuComponent HomeUrl="/Administrator" ProfileName="@ProfileName" ProfileImage="@ProfileImage" UserRole="@UserRole">
+                    <AuthorizeView Policy="IsUser">
+                        <VerticalMenuComponent HomeUrl="/user" ProfileName="@ProfileName" ProfileImage="@ProfileImage" UserRole="@UserRole">
                             <NavigationItem >
-                                <AdminMenuComponent />
+                                <UserMenuComponent/>
                             </NavigationItem>
                         </VerticalMenuComponent>
-                    </Authorized>
-                </AuthorizeView>
+                    </AuthorizeView>
+                    <AuthorizeView Policy="IsAdministrator">
+                        <Authorized>
+                            <VerticalMenuComponent HomeUrl="/Administrator" ProfileName="@ProfileName" ProfileImage="@ProfileImage" UserRole="@UserRole">
+                                <NavigationItem >
+                                    <AdminMenuComponent/>
+                                </NavigationItem>
+                            </VerticalMenuComponent>
+                        </Authorized>
+                    </AuthorizeView>
             </VerticalMenueRenderer>
             <HorisontalMenueRenderer>
                 <AuthorizeView Policy="IsUser">
@@ -45,9 +45,4 @@
             </BodyRenderer>
         </AreaLayoutComponent>
     </div>
-}
-
-@code
-{
-
 }

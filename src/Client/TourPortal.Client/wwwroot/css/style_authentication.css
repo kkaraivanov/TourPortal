@@ -65,7 +65,7 @@
     padding: 15px;
     background: rgba(0,0,0,0.8);
     border-radius: 15px;
-    min-height: 400px;
+    /*min-height: 580px;*/
 }
 
 .modal-form-panel input[type="text"],

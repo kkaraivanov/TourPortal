@@ -5,32 +5,36 @@
     using System.ComponentModel.DataAnnotations;
     using Templates;
 
-    public class UserProfile : IAuditable
+    public class Hotel : IAuditable
     {
-        public UserProfile()
+        public Hotel()
         {
             Id = Guid.NewGuid().ToString();
+            Employes = new HashSet<Employe>();
+            Reservations = new HashSet<Reservation>();
         }
 
-        [Key] 
+        [Key]
         public string Id { get; set; }
-        
+
         public string Sity { get; set; }
 
         public string Address { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+        public int RoomsCount => Rooms.Count;
 
-        public DateTime? ModifiedOn { get; set; }
-
-        public string UserId { get; set; }
-
-        public virtual ApplicationUser ApplicationUser { get; set; }
+        public string OwnerId { get; set; }
 
         public virtual Owner Owner { get; set; }
 
-        public virtual Employe Employe { get; set; }
+        public virtual ICollection<Employe> Employes { get; set; }
+
+        public virtual ICollection<Room> Rooms { get; set; }
 
         public virtual ICollection<Reservation> Reservations { get; set; }
+
+        public DateTime CreatedOn { get; set; }
+
+        public DateTime? ModifiedOn { get; set; }
     }
 }

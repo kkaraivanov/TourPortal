@@ -13,9 +13,11 @@
     }
 } */
 
-@media (max-width: 1260px) {}
+@media (max-width: 1260px) {
+}
 
-@media (max-width: 1120px) {}
+@media (max-width: 1120px) {
+}
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
     .or {
@@ -107,7 +109,6 @@
     .social_box {
         filter: invert(100%);
     }
-
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
@@ -122,7 +123,6 @@
     .client_section .carousel-control-prev,
     .client_section .carousel-control-next {
         top: 100%;
-
     }
 
     .client_section .carousel-control-prev {
@@ -160,7 +160,7 @@
         margin-bottom: 35px;
     }
 
-    .info_section .info_main .row>div {
+    .info_section .info_main .row > div {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -180,7 +180,6 @@
     .gallery_section .gallery_container .box {
         flex-direction: column;
         align-items: center;
-
     }
 
     .gallery_section .gallery_container .gallery_box {
@@ -203,6 +202,10 @@
         top: 14px;
         left: 234px;
     }
+
+ .modal-form-panel .panel-body {
+     min-height: 580px;
+ }
 }
 
 @media (max-width: 576px) {
@@ -221,6 +224,7 @@
     .slider_section .img-box::before {
         background: -webkit-gradient(linear, left top, left bottom, from(#000000), to(transparent));
         background: linear-gradient(to bottom, #000, transparent);
+        z-index: -1;
     }
 
     .gallery_section .gallery_container .box .img-box {
@@ -273,13 +277,14 @@
     }
 }
 
-@media (max-width: 420px) {}
+@media (max-width: 420px) {
+}
 
-@media (max-width: 360px) {}
+@media (max-width: 360px) {
+}
 
 @media (min-width: 1200px) {
     .container {
         max-width: 1170px;
     }
-
 }

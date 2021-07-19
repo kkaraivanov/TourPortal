@@ -41,13 +41,14 @@
                 Thread.Sleep(500);
                 await AddScripts(module);
                 areaIsReady = true;
+
+                StateHasChanged();
             }
 
-            ;
             var state = await _state.GetAuthenticationStateAsync();
             var userData = state.User.Identity.Name;
             var request = await ApiService.GetUserInfo(userData);
-
+            ;
             if (request.IsOk)
             {
                 var responseData = request.ResponseData;
@@ -80,5 +81,5 @@
             await module.InvokeVoidAsync("removeScripts");
             await module.InvokeVoidAsync("removeCss");
         }
-	}
+    }
 }

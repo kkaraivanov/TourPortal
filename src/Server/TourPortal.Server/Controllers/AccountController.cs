@@ -80,10 +80,10 @@
                 {
                     UserName = model.UserName,
                     Email = model.Email,
-                    PhoneNumber = "",
-                    FirstName = "",
-                    MidleName = "",
-                    LastName = "",
+                    PhoneNumber = model.PhoneNumber,
+                    FirstName = model.FirstName,
+                    MidleName = model.MidleName,
+                    LastName = model.LastName,
                     EmailConfirmed = true
                 };
 
@@ -119,7 +119,12 @@
 
                 var userProfile = await _context.UserProfiles.FirstOrDefaultAsync(x => x.UserId == user.Id);
 
-                if (userProfile == null)
+                if (userProfile != null)
+                {
+                    await _userManager.DeleteAsync(user);
+                    return new ApplicationResponse<RegisterResponseModel>(new ApplicationError("", "User profile has exist"));
+                }
+                else
                 {
                     _context.UserProfiles.Add(new UserProfile
                     {
@@ -140,6 +145,36 @@
             return respons.ToResponse();
         }
 
+        private async Task<IdentityResult> CreateApplicationUser(
+            string userName, 
+            string email, 
+            string password,
+            string phoneNumber, 
+            string firstName, 
+            string midleName, 
+            string lastName)
+        {
+            var applicationUser = _userManager.FindByNameAsync(userName).Result;
+
+            applicationUser = new ApplicationUser
+            {
+                UserName = userName,
+                Email = email,
+                PhoneNumber = phoneNumber,
+                FirstName = firstName,
+                MidleName = midleName,
+                LastName = lastName,
+                EmailConfirmed = true
+            };
+
+            return _userManager.CreateAsync(applicationUser, password).Result;
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Owner")]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<RegisterResponseModel>> RegisterEmploye([FromBody] RegisterModel model) =>
+            await Register(model);
 
         [HttpGet]
         [AllowAnonymous]

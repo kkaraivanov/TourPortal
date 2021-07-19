@@ -1,63 +1,95 @@
 ﻿<div id="loginModal" class="modal-form-panel">
 	<div class="panel-body">
-		<h3 class="text-center heading-text">Вход</h3>
-		<EditForm OnValidSubmit="OnSubmit" Model="register" Context="RegisterForm" style="height: 400px">
+		<h3 class="text-center heading-text">Регистрация</h3>
+		<EditForm OnValidSubmit="OnSubmit" Model="register" Context="RegisterForm">
 			<DataAnnotationsValidator />
-			<div class="d-flex flex-column justify-content-between h-100">
-				<div>
-					<div class="form-group">
-						<label for="username" class="sr-only">User Name</label>
-						<InputText id="username" type="text" class="form-control" placeholder="Потребителско име" autofocus @bind-Value="@register.UserName" />
-						<ValidationMessage For="@(() => register.UserName)" />
-					</div>
-					<div class="form-group">
-						<label for="email" class="sr-only">Email</label>
-						<InputText id="email" type="text" class="form-control" placeholder="Email" autofocus @bind-Value="@register.Email" />
-						<ValidationMessage For="@(() => register.Email)" />
-					</div>
+            <div class="d-flex flex-column justify-content-between h-50 h-md-100">
+                <div class="row">
+                    <div class="col-12 col-md-6">
 
-					<div class="form-group">
-						<InputSelect @bind-Value="@register.RoleId" class="form-control">
-							@if (UserTypes.Count > 0)
-							{
-		   <option value="" disabled selected hidden>Избери роля</option>
-								@foreach (var role in UserTypes)
-								{
-			   <option class="form-control" value="@role.RoleId">@role.RoleName</option>
-								}
-							}
-	  </InputSelect>
-	  <ValidationMessage For="@(() => register.RoleId)" />
-	 </div>
+                        <div class="form-group">
+                            <label for="username" class="sr-only">User Name</label>
+                            <InputText id="username" type="text" class="form-control" placeholder="Потребителско име" autofocus @bind-Value="@register.UserName"/>
+                            <ValidationMessage For="@(() => register.UserName)"/>
+                        </div>
 
-	 <div class="form-group">
-	  <label for="password" class="sr-only">Password</label>
-	  <InputText type="password" id="password" class="form-control" placeholder="Парола" @bind-Value="@register.Password" />
-	  <ValidationMessage For="@(() => register.Password)" />
-	 </div>
+                        <div class="form-group">
+                            <label for="email" class="sr-only">Email</label>
+                            <InputText id="email" type="text" class="form-control" placeholder="Email" autofocus @bind-Value="@register.Email"/>
+                            <ValidationMessage For="@(() => register.Email)"/>
+                        </div>
 
-	 <div class="form-group">
-	  <label for="passwordConfirm" class="sr-only">Password Confirmation</label>
-	  <InputText type="password" id="passwordConfirm" class="form-control" placeholder="Потвърди палолата" @bind-Value="@register.ConfirmPassword" />
-	  <ValidationMessage For="@(() => register.ConfirmPassword)" />
-	 </div>
-	</div>
-	<div>
-	 <div class="form-group">
-         <div class="row">
-             <div class="col-sm-6 offset-sm-3">
-                 <button class="form-control btn btn-login" type="submit">Регистриране</button>
-             </div>
-         </div>
-         <div class="row pt-2" role="alert">
-             <label class="text-danger">@Error</label>
-         </div>
-	 </div>
-	</div>
-   </div>
+                        <div class="form-group">
+                            <InputSelect @bind-Value="@register.RoleId" class="form-control">
+                                @if (UserTypes.Count > 0)
+                                {
+                                    <option value="" disabled selected hidden>Избери роля</option>
+                                    @foreach (var role in UserTypes)
+                                    {
+                                        <option class="form-control" value="@role.RoleId">@role.RoleName</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => register.RoleId)"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password" class="sr-only">Password</label>
+                            <InputText type="password" id="password" class="form-control" placeholder="Парола" @bind-Value="@register.Password"/>
+                            <ValidationMessage For="@(() => register.Password)"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="passwordConfirm" class="sr-only">Password Confirmation</label>
+                            <InputText type="password" id="passwordConfirm" class="form-control" placeholder="Потвърди палолата" @bind-Value="@register.ConfirmPassword"/>
+                            <ValidationMessage For="@(() => register.ConfirmPassword)"/>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+
+                        <div class="form-group">
+                            <label for="name" class="sr-only">FirstName</label>
+                            <InputText id="name" type="text" class="form-control" placeholder="Име" autofocus @bind-Value="@register.FirstName"/>
+                            <ValidationMessage For="@(() => register.UserName)"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="midlename" class="sr-only">MidleName</label>
+                            <InputText id="midlename" type="text" class="form-control" placeholder="Презиме" autofocus @bind-Value="@register.MidleName"/>
+                            <ValidationMessage For="@(() => register.UserName)"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastname" class="sr-only">LastName</label>
+                            <InputText id="lastname" type="text" class="form-control" placeholder="Фамилия" autofocus @bind-Value="@register.LastName"/>
+                            <ValidationMessage For="@(() => register.UserName)"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phonenumber" class="sr-only">PhoneNumber</label>
+                            <InputText id="phonenumber" type="text" class="form-control" placeholder="Телефон" autofocus @bind-Value="@register.PhoneNumber"/>
+                            <ValidationMessage For="@(() => register.UserName)"/>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 offset-sm-3">
+                                <button class="form-control btn btn-login" type="submit">Регистриране</button>
+                            </div>
+                        </div>
+                        <div class="row pt-2" role="alert">
+                            <label class="text-danger">@Error</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
   </EditForm>
   <EditForm OnValidSubmit="OpenLoginForm" Model="Message" Context="SendMessageForm">
-   <div class="row">
+   <div class="row text-center">
 	<div class="col-12">
 	 <button style="border: 0; background-color: transparent; color: white;" type="submit">Вече имате акаунт? Щракнете тук, за да влезете</button>
 	</div>

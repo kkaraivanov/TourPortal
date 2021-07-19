@@ -23,6 +23,20 @@
 
         public DbSet<UserProfile> UserProfiles { get; set; }
 
+        public DbSet<Employe> Employes { get; set; }
+
+        public DbSet<Hotel> Hotels { get; set; }
+
+        public DbSet<Owner> Owners { get; set; }
+
+        public DbSet<Room> Rooms { get; set; }
+
+        public DbSet<RoomType> RoomTypes { get; set; }
+
+        public DbSet<RoomInType> RoomsInType { get; set; }
+
+        public DbSet<Reservation> Reservations { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
@@ -54,6 +68,55 @@
                 b.HasMany(e => e.Roles)
                     .WithOne(e => e.Role)
                     .HasForeignKey(ur => ur.RoleId)
+                    .IsRequired();
+            });
+
+            builder.Entity<UserProfile>(b =>
+            {
+                b.HasOne(up => up.Owner)
+                    .WithOne(o => o.Profile)
+                    .HasForeignKey<Owner>(o => o.ProfileId);
+
+                b.HasOne(up => up.Employe)
+                    .WithOne(e => e.Profile)
+                    .HasForeignKey<Employe>(e => e.ProfileId);
+
+                b.HasMany(up => up.Reservations)
+                    .WithOne(r => r.Profile)
+                    .HasForeignKey(r => r.ProfileId);
+            });
+
+            builder.Entity<Hotel>(b =>
+            {
+                b.HasOne(h => h.Owner)
+                    .WithOne(o => o.Hotel)
+                    .HasForeignKey<Hotel>(h => h.OwnerId);
+
+                b.HasMany(h => h.Employes)
+                    .WithOne(e => e.Hotel)
+                    .HasForeignKey(eh => eh.HotelId);
+                
+                b.HasMany(h => h.Rooms)
+                    .WithOne(r => r.Hotel)
+                    .HasForeignKey(r => r.HotelId);
+                
+                b.HasMany(h => h.Reservations)
+                    .WithOne(r => r.Hotel)
+                    .HasForeignKey(r => r.HotelId);
+            });
+
+            builder.Entity<RoomInType>(b =>
+            {
+                b.HasKey(k => new {k.RoomId, k.RoomTypeId});
+
+                b.HasOne(rit => rit.Room)
+                    .WithMany(r => r.RoomInTypes)
+                    .HasForeignKey(rit => rit.RoomId)
+                    .IsRequired();
+
+                b.HasOne(rit => rit.RoomType)
+                    .WithMany(rt => rt.RoomInTypes)
+                    .HasForeignKey(rit => rit.RoomTypeId)
                     .IsRequired();
             });
 

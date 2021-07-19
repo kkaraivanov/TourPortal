@@ -40,7 +40,7 @@
                         new KeyValuePair<string, string>("email", loginModel.Email),
                         new KeyValuePair<string, string>("password", loginModel.Password),
                     }));
-            
+
             var request = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
@@ -54,7 +54,7 @@
                     {
                         PropertyNameCaseInsensitive = true
                     });
-            
+
             await _localStorage.SetItemAsync(ApplicationConstants.AuthenticatedTokenString, loginResult.access_token);
 
             // TODO: if have the error, can make ((ApiAuthenticationStateProvider)_authenticationStateProvider).SetUserAsAuthenticated(loginModel.Email);
@@ -78,11 +78,32 @@
             await Post<RegisterModel, RegisterResponseModel>(Global.Routes.Register, registerModel);
 
         public async Task<ApplicationResponse<UserRolesRespons>> GetUserRoles() =>
-        await _httpClient.GetFromJsonAsync<ApplicationResponse<UserRolesRespons>>(Global.Routes.GetRoles);
+            await Get<UserRolesRespons>(Global.Routes.GetRoles);
+            //await _httpClient.GetFromJsonAsync<ApplicationResponse<UserRolesRespons>>(Global.Routes.GetRoles);
 
         public async Task<ApplicationResponse<UserInfoResponse>> GetUserInfo(string userEmail) =>
-            await _httpClient.GetFromJsonAsync<ApplicationResponse<UserInfoResponse>>(Global.Routes.GetUserInfo);
+            await Get<UserInfoResponse>(Global.Routes.GetUserInfo + userEmail);
+        //await _httpClient.GetFromJsonAsync<ApplicationResponse<UserInfoResponse>>(Global.Routes.GetUserInfo);
 
+        private async Task<ApplicationResponse<T>> Get<T>(string url)
+        {
+            var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var token = await _localStorage.GetItemAsync<string>(ApplicationConstants.AuthenticatedTokenString);
+
+            if (state.User.Identity.IsAuthenticated)
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+
+            try
+            {
+                return await _httpClient.GetFromJsonAsync<ApplicationResponse<T>>(url);
+            }
+            catch (Exception ex)
+            {
+                return new ApplicationResponse<T>(new ApplicationError("HTTP Client", ex.Message));
+            }
+        }
 
         private async Task<ApplicationResponse<TResponse>> Post<TRequest, TResponse>(string url, TRequest request)
         {
