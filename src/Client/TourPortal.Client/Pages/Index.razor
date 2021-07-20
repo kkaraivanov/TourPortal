@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using TourPortal.Infrastructure.Global.Types
 
 <AuthorizeView>
     <NotAuthorized>
@@ -18,23 +19,21 @@
     </NotAuthorized>
 </AuthorizeView>
 
-<AuthorizeView Policy = "IsAdministrator">
-    @GoToAdministratorArea()
-</AuthorizeView>
-
-<AuthorizeView Policy = "IsUser">
-    @GoToUserArea()
-</AuthorizeView>
-
 @code
 {
-    private async Task GoToAdministratorArea()
+    protected override async Task OnInitializedAsync()
     {
-        NavigationManager.NavigateTo("administrator/");
-    }
-
-    private async Task GoToUserArea()
-    {
-        NavigationManager.NavigateTo("user/");
+        var state = await _state.GetAuthenticationStateAsync();
+        if (state.User.Identity.IsAuthenticated)
+        {
+            if (state.User.IsInRole(Security.Role.Owner) || state.User.IsInRole(Security.Role.User))
+            {
+                NavigationManager.NavigateTo("/user", true);
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/administrator", true);
+            }
+        }
     }
 }

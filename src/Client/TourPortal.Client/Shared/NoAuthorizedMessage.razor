@@ -1,14 +1,55 @@
-﻿@layout AreaLayout
+﻿@page "/{homeUrl}/notauthorized"
+@using TourPortal.Infrastructure.Global.Types
+@layout AreaLayout
 
-<PageModelComponent>
-    <PageHeader>
-        <h3>Получи се грешка</h3>
-    </PageHeader>
-    <PageBody>
-        <h4>Нямате необходимите права за достъп до търсения ресурс.</h4>
-    </PageBody>
-</PageModelComponent>
+@if (!string.IsNullOrEmpty(HomeUrl))
+{
+    <PageModelComponent>
+        <PageHeader>
+            <h3>Не позволен достъп</h3>
+        </PageHeader>
+        <PageBody>
+            <div class="card border-danger text-center">
+                <div class="card-header">
+                    <h3>Внимание!</h3>
+                </div>
+                <div class="card-body text-danger">
+                    <h5 class="card-title">Достъпът до панел на " @Area " е отказан.</h5>
+                    <h5 class="card-text">С цел защита на потребителите, достъпът на " @Role " до панел на " @Area " е ограничен. За повече информация admin@Test.com</h5>
+                    <a href="@Uri" class="btn btn-primary">Начало</a>
+                </div>
+                <div class="card-footer text-muted">
+                    Copyright &copy; <span>@year</span> All Rights Reserved by Tour Portal.
+                </div>
+            </div>
+        </PageBody>
+    </PageModelComponent>
+}
 
 @code {
-	
+    [Parameter]
+    public string HomeUrl { get; set; }
+    private string Uri = string.Empty;
+    private string Role = string.Empty;
+    private string Area = string.Empty;
+    private int year;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await _state.GetAuthenticationStateAsync();
+        if (state.User.IsInRole(Security.Role.Owner) || state.User.IsInRole(Security.Role.User))
+        {
+            Area = "Администратор";
+            Role = "Потребители";
+            Uri = "/user";
+        }
+        else
+        {
+            Area = "Потребител";
+            Role = "Администратори";
+            Uri = "/administrator";
+        }
+
+        year = await _jsRuntime.InvokeAsync<int>("getYear");
+    }
 }

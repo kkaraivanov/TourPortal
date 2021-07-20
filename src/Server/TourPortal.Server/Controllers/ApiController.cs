@@ -8,6 +8,7 @@
     using Infrastructure.Shared.Models.Response;
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Route("api/[controller]")]
     public class ApiController : Controller
     {
         protected ApplicationResponse<T> Error<T>(string from, string message)

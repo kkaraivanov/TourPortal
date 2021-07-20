@@ -57,6 +57,11 @@
     [Parameter]
     public string Id { get; set; }
 
+    protected override void OnParametersSet()
+    {
+        
+    }
+
     private void Profile()
     {
         NavigationManager.NavigateTo($"{HomeUrl}/profile");

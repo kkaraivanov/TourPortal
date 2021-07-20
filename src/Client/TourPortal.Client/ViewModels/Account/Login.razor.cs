@@ -20,7 +20,6 @@
             if (result.IsOk)
             {
                 await Close();
-                NavigationManager.NavigateTo("/");
             }
             else
             {

@@ -5,6 +5,7 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
     using IdentityModel;
+    using Infrastructure.Global.Types;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +16,6 @@
     using Microsoft.EntityFrameworkCore;
     using Storage;
 
-    [Route("api/[controller]")]
     public class AccountController : ApiController
     {
         private readonly ApplicationDbContext _context;
@@ -57,7 +57,7 @@
 
             var role = await _roleManager.FindByIdAsync(model.RoleId);
 
-            if (role == null)
+            if (role is null)
             {
                 return new ApplicationResponse<RegisterResponseModel>(new ApplicationError("", "The following role types are invalid."));
             }
@@ -76,48 +76,22 @@
                     return new ApplicationResponse<RegisterResponseModel>(new ApplicationError("", "The following email already exist."));
                 }
 
-                applicationUser = new ApplicationUser
-                {
-                    UserName = model.UserName,
-                    Email = model.Email,
-                    PhoneNumber = model.PhoneNumber,
-                    FirstName = model.FirstName,
-                    MidleName = model.MidleName,
-                    LastName = model.LastName,
-                    EmailConfirmed = true
-                };
+                await CreateApplicationUser(
+                    model.UserName,
+                    model.Email,
+                    model.Password,
+                    model.PhoneNumber,
+                    model.FirstName,
+                    model.MidleName,
+                    model.LastName,
+                    role.Name);
 
-                var result = _userManager.CreateAsync(applicationUser, model.Password).Result;
-                if (!result.Succeeded)
-                    return new ApplicationResponse<RegisterResponseModel>(new ApplicationError("", result.Errors.First().Description));
-
-                result = _userManager.AddClaimsAsync(applicationUser, new Claim[]{
-                    new Claim(JwtClaimTypes.Name, model.UserName),
-                    new Claim(JwtClaimTypes.Email, model.Email),
-                    new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean)
-                }).Result;
-
-                await _userManager.AddClaimAsync(applicationUser, new Claim($"Is{role.Name}", "true"));
-                ApplicationUser user = await _userManager.FindByNameAsync(applicationUser.UserName);
+                ApplicationUser user = await _userManager
+                    .FindByNameAsync(model.UserName);
                 respons.UserId = user.Id;
-
-                try
-                {
-                    result = await _userManager.AddToRolesAsync(user, new string[] { role.Name});
-                }
-                catch
-                {
-                    await _userManager.DeleteAsync(user);
-                    return new ApplicationResponse<RegisterResponseModel>(new ApplicationError("", $"Importing user in db error: User {user.UserName} has deleted."));
-                }
-
-                if (!result.Succeeded)
-                {
-                    await _userManager.DeleteAsync(user);
-                    return new ApplicationResponse<RegisterResponseModel>(new ApplicationError("", result.Errors.First().Description));
-                }
-
-                var userProfile = await _context.UserProfiles.FirstOrDefaultAsync(x => x.UserId == user.Id);
+                var userProfile = await _context
+                    .UserProfiles
+                    .FirstOrDefaultAsync(x => x.UserId == user.Id);
 
                 if (userProfile != null)
                 {
@@ -136,6 +110,21 @@
                 }
 
                 _context.SaveChanges();
+
+                userProfile = await _context
+                    .UserProfiles
+                    .FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+                if (role.Name.Equals(Security.Role.Owner))
+                {
+                    _context.Owners.Add(new Owner
+                    {
+                        ProfileId = userProfile.Id,
+                        Profile = userProfile
+                    });
+                }
+
+                _context.SaveChanges();
             }
             catch (Exception e)
             {
@@ -143,31 +132,6 @@
             }
 
             return respons.ToResponse();
-        }
-
-        private async Task<IdentityResult> CreateApplicationUser(
-            string userName, 
-            string email, 
-            string password,
-            string phoneNumber, 
-            string firstName, 
-            string midleName, 
-            string lastName)
-        {
-            var applicationUser = _userManager.FindByNameAsync(userName).Result;
-
-            applicationUser = new ApplicationUser
-            {
-                UserName = userName,
-                Email = email,
-                PhoneNumber = phoneNumber,
-                FirstName = firstName,
-                MidleName = midleName,
-                LastName = lastName,
-                EmailConfirmed = true
-            };
-
-            return _userManager.CreateAsync(applicationUser, password).Result;
         }
 
         [HttpPost]
@@ -230,6 +194,70 @@
             };
 
             return new ApplicationResponse<UserInfoResponse>(response);
+        }
+
+        private async Task CreateApplicationUser(
+            string userName,
+            string email,
+            string password,
+            string phoneNumber,
+            string firstName,
+            string midleName,
+            string lastName,
+            string roleName)
+        {
+            try
+            {
+                var applicationUser = _userManager.FindByNameAsync(userName).Result;
+
+                if (applicationUser == null)
+                {
+                    applicationUser = new ApplicationUser
+                    {
+                        UserName = userName,
+                        Email = email,
+                        PhoneNumber = phoneNumber,
+                        FirstName = firstName,
+                        MidleName = midleName,
+                        LastName = lastName,
+                        EmailConfirmed = true
+                    };
+
+                    var result = _userManager.CreateAsync(applicationUser, password).Result;
+                    if (!result.Succeeded)
+                        throw new Exception(result.Errors.First().Description);
+
+                    result = _userManager.AddClaimsAsync(applicationUser, new Claim[]{
+                        new Claim(JwtClaimTypes.Name, userName),
+                        new Claim(JwtClaimTypes.GivenName, firstName),
+                        new Claim(JwtClaimTypes.FamilyName, lastName),
+                        new Claim(JwtClaimTypes.Email, email),
+                        new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean)
+                    }).Result;
+
+                    await _userManager.AddClaimAsync(applicationUser, new Claim($"Is{roleName}", "true"));
+                    ApplicationUser user = await _userManager.FindByNameAsync(applicationUser.UserName);
+
+                    try
+                    {
+                        result = await _userManager.AddToRolesAsync(user, new string[] { roleName });
+                    }
+                    catch
+                    {
+                        await _userManager.DeleteAsync(user);
+                        throw;
+                    }
+
+                    if (!result.Succeeded)
+                    {
+                        await _userManager.DeleteAsync(user);
+                    }
+                }
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

@@ -1,18 +1,20 @@
-﻿@code {
-    protected override async Task OnInitializedAsync()
-    {
-        var uri = NavigationManager.Uri.ToLower();
-        if (uri.Contains("administrator"))
-        {
-            NavigationManager.NavigateTo("user/error/notauthorized");
-        }
-        else if (uri.Contains("user"))
-        {
-            NavigationManager.NavigateTo("administrator/error/notauthorized");
-        }
-        else
-        {
-            NavigationManager.NavigateTo("/error");
-        }
-    }
+﻿@using TourPortal.Infrastructure.Global.Types
+
+@code
+{
+	protected override async Task OnInitializedAsync()
+	{
+	    var state = await _state.GetAuthenticationStateAsync();
+	    if (state.User.Identity.IsAuthenticated)
+	    {
+	        if (state.User.IsInRole(Security.Role.Owner) || state.User.IsInRole(Security.Role.User))
+	        {
+	            NavigationManager.NavigateTo("/user/notauthorized", true);
+	        }
+	        else
+	        {
+	            NavigationManager.NavigateTo("/administrator/notauthorized", true);
+	        }
+	    }
+	}
 }

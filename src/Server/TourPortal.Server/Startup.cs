@@ -125,10 +125,6 @@ namespace TourPortal.Server
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapGet("/", async context =>
-                //{
-                //    await context.Response.WriteAsync("Hello World!");
-                //});
                 endpoints.MapControllerRoute("api", "api/{controller}/{action}/{id?}");
                 endpoints.MapFallbackToFile("index.html");
             });

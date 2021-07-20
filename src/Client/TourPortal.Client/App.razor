@@ -1,18 +1,27 @@
 <CascadingAuthenticationState>
-	<CascadingBlazoredModal>
-		<Router AppAssembly="@typeof(Program).Assembly">
-			<Found Context="routeData">
-				<AuthorizeRouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)">
-					<NotAuthorized>
-						<NoAuthorizedError />
-					</NotAuthorized>
-				</AuthorizeRouteView>
-			</Found>
-			<NotFound>
-				<LayoutView Layout="@typeof(MainLayout)">
-					<NotFoundError />
-				</LayoutView>
-			</NotFound>
-		</Router>
-	</CascadingBlazoredModal>
+    <CascadingBlazoredModal>
+        <Router AppAssembly="@typeof(Program).Assembly">
+            <Found Context="routeData">
+                <AuthorizeRouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)">
+                    <NotAuthorized>
+                        <NoAuthorizedError />
+                    </NotAuthorized>
+                </AuthorizeRouteView>
+            </Found>
+            <NotFound>
+                <AuthorizeView>
+                    <NotAuthorized>
+                        <LayoutView Layout="@typeof(MainLayout)">
+                            <DefaultError/>
+                        </LayoutView>
+                    </NotAuthorized>
+                    <Authorized>
+                        <LayoutView Layout="@typeof(AreaLayout)">
+                            <LayoutError/>
+                        </LayoutView>
+                    </Authorized>
+                </AuthorizeView>
+            </NotFound>
+        </Router>
+    </CascadingBlazoredModal>
 </CascadingAuthenticationState>
