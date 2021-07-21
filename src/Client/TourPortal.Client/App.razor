@@ -10,17 +10,20 @@
             </Found>
             <NotFound>
                 <AuthorizeView>
-                    <NotAuthorized>
+                    @*<NotAuthorized>
                         <LayoutView Layout="@typeof(MainLayout)">
                             <DefaultError/>
                         </LayoutView>
-                    </NotAuthorized>
+                    </NotAuthorized>*@
                     <Authorized>
                         <LayoutView Layout="@typeof(AreaLayout)">
                             <LayoutError/>
                         </LayoutView>
                     </Authorized>
                 </AuthorizeView>
+                <LayoutView Layout="@typeof(MainLayout)">
+                    <DefaultError/>
+                </LayoutView>
             </NotFound>
         </Router>
     </CascadingBlazoredModal>

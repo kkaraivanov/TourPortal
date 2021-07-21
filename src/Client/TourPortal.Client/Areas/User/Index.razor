@@ -1,14 +1,37 @@
 ﻿@page "/user"
+@using TourPortal.Infrastructure.Shared.Models.HotelRequestResponse
 
 <PageModelComponent>
     <PageHeader>
-        <h3>Index</h3>
+        <div class="d-flex justify-content-between">
+        @*<h3>Начало</h3>*@
+            <AuthorizeView Roles="@Security.Role.User">
+                <HotelSearch SerchHotels="@hotels" OnChanged="@Change" />
+            </AuthorizeView>
+        </div>
     </PageHeader>
     <PageBody>
         <h4>Welcom from User Layout</h4>
+        @if (hotels.Any())
+        {
+            @foreach (var s in hotels)
+            {
+                <p>@s</p>
+            }
+        }
     </PageBody>
 </PageModelComponent>
 
 @code {
+    private List<SearchFreeHotelsResponse> hotels = new List<SearchFreeHotelsResponse>();
 
+    protected override void OnInitialized()
+    {
+        
+    }
+
+    private void Change(List<SearchFreeHotelsResponse> list)
+    {
+        hotels = list;
+    }
 }

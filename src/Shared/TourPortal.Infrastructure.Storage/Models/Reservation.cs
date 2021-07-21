@@ -29,6 +29,8 @@
 
         public int NumberOfNights { get; set; }
 
+        public int NumberOfPersons { get; set; }
+
         public decimal Price { get; set; }
 
         public bool IsCompleted { get; set; }

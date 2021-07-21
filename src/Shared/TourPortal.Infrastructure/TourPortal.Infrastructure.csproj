@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TourPortal.Infrastructure.Global\TourPortal.Infrastructure.Global.csproj" />
     <ProjectReference Include="..\TourPortal.Infrastructure.Shared\TourPortal.Infrastructure.Shared.csproj" />
   </ItemGroup>
 

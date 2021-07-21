@@ -79,11 +79,9 @@
 
         public async Task<ApplicationResponse<UserRolesRespons>> GetUserRoles() =>
             await Get<UserRolesRespons>(Global.Routes.GetRoles);
-            //await _httpClient.GetFromJsonAsync<ApplicationResponse<UserRolesRespons>>(Global.Routes.GetRoles);
 
         public async Task<ApplicationResponse<UserInfoResponse>> GetUserInfo(string userEmail) =>
             await Get<UserInfoResponse>(Global.Routes.GetUserInfo + userEmail);
-        //await _httpClient.GetFromJsonAsync<ApplicationResponse<UserInfoResponse>>(Global.Routes.GetUserInfo);
 
         private async Task<ApplicationResponse<T>> Get<T>(string url)
         {

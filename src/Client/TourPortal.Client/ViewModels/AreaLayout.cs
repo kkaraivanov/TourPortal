@@ -11,6 +11,7 @@
         {
             "css/area-style/js/animate.js",
             "css/area-style/js/bootstrap-select.js",
+            "css/area-style/js/bootstrap-datepicker.js",
             "css/area-style/js/owl.carousel.js",
             "css/area-style/js/utils.js",
             "css/area-style/js/perfect-scrollbar.min.js",
@@ -19,6 +20,7 @@
         private string[] cssPaths = new string[]
         {
             "css/area-style/css/bootstrap.min.css",
+            "css/area-style/css/bootstrap-datepicker.css",
             "css/area-style/style.css",
             "css/area-style/css/responsive.css",
             "css/area-style/css/perfect-scrollbar.css",
