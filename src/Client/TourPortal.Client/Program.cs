@@ -35,7 +35,8 @@ namespace TourPortal.Client
 
             builder.Services
                 .AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>()
-                .AddScoped<IApiService, ApiService>();
+                .AddScoped<IApiService, ApiService>()
+                .AddSingleton<ILogedUserService, LogedUserService>();
 
             builder.Services
                 .AddHttpClient<IApiService, ApiService>(x =>

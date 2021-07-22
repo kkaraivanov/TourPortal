@@ -8,9 +8,11 @@
     using System.Text.Json;
     using System.Threading.Tasks;
     using Blazored.LocalStorage;
+    using Data;
     using Microsoft.AspNetCore.Components.Authorization;
 
     using Infrastructure.Global;
+    using Infrastructure.Global.Types;
     using Infrastructure.Services;
     using Infrastructure.Shared.Models.Authentication;
     using Infrastructure.Shared.Models.Response;
@@ -20,15 +22,18 @@
         private readonly HttpClient _httpClient;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly ILocalStorageService _localStorage;
+        private readonly ILogedUserService _loginUserService;
 
         public ApiService(
             HttpClient httpClient,
             AuthenticationStateProvider authenticationStateProvider,
-            ILocalStorageService localStorage)
+            ILocalStorageService localStorage,
+            ILogedUserService loginUserService)
         {
             _httpClient = httpClient;
             _authenticationStateProvider = authenticationStateProvider;
             _localStorage = localStorage;
+            _loginUserService = loginUserService;
         }
 
         public async Task<ApplicationResponse<LoginResponseModel>> Login(LoginModel loginModel)
@@ -82,6 +87,9 @@
 
         public async Task<ApplicationResponse<UserInfoResponse>> GetUserInfo(string userEmail) =>
             await Get<UserInfoResponse>(Global.Routes.GetUserInfo + userEmail);
+
+        public async Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfo() =>
+            await Get<HotelInfoResponse>(Global.Routes.GetHotelInfo);
 
         private async Task<ApplicationResponse<T>> Get<T>(string url)
         {

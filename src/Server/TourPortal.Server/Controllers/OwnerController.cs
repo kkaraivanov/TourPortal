@@ -1,5 +1,6 @@
 ﻿namespace TourPortal.Server.Controllers
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using Infrastructure.Global.Types;
     using Infrastructure.Services;
@@ -31,6 +32,7 @@
             _accountService = accountService;
         }
 
+        [HttpPost]
         [Route("[action]")]
         public async Task<ApplicationResponse<RegisterResponseModel>> RegisterEmploye([FromBody] RegisterModel model)
         {
@@ -57,6 +59,28 @@
             return respons.ToResponse();
         }
 
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfo()
+        {
+            var ownerId = _userManager.GetUserId(User);
+            var hotel = _context.Hotels.FirstOrDefault(x => x.OwnerId == ownerId);
 
+            if (hotel != null)
+            {
+                var response = new HotelInfoResponse
+                {
+                    Id = hotel.Id,
+                    HotelName = hotel.HotelName,
+                    Sity = hotel.Sity,
+                    Address = hotel.Address,
+                    HotelImageUrl = hotel.HotelImageUrl
+                };
+
+                return response.ToResponse();
+            }
+            
+            return new ApplicationResponse<HotelInfoResponse>();
+        }
     }
 }

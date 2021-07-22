@@ -16,5 +16,7 @@
         Task<ApplicationResponse<UserRolesRespons>> GetUserRoles();
 
         Task<ApplicationResponse<UserInfoResponse>> GetUserInfo(string userEmail);
+
+        Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfo();
     }
 }

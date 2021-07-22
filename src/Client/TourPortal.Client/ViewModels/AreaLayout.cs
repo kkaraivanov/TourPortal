@@ -2,6 +2,7 @@
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using Data;
     using Infrastructure.Global.Types;
     using Microsoft.JSInterop;
 
@@ -55,13 +56,50 @@
             if (request.IsOk)
             {
                 var responseData = request.ResponseData;
+                if (!User.IsLoggedIn)
+                {
+                    var user = new LogedUserModel
+                    {
+                        Id = responseData.Id,
+                        ProfileName = responseData.ProfileName,
+                        ProfileImage = responseData.ProfileImage,
+                        UserRole = responseData.UserRole.Contains(Security.Role.Administrator) ? "Администратор" :
+                        responseData.UserRole.Contains(Security.Role.Owner) ? "Собственик хотел" :
+                        "Потребител"
+                    };
 
-                Id = responseData.Id;
-                ProfileName = responseData.ProfileName;
-                ProfileImage = responseData.ProfileImage;
-                UserRole = responseData.UserRole.Contains(Security.Role.Administrator) ? "Администратор" :
-                    responseData.UserRole.Contains(Security.Role.Owner) ? "Собственик хотел" :
-                    "Потребител";
+                    User.LogedInUser(user);
+                    StateHasChanged();
+                }
+
+                Id = User.User.Id;
+                ProfileName = User.User.ProfileName;
+                ProfileImage = User.User.ProfileImage;
+                UserRole = User.User.UserRole;
+            }
+
+            if (state.User.IsInRole(Security.Role.Owner))
+            {
+                var hotelInfoRequest = await ApiService.GetHotelInfo();
+
+                if (hotelInfoRequest.IsOk)
+                {
+                    var hotelInfo = hotelInfoRequest.ResponseData;
+
+                    if (hotelInfo != null)
+                    {
+                        var hotel = new HotelInfoModel
+                        {
+                            Id = hotelInfo.Id,
+                            HotelName = hotelInfo.HotelName,
+                            Sity = hotelInfo.Sity,
+                            Address = hotelInfo.Address,
+                            HotelImageUrl = hotelInfo.HotelImageUrl
+                        };
+
+                        User.AddHotel(hotel);
+                    }
+                }
             }
         }
 

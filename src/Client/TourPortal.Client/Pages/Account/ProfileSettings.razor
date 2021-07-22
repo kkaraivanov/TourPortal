@@ -16,10 +16,13 @@
 <AuthorizeView Policy="IsUser">
     <PageModelComponent>
         <PageHeader>
-            <h3>User Profile Settings</h3>
+            <h3>@User.User.ProfileName Settings</h3>
         </PageHeader>
         <PageBody>
-            <h4>Welcom from user Layout</h4>
+            <h4>@User.User.Id</h4>
+            <h4>@User.User.ProfileName</h4>
+            <h4>@User.User.UserRole</h4>
+            <h4>@User.User.ProfileImage</h4>
         </PageBody>
     </PageModelComponent>
 </AuthorizeView>

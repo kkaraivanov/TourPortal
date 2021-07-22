@@ -8,6 +8,7 @@
             public const string Register = "api/account/register";
             public const string GetRoles = "api/account/getUserRoles";
             public const string GetUserInfo = "api/account/getUserInfo?userEmail=";
+            public const string GetHotelInfo = "api/owner/getHotelInfo";
         }
     }
 }

@@ -2,14 +2,21 @@
 @page "/user/hotel"
 
 <PageModelComponent>
-    <PageHeader>
-        <h3>Хотел</h3>
-    </PageHeader>
-    <PageBody>
-        <h4>Welcom from user page test</h4>
-    </PageBody>
+	<PageHeader>
+		<h3>Хотел @User.Hotel?.HotelName</h3>
+	</PageHeader>
+	<PageBody>
+		@if (User.Hotel == null)
+		{
+		    <HotelCard />
+		}
+		else
+		{
+		    <HotelCard Hotel="@User.Hotel" />
+		}
+	</PageBody>
 </PageModelComponent>
 
 @code {
-
+	private string imageUrl = string.Empty;
 }
