@@ -6,14 +6,14 @@
     using System.Threading.Tasks;
     using IdentityModel;
     using Infrastructure.Global.Types;
+    using Infrastructure.Services;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Identity;
 
     using Infrastructure.Shared.Models.Authentication;
     using Infrastructure.Shared.Models.Response;
     using Infrastructure.Storage.Models;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
     using Storage;
 
     public class AccountController : ApiController
@@ -21,15 +21,18 @@
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IAccountService _accountService;
 
         public AccountController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager)
+            RoleManager<ApplicationRole> roleManager, 
+            IAccountService accountService)
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
+            _accountService = accountService;
         }
 
         [HttpGet]
@@ -48,6 +51,8 @@
         [Route("[action]")]
         public async Task<ApplicationResponse<RegisterResponseModel>> Register([FromBody] RegisterModel model)
         {
+            ModelStateErrors<RegisterModel>();
+
             var respons = new RegisterResponseModel();
 
             if (model is null)
@@ -76,7 +81,7 @@
                     return new ApplicationResponse<RegisterResponseModel>(new ApplicationError("", "The following email already exist."));
                 }
 
-                await CreateApplicationUser(
+                await _accountService.AddNewUser(
                     model.UserName,
                     model.Email,
                     model.Password,
@@ -85,46 +90,18 @@
                     model.MidleName,
                     model.LastName,
                     role.Name);
-
-                ApplicationUser user = await _userManager
-                    .FindByNameAsync(model.UserName);
+                
+                ApplicationUser user = await _userManager.FindByNameAsync(model.UserName);
                 respons.UserId = user.Id;
-                var userProfile = await _context
-                    .UserProfiles
-                    .FirstOrDefaultAsync(x => x.UserId == user.Id);
-
-                if (userProfile != null)
-                {
-                    await _userManager.DeleteAsync(user);
-                    return new ApplicationResponse<RegisterResponseModel>(new ApplicationError("", "User profile has exist"));
-                }
-                else
-                {
-                    _context.UserProfiles.Add(new UserProfile
-                    {
-                        UserId = user.Id,
-                        ApplicationUser = user,
-                        CreatedOn = DateTime.Now,
-                        ModifiedOn = DateTime.Now,
-                    });
-                }
+                await _accountService.AddUserProfile(user.Id, model.UserName);
 
                 _context.SaveChanges();
-
-                userProfile = await _context
-                    .UserProfiles
-                    .FirstOrDefaultAsync(x => x.UserId == user.Id);
 
                 if (role.Name.Equals(Security.Role.Owner))
                 {
-                    _context.Owners.Add(new Owner
-                    {
-                        ProfileId = userProfile.Id,
-                        Profile = userProfile
-                    });
+                    await _accountService.AddUserToOwner(user.Id);
+                    _context.SaveChanges();
                 }
-
-                _context.SaveChanges();
             }
             catch (Exception e)
             {
@@ -135,7 +112,7 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = "Owner")]
+        [Authorize(Roles = Security.Role.Owner)]
         [Route("[action]")]
         public async Task<ApplicationResponse<RegisterResponseModel>> RegisterEmploye([FromBody] RegisterModel model) =>
             await Register(model);

@@ -120,6 +120,13 @@
                     .IsRequired();
             });
 
+            builder.Entity<Room>(b =>
+            {
+                b.HasMany(r => r.RoomImages)
+                    .WithOne(ri => ri.Room)
+                    .HasForeignKey(ri => ri.RoomId);
+            });
+
             builder.SeedRolesToDatabase();
             builder.SoftDeletableProperties();
             builder.Entity<Message>().ToTable("Messages");

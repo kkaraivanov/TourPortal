@@ -24,4 +24,8 @@
     <ProjectReference Include="..\..\Shared\TourPortal.Infrastructure\TourPortal.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModels\Hotel\" />
+  </ItemGroup>
+
 </Project>

@@ -20,9 +20,15 @@
 
         public virtual Hotel Hotel { get; set; }
 
-        public int NumberOfBeds { get; set; }
+        public int RoomNumber { get; set; }
+
+        public int CountOfBeds { get; set; }
+
+        public int CountOfPersons { get; set; }
 
         public decimal Price { get; set; }
+
+        public virtual ICollection<RoomImages> RoomImages { get; set; }
 
         public virtual ICollection<RoomInType> RoomInTypes { get; set; }
     }

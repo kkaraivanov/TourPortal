@@ -14,8 +14,9 @@
                     <h3>Внимание!</h3>
                 </div>
                 <div class="card-body text-danger">
-                    <h5 class="card-title">Достъпът до панел на " @Area " е отказан.</h5>
-                    <h5 class="card-text">С цел защита на потребителите, достъпът на " @Role " до панел на " @Area " е ограничен. За повече информация admin@Test.com</h5>
+                    <h5 class="card-title">Достъпът до този ресурс е отказан.</h5>
+                    <h5 class="card-text">С цел защита данните на потребителите, достъпът до ресурси е ограничен. За повече информация admin@Test.com</h5>
+                    <br />
                     <a href="@Uri" class="btn btn-primary">Начало</a>
                 </div>
                 <div class="card-footer text-muted">
@@ -30,8 +31,6 @@
     [Parameter]
     public string HomeUrl { get; set; }
     private string Uri = string.Empty;
-    private string Role = string.Empty;
-    private string Area = string.Empty;
     private int year;
 
     protected override async Task OnInitializedAsync()
@@ -39,14 +38,10 @@
         var state = await _state.GetAuthenticationStateAsync();
         if (state.User.IsInRole(Security.Role.Owner) || state.User.IsInRole(Security.Role.User))
         {
-            Area = "Администратор";
-            Role = "Потребители";
             Uri = "/user";
         }
         else
         {
-            Area = "Потребител";
-            Role = "Администратори";
             Uri = "/administrator";
         }
 

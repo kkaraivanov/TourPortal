@@ -2,156 +2,156 @@
 
 <section class="section bg-light pb-0">
 	<div class="container">
-        <EditForm Model="model" OnSubmit="Search" Context="SearchHotels" class="form_book">
-            <div class="row">
-                <div class="col-md-3">
-                    <label class="date">От Дата</label>
-                    <RadzenDatePicker DateFormat="d"
-                                      TValue="DateTime?"
-                                      DateRender=@DateFrom
-                                      Change=@(args => OnChange(args)) 
-                                      class="book_n" />
-                </div>
-                <div class="col-md-3">
-                    <label class="date">До Дата</label>
-                    <RadzenDatePicker DateFormat="d"
-                                      TValue="DateTime?"
-                                      DateRender=@DateTo
-                                      Change=@(args => model.ChecOut = args.Value) 
-                                      class="book_n" />
-                </div>
-                <div class="col-md-3">
-                    <label class="date">Посетители</label>
-                    <InputSelect @bind-Value="model.Persons" class="book_n">
-                        @for (var i = 1; i <= personsCount; i++)
-                        {
-                            <option class="form-control" value="@model.Persons">@i</option>
-                        }
-                    </InputSelect>
-                </div>
-                <div class="col-md-3">
-                    <button class="book_btn">Търси</button>
-                </div>
-            </div>
-        </EditForm>
+		<EditForm Model="model" OnSubmit="Search" Context="SearchHotels" class="form_book">
+			<div class="row">
+				<div class="col-md-3">
+					<label class="date">От Дата</label>
+					<RadzenDatePicker DateFormat="d"
+									  TValue="DateTime?"
+									  DateRender=@DateFrom
+									  Change=@(args => OnChange(args))
+									  class="book_n" />
+				</div>
+				<div class="col-md-3">
+					<label class="date">До Дата</label>
+					<RadzenDatePicker DateFormat="d"
+									  TValue="DateTime?"
+									  DateRender=@DateTo
+									  Change=@(args => model.ChecOut = args.Value)
+									  class="book_n" />
+				</div>
+				<div class="col-md-3">
+					<label class="date">Посетители</label>
+					<InputSelect @bind-Value="model.Persons" class="book_n">
+						@for (var i = 1; i <= personsCount; i++)
+						{
+		  <option class="form-control" value="@model.Persons">@i</option>
+						}
+	 </InputSelect>
 	</div>
+	<div class="col-md-3">
+	 <button class="book_btn">Търси</button>
+	</div>
+   </div>
+  </EditForm>
+ </div>
 </section>
 
 @code
 {
 	private SearchFreeHotelsRequest model = new SearchFreeHotelsRequest();
-        private string dateFormat = "MM/dd/yyyy";
-        private int personsCount = 4;
-        IEnumerable<DateTime> dates = new DateTime[] { DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1) };
-        List<DateTime> datesFrom = new List<DateTime>();
-        List<DateTime> datesTo = new List<DateTime>();
+	private string dateFormat = "MM/dd/yyyy";
+	private int personsCount = 4;
+	IEnumerable<DateTime> dates = new DateTime[] { DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1) };
+	List<DateTime> datesFrom = new List<DateTime>();
+	List<DateTime> datesTo = new List<DateTime>();
 
-        [Parameter]
-        public List<SearchFreeHotelsResponse> SerchHotels { get; set; }
+	[Parameter]
+	public List<SearchFreeHotelsResponse> SerchHotels { get; set; }
 
-        [Parameter]
-        public EventCallback<List<SearchFreeHotelsResponse>> OnChanged { get; set; }
+	[Parameter]
+	public EventCallback<List<SearchFreeHotelsResponse>> OnChanged { get; set; }
 
-        protected override async Task OnInitializedAsync()
-        {
-            for (int i = 1; i <= 31; i++)
-            {
-                datesFrom.Add(DateTime.Today.AddDays(-i));
-            }
-        }
+	protected override async Task OnInitializedAsync()
+	{
+		for (int i = 1; i <= 31; i++)
+		{
+			datesFrom.Add(DateTime.Today.AddDays(-i));
+		}
+	}
 
-        private async Task Search()
-        {
-            if (SerchHotels.Any())
-            {
-                var item = SerchHotels.Last();
-                SerchHotels.Remove(item);
+	private async Task Search()
+	{
+		if (SerchHotels.Any())
+		{
+			var item = SerchHotels.Last();
+			SerchHotels.Remove(item);
 
-                await OnChanged.InvokeAsync(SerchHotels);
-            }
-        }
+			await OnChanged.InvokeAsync(SerchHotels);
+		}
+	}
 
-        void OnChange(DateTime? value)
-        {
-            datesTo.AddRange(datesFrom);
-            var dayNow = DateTime.Now.Day;
-            var checkedDay = value.Value.Day;
-            var count = checkedDay - dayNow;
+	void OnChange(DateTime? value)
+	{
+		datesTo.AddRange(datesFrom);
+		var dayNow = DateTime.Now.Day;
+		var checkedDay = value.Value.Day;
+		var count = checkedDay - dayNow;
 
-            for (int i = 1; i <= count; i++)
-            {
-                datesTo.Add(DateTime.Today.AddDays(i));
-            }
+		for (int i = 1; i <= count; i++)
+		{
+			datesTo.Add(DateTime.Today.AddDays(i));
+		}
 
-            StateHasChanged();
-        }
+		StateHasChanged();
+	}
 
-        void DateFrom(DateRenderEventArgs args)
-        {
-            args.Disabled = datesFrom.Contains(args.Date);
-        }
+	void DateFrom(DateRenderEventArgs args)
+	{
+		args.Disabled = datesFrom.Contains(args.Date);
+	}
 
-        void DateTo(DateRenderEventArgs args)
-        {
-            args.Disabled = datesTo.Contains(args.Date);
-        }
+	void DateTo(DateRenderEventArgs args)
+	{
+		args.Disabled = datesTo.Contains(args.Date);
+	}
 
-        void DateRenderSpecial(DateRenderEventArgs args)
-        {
-            if (dates.Contains(args.Date))
-            {
-                args.Attributes.Add("style", "background-color: #ff6d41; border-color: white;");
-            }
-        }
+	void DateRenderSpecial(DateRenderEventArgs args)
+	{
+		if (dates.Contains(args.Date))
+		{
+			args.Attributes.Add("style", "background-color: #ff6d41; border-color: white;");
+		}
+	}
 }
 
 <style>
-    .form_book {
-        background: #fff;
-        padding: 5px 10px 0px 5px;
-        border-radius: 40px 40px 0px 0px;
-    }
+	.form_book {
+		background: #fff;
+		padding: 5px 10px 0px 5px;
+		border-radius: 40px 40px 0px 0px;
+	}
 
-    .form_book .date {
-        color: #7e7e7e;
-        font-weight: bold;
-        font-size: 15px;
-        text-transform: uppercase;
-        padding-left: 17px;
-    }
+		.form_book .date {
+			color: #7e7e7e;
+			font-weight: bold;
+			font-size: 15px;
+			text-transform: uppercase;
+			padding-left: 17px;
+		}
 
-    .book_n {
-        border: inherit;
-        border-radius: 20px;
-        background-color: #eeeeee;
-        width: 100%;
-        font-size: 16px;
-        height: auto;
-        line-height: normal;
-        padding: 10px 20px;
-        -webkit-appearance: none !important;
-    }
+	.book_n {
+		border: inherit;
+		border-radius: 20px;
+		background-color: #eeeeee;
+		width: 100%;
+		font-size: 16px;
+		height: auto;
+		line-height: normal;
+		padding: 10px 20px;
+		-webkit-appearance: none !important;
+	}
 
 
-    .book_btn {
-        font-size: 17px;
-        background-color: #000;
-        color: #fff;
-        font-weight: 500;
-        padding: 5px 0px;
-        width: 100%;
-        max-width: 161px;
-        text-align: center;
-        display: inline-block;
-        transition: ease-in all 0.5s;
-        border-radius: 10px;
-        margin-top: 33px;
-    }
+	.book_btn {
+		font-size: 17px;
+		background-color: #000;
+		color: #fff;
+		font-weight: 500;
+		padding: 5px 0px;
+		width: 100%;
+		max-width: 161px;
+		text-align: center;
+		display: inline-block;
+		transition: ease-in all 0.5s;
+		border-radius: 10px;
+		margin-top: 33px;
+	}
 
-    .book_btn:hover {
-        background-color: #eec237;
-        color: #fff;
-        transition: ease-in all 0.5s;
-        border-radius: 25px
-    }
+		.book_btn:hover {
+			background-color: #eec237;
+			color: #fff;
+			transition: ease-in all 0.5s;
+			border-radius: 25px
+		}
 </style>

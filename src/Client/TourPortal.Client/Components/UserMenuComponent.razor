@@ -1,9 +1,18 @@
-﻿<NavigationComponent NavigationLink="/user/">
+﻿@using TourPortal.Infrastructure.Global.Types
+<NavigationComponent NavigationLink="/user/">
     <NavigationContent>
         <i class="mdi mdi-home menu-icon"></i>
         <span class="menu-title">Начало</span>
     </NavigationContent>
 </NavigationComponent>
+<AuthorizeView Roles="@Security.Role.Owner">
+    <NavigationComponent NavigationLink="/user/hotel">
+        <NavigationContent>
+            <i class="mdi mdi-home menu-icon"></i>
+            <span class="menu-title">Моят хотел</span>
+        </NavigationContent>
+    </NavigationComponent>
+</AuthorizeView>
 <NavigationComponent NavigationLink="/user/test">
     <NavigationContent>
         <i class="mdi mdi-home menu-icon"></i>
