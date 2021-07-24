@@ -1,11 +1,12 @@
 ﻿@attribute [Authorize(Roles = Security.Role.Owner)]
 @page "/user/hotel"
+@using TourPortal.Client.Data
 @using TourPortal.Infrastructure.Shared.Enums
 @using TourPortal.Infrastructure.Shared.Models.Hotel
 
 <PageModelComponent>
 	<PageHeader>
-		<h3>Хотел</h3>
+		<h3>Хотел @hotelName</h3>
 	</PageHeader>
     <PageBody>
         @if (isHotelExist)
@@ -23,11 +24,41 @@
             else
             {
                 <EditForm OnValidSubmit="AddHotelToDatabase" Model="hotelModel" Context="HotelForm">
-                    <HotelCardComponent ImageUrl="@hotelModel.HotelImageUrl" Name="@hotelModel.HotelName" City="@hotelModel.City" Address="@hotelModel.Address" Contacts="hotelModel.Contacts" IsEditable="isHotelExist">
+                    <HotelCardComponent HotelModel="@hotelModel" IsEditable="@isHotelExist" OnChangedHotelModel="@HotelIsChanged">
                         <ButtonSection>
                             <div class="row d-flex flex-row justify-content-end">
                                 <div>
-                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => Cancle()) Text="Отказ" ButtonStyle="ButtonStyle.Primary"/>
+                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => OnAddButtonClick()) Text="Отказ" ButtonStyle="ButtonStyle.Primary"/>
+                                </div>
+                                <div>
+                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => AddHotelToDatabase()) Text="Запази" ButtonStyle="ButtonStyle.Success"/>
+                                </div>
+                            </div>
+                        </ButtonSection>
+                    </HotelCardComponent>
+                </EditForm>
+            }
+        }
+        else
+        {
+            @if (!isChangeButtonClick)
+            {
+                <HotelCardComponent HotelInfo="@User.Hotel">
+                    <ButtonSection>
+                        <div class="row d-flex justify-content-end">
+                            <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => OnChangeButtonClick()) Text="Редактирай" ButtonStyle="ButtonStyle.Primary"/>
+                        </div>
+                    </ButtonSection>
+                </HotelCardComponent>
+            }
+            else
+            {
+                <EditForm OnValidSubmit="ChangeHotelData" Model="hoteInfolModel" Context="HotelForm">
+                    <HotelCardComponent HotelInfo="@hoteInfolModel" IsEditable="@isChangeButtonClick" OnChangedHotelInfo="@HotelIsChanged">
+                        <ButtonSection>
+                            <div class="row d-flex flex-row justify-content-end">
+                                <div>
+                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => OnAddButtonClick()) Text="Отказ" ButtonStyle="ButtonStyle.Primary"/>
                                 </div>
                                 <div>
                                     <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => AddHotelToDatabase()) Text="Запази" ButtonStyle="ButtonStyle.Success"/>
@@ -42,29 +73,78 @@
 </PageModelComponent>
 
 @code {
-    private  Dictionary<string, ContactType> hotelContacts = new  Dictionary<string, ContactType>();
     private bool isHotelExist;
     private bool isAddButtonClick;
+    private bool isChangeButtonClick;
+    private string hotelName = string.Empty;
     private AddHotelModel hotelModel = new AddHotelModel();
+    private HotelInfoModel hoteInfolModel = new HotelInfoModel();
 
     protected override async Task OnParametersSetAsync()
     {
         isHotelExist = User.Hotel == null;
+
+        if (!isHotelExist)
+        {
+            hotelName = User.Hotel.HotelName;
+        }
     }
 
-    protected async Task AddHotelToDatabase()
+    private async Task ChangeHotelData()
     {
 
     }
-    
-    protected async Task Cancle()
+
+    private async Task AddHotelToDatabase()
     {
-        hotelContacts = new Dictionary<string, ContactType>();
-        isAddButtonClick = isAddButtonClick != true;
+        if (hotelModel != null)
+        {
+            if (string.IsNullOrEmpty(hotelModel.HotelName) ||
+                string.IsNullOrEmpty(hotelModel.City) ||
+                string.IsNullOrEmpty(hotelModel.Address))
+            {
+                return;
+            }
+
+            var request = await ApiService.AddNewHotel(hotelModel);
+
+            if (request.IsOk)
+            {
+                var newHotelData = request.ResponseData;
+                var newHotel = new HotelInfoModel
+                {
+                    Id = newHotelData.Id,
+                    HotelName = newHotelData.HotelName,
+                    City = newHotelData.City,
+                    Address = newHotelData.Address,
+                    Contacts = newHotelData.Contacts,
+                    HotelImageUrl = newHotelData.HotelImageUrl
+                };
+
+                User.AddHotel(newHotel);
+                StateHasChanged();
+            }
+        }
     }
     
     protected async Task OnAddButtonClick()
     {
         isAddButtonClick = isAddButtonClick != true;
+    }
+
+    protected async Task OnChangeButtonClick()
+    {
+        hoteInfolModel = User.Hotel;
+        isChangeButtonClick = isChangeButtonClick != true;
+    }
+
+    private void HotelIsChanged(AddHotelModel hotel)
+    {
+        hotelModel = hotel;
+    }
+    
+    private void HotelIsChanged(HotelInfoModel hotel)
+    {
+        hoteInfolModel = hotel;
     }
 }

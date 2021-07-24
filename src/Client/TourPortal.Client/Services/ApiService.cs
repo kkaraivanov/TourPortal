@@ -15,6 +15,7 @@
     using Infrastructure.Global.Types;
     using Infrastructure.Services;
     using Infrastructure.Shared.Models.Authentication;
+    using Infrastructure.Shared.Models.Hotel;
     using Infrastructure.Shared.Models.Response;
 
     class ApiService : IApiService
@@ -91,6 +92,9 @@
         public async Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfo() =>
             await Get<HotelInfoResponse>(Global.Routes.GetHotelInfo);
 
+        public async Task<ApplicationResponse<HotelInfoResponse>> AddNewHotel(AddHotelModel hotelModel) =>
+            await Post<AddHotelModel, HotelInfoResponse>(Global.Routes.AddNewHotel, hotelModel);
+
         private async Task<ApplicationResponse<T>> Get<T>(string url)
         {
             var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
@@ -113,7 +117,14 @@
 
         private async Task<ApplicationResponse<TResponse>> Post<TRequest, TResponse>(string url, TRequest request)
         {
-            (_authenticationStateProvider as ApiAuthenticationStateProvider)?.GetAuthenticationStateAsync();
+            //(_authenticationStateProvider as ApiAuthenticationStateProvider)?.GetAuthenticationStateAsync();
+            var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var token = await _localStorage.GetItemAsync<string>(ApplicationConstants.AuthenticatedTokenString);
+
+            if (state.User.Identity.IsAuthenticated)
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
 
             try
             {

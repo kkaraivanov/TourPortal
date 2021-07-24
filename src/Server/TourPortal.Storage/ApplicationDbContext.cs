@@ -37,6 +37,8 @@
 
         public DbSet<Reservation> Reservations { get; set; }
 
+        public DbSet<Contact> Contacts { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
@@ -103,6 +105,10 @@
                 b.HasMany(h => h.Reservations)
                     .WithOne(r => r.Hotel)
                     .HasForeignKey(r => r.HotelId);
+
+                b.HasMany(h => h.Contacts)
+                    .WithOne(c => c.Hotel)
+                    .HasForeignKey(c => c.HotelId);
             });
 
             builder.Entity<RoomInType>(b =>

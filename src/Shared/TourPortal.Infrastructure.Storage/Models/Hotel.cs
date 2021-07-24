@@ -13,7 +13,7 @@
             Employes = new HashSet<Employe>();
             Rooms = new HashSet<Room>();
             Reservations = new HashSet<Reservation>();
-            Contactses = new HashSet<Contacts>();
+            Contacts = new HashSet<Contact>();
         }
 
         [Key]
@@ -27,7 +27,7 @@
 
         [Required]
         [MaxLength(20)]
-        public string Sity { get; set; }
+        public string City { get; set; }
 
         [Required]
         [MaxLength(64)]
@@ -45,7 +45,7 @@
 
         public virtual ICollection<Reservation> Reservations { get; set; }
 
-        public virtual ICollection<Contacts> Contactses { get; set; }
+        public virtual ICollection<Contact> Contacts { get; set; }
 
         public DateTime CreatedOn { get; set; }
 

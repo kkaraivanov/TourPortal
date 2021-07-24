@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
 
     using Shared.Models.Authentication;
+    using Shared.Models.Hotel;
     using Shared.Models.Response;
 
     public interface IApiService
@@ -18,5 +19,7 @@
         Task<ApplicationResponse<UserInfoResponse>> GetUserInfo(string userEmail);
 
         Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfo();
+
+        Task<ApplicationResponse<HotelInfoResponse>> AddNewHotel(AddHotelModel hotelModel);
     }
 }

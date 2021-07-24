@@ -4,15 +4,19 @@
     using System.ComponentModel.DataAnnotations;
     using Shared.Enums;
 
-    public class Contacts
+    public class Contact
     {
-        public Contacts()
+        public Contact()
         {
             Id = Guid.NewGuid().ToString();
         }
 
         [Key]
         public string Id { get; set; }
+
+        public string HotelId { get; set; }
+
+        public Hotel Hotel { get; set; }
 
         [Required]
         public string ContactString { get; set; }

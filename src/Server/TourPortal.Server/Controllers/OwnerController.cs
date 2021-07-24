@@ -5,6 +5,7 @@
     using Infrastructure.Global.Types;
     using Infrastructure.Services;
     using Infrastructure.Shared.Models.Authentication;
+    using Infrastructure.Shared.Models.Hotel;
     using Infrastructure.Shared.Models.Response;
     using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Authorization;
@@ -59,28 +60,77 @@
             return respons.ToResponse();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("[action]")]
-        public async Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfo()
+        public async Task<ApplicationResponse<HotelInfoResponse>> AddNewHotel([FromBody] AddHotelModel hotelModel)
         {
-            var ownerId = _userManager.GetUserId(User);
-            var hotel = _context.Hotels.FirstOrDefault(x => x.OwnerId == ownerId);
+            ModelStateErrors<AddHotelModel>();
+
+            if (hotelModel == null)
+            {
+                return new ApplicationResponse<HotelInfoResponse>(new ApplicationError("", "Hotel model can't be null."));
+            }
+
+            var userId = _userManager.GetUserId(User);
+            var owner = _context.Owners
+                .FirstOrDefault(x => x.Profile.UserId == userId);
+            var hotel = _context.Hotels
+                .FirstOrDefault(x => x.OwnerId == owner.Id);
 
             if (hotel != null)
             {
-                var response = new HotelInfoResponse
+                return new ApplicationResponse<HotelInfoResponse>(new ApplicationError("", $"Hotel {hotel.HotelName} already exists."));
+            }
+
+            hotel = new Hotel
+            {
+                OwnerId = owner.Id,
+                Owner = owner,
+                HotelName = hotelModel.HotelName,
+                City = hotelModel.City,
+                Address = hotelModel.Address,
+                HotelImageUrl = hotelModel.HotelImageUrl
+            };
+
+            await _context.Hotels.AddAsync(hotel);
+            await _context.SaveChangesAsync();
+
+            var hotelName = hotel.HotelName;
+            hotel = _context.Hotels
+                .FirstOrDefault(x => x.OwnerId == owner.Id);
+
+            if (hotel == null)
+            {
+                return new ApplicationResponse<HotelInfoResponse>(new ApplicationError("", $"Hotel {hotelName} was not created."));
+            }
+
+            foreach (var (contact, contactType) in hotelModel.Contacts)
+            {
+                var newContact = new Contact
                 {
-                    Id = hotel.Id,
-                    HotelName = hotel.HotelName,
-                    Sity = hotel.Sity,
-                    Address = hotel.Address,
-                    HotelImageUrl = hotel.HotelImageUrl
+                    ContactString = contact,
+                    ContactType = contactType
                 };
 
-                return response.ToResponse();
+                hotel.Contacts.Add(newContact);
             }
-            
-            return new ApplicationResponse<HotelInfoResponse>();
+
+            owner.Hotel = hotel;
+            _context.Owners.Update(owner);
+            await _context.SaveChangesAsync();
+
+
+            var respone = new HotelInfoResponse
+            {
+                Id = hotel.Id,
+                HotelName = hotel.HotelName,
+                Address = hotel.Address,
+                City = hotel.City,
+                Contacts = hotelModel.Contacts,
+                HotelImageUrl = hotel.HotelImageUrl
+            };
+
+            return respone.ToResponse();
         }
     }
 }

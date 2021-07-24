@@ -92,12 +92,14 @@
                         {
                             Id = hotelInfo.Id,
                             HotelName = hotelInfo.HotelName,
-                            Sity = hotelInfo.Sity,
+                            City = hotelInfo.City,
                             Address = hotelInfo.Address,
+                            Contacts = hotelInfo.Contacts,
                             HotelImageUrl = hotelInfo.HotelImageUrl
                         };
 
                         User.AddHotel(hotel);
+                        StateHasChanged();
                     }
                 }
             }
