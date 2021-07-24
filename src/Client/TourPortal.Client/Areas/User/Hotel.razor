@@ -1,22 +1,70 @@
 ﻿@attribute [Authorize(Roles = Security.Role.Owner)]
 @page "/user/hotel"
+@using TourPortal.Infrastructure.Shared.Enums
+@using TourPortal.Infrastructure.Shared.Models.Hotel
 
 <PageModelComponent>
 	<PageHeader>
-		<h3>Хотел @User.Hotel?.HotelName</h3>
+		<h3>Хотел</h3>
 	</PageHeader>
-	<PageBody>
-		@if (User.Hotel == null)
-		{
-		    <HotelCard />
-		}
-		else
-		{
-		    <HotelCard Hotel="@User.Hotel" />
-		}
-	</PageBody>
+    <PageBody>
+        @if (isHotelExist)
+        {
+            @if (!isAddButtonClick)
+            {
+                <HotelCardComponent>
+                    <ButtonSection>
+                        <div class="row d-flex justify-content-end">
+                            <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => OnAddButtonClick()) Text="Добави хотел" ButtonStyle="ButtonStyle.Primary"/>
+                        </div>
+                    </ButtonSection>
+                </HotelCardComponent>
+            }
+            else
+            {
+                <EditForm OnValidSubmit="AddHotelToDatabase" Model="hotelModel" Context="HotelForm">
+                    <HotelCardComponent ImageUrl="@hotelModel.HotelImageUrl" Name="@hotelModel.HotelName" City="@hotelModel.City" Address="@hotelModel.Address" Contacts="hotelModel.Contacts" IsEditable="isHotelExist">
+                        <ButtonSection>
+                            <div class="row d-flex flex-row justify-content-end">
+                                <div>
+                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => Cancle()) Text="Отказ" ButtonStyle="ButtonStyle.Primary"/>
+                                </div>
+                                <div>
+                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => AddHotelToDatabase()) Text="Запази" ButtonStyle="ButtonStyle.Success"/>
+                                </div>
+                            </div>
+                        </ButtonSection>
+                    </HotelCardComponent>
+                </EditForm>
+            }
+        }
+    </PageBody>
 </PageModelComponent>
 
 @code {
-	private string imageUrl = string.Empty;
+    private  Dictionary<string, ContactType> hotelContacts = new  Dictionary<string, ContactType>();
+    private bool isHotelExist;
+    private bool isAddButtonClick;
+    private AddHotelModel hotelModel = new AddHotelModel();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        isHotelExist = User.Hotel == null;
+    }
+
+    protected async Task AddHotelToDatabase()
+    {
+
+    }
+    
+    protected async Task Cancle()
+    {
+        hotelContacts = new Dictionary<string, ContactType>();
+        isAddButtonClick = isAddButtonClick != true;
+    }
+    
+    protected async Task OnAddButtonClick()
+    {
+        isAddButtonClick = isAddButtonClick != true;
+    }
 }
