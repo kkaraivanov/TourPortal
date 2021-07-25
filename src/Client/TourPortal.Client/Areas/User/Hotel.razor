@@ -1,7 +1,6 @@
 ﻿@attribute [Authorize(Roles = Security.Role.Owner)]
 @page "/user/hotel"
 @using TourPortal.Client.Data
-@using TourPortal.Infrastructure.Shared.Enums
 @using TourPortal.Infrastructure.Shared.Models.Hotel
 
 <PageModelComponent>
@@ -13,7 +12,7 @@
         {
             @if (!isAddButtonClick)
             {
-                <HotelCardComponent>
+                <HotelCardComponent HotelInfo="@hoteInfolModel">
                     <ButtonSection>
                         <div class="row d-flex justify-content-end">
                             <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => OnAddButtonClick()) Text="Добави хотел" ButtonStyle="ButtonStyle.Primary"/>
@@ -24,7 +23,7 @@
             else
             {
                 <EditForm OnValidSubmit="AddHotelToDatabase" Model="hotelModel" Context="HotelForm">
-                    <HotelCardComponent HotelModel="@hotelModel" IsEditable="@isHotelExist" OnChangedHotelModel="@HotelIsChanged">
+                    <HotelCardComponent HotelModel="@hotelModel" IsAddHotel="@isHotelExist" IsEditable="@isHotelExist" OnChangedHotelModel="@HotelIsChanged">
                         <ButtonSection>
                             <div class="row d-flex flex-row justify-content-end">
                                 <div>
@@ -43,7 +42,7 @@
         {
             @if (!isChangeButtonClick)
             {
-                <HotelCardComponent HotelInfo="@User.Hotel">
+                <HotelCardComponent HotelInfo="@hoteInfolModel">
                     <ButtonSection>
                         <div class="row d-flex justify-content-end">
                             <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => OnChangeButtonClick()) Text="Редактирай" ButtonStyle="ButtonStyle.Primary"/>
@@ -54,14 +53,14 @@
             else
             {
                 <EditForm OnValidSubmit="ChangeHotelData" Model="hoteInfolModel" Context="HotelForm">
-                    <HotelCardComponent HotelInfo="@hoteInfolModel" IsEditable="@isChangeButtonClick" OnChangedHotelInfo="@HotelIsChanged">
+                    <HotelCardComponent HotelInfo="@hoteInfolModel" IsChangedHotel="@isChangeButtonClick" IsEditable="@isChangeButtonClick" OnChangedHotelInfo="@HotelIsChanged">
                         <ButtonSection>
                             <div class="row d-flex flex-row justify-content-end">
                                 <div>
-                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => OnAddButtonClick()) Text="Отказ" ButtonStyle="ButtonStyle.Primary"/>
+                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => OnChangeButtonClick()) Text="Отказ" ButtonStyle="ButtonStyle.Primary"/>
                                 </div>
                                 <div>
-                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => AddHotelToDatabase()) Text="Запази" ButtonStyle="ButtonStyle.Success"/>
+                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => ChangeHotelData()) Text="Запази" ButtonStyle="ButtonStyle.Success"/>
                                 </div>
                             </div>
                         </ButtonSection>
@@ -87,12 +86,21 @@
         if (!isHotelExist)
         {
             hotelName = User.Hotel.HotelName;
+            hoteInfolModel = User.Hotel;
         }
     }
 
     private async Task ChangeHotelData()
     {
-
+        if (hoteInfolModel != null)
+        {
+            if (string.IsNullOrEmpty(hoteInfolModel.HotelName) ||
+                string.IsNullOrEmpty(hoteInfolModel.City) ||
+                string.IsNullOrEmpty(hoteInfolModel.Address))
+            {
+                return;
+            }
+        }
     }
 
     private async Task AddHotelToDatabase()
@@ -121,9 +129,13 @@
                     HotelImageUrl = newHotelData.HotelImageUrl
                 };
 
+                hoteInfolModel = newHotel;
                 User.AddHotel(newHotel);
-                StateHasChanged();
             }
+
+            hotelName = hoteInfolModel.HotelName;
+            isHotelExist = false;
+            StateHasChanged();
         }
     }
     

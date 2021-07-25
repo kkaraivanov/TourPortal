@@ -1,5 +1,6 @@
 ﻿namespace TourPortal.Server.Controllers
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Infrastructure.Global.Types;
@@ -11,6 +12,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Services;
     using Storage;
 
     [Authorize(Roles = Security.Role.Owner)]
@@ -20,17 +22,19 @@
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IAccountService _accountService;
+        private readonly IHotelService _hotelService;
 
         public OwnerController(
             ApplicationDbContext context, 
             UserManager<ApplicationUser> userManager, 
             RoleManager<ApplicationRole> roleManager, 
-            IAccountService accountService)
+            IAccountService accountService, IHotelService hotelService)
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
             _accountService = accountService;
+            _hotelService = hotelService;
         }
 
         [HttpPost]
@@ -72,63 +76,37 @@
             }
 
             var userId = _userManager.GetUserId(User);
-            var owner = _context.Owners
-                .FirstOrDefault(x => x.Profile.UserId == userId);
-            var hotel = _context.Hotels
-                .FirstOrDefault(x => x.OwnerId == owner.Id);
+            var owner = _hotelService.GetOwner(userId);
+            var hotel = await _hotelService.GetHotelByOwnerId(owner.Id);
 
             if (hotel != null)
             {
                 return new ApplicationResponse<HotelInfoResponse>(new ApplicationError("", $"Hotel {hotel.HotelName} already exists."));
             }
 
-            hotel = new Hotel
-            {
-                OwnerId = owner.Id,
-                Owner = owner,
-                HotelName = hotelModel.HotelName,
-                City = hotelModel.City,
-                Address = hotelModel.Address,
-                HotelImageUrl = hotelModel.HotelImageUrl
-            };
-
-            await _context.Hotels.AddAsync(hotel);
-            await _context.SaveChangesAsync();
-
-            var hotelName = hotel.HotelName;
-            hotel = _context.Hotels
-                .FirstOrDefault(x => x.OwnerId == owner.Id);
-
+            var hotelName = hotelModel.HotelName;
+            hotel = await _hotelService.AddNewHotel(hotelModel, owner);
+            
             if (hotel == null)
             {
                 return new ApplicationResponse<HotelInfoResponse>(new ApplicationError("", $"Hotel {hotelName} was not created."));
             }
 
+            var contacts = new List<Contact>();
             foreach (var (contact, contactType) in hotelModel.Contacts)
             {
                 var newContact = new Contact
                 {
                     ContactString = contact,
-                    ContactType = contactType
+                    ContactType = contactType,
+                    HotelId = hotel.Id
                 };
 
-                hotel.Contacts.Add(newContact);
+                contacts.Add(newContact);
             }
 
-            owner.Hotel = hotel;
-            _context.Owners.Update(owner);
-            await _context.SaveChangesAsync();
-
-
-            var respone = new HotelInfoResponse
-            {
-                Id = hotel.Id,
-                HotelName = hotel.HotelName,
-                Address = hotel.Address,
-                City = hotel.City,
-                Contacts = hotelModel.Contacts,
-                HotelImageUrl = hotel.HotelImageUrl
-            };
+            await _hotelService.AddNewHotlContacts(contacts);
+            var respone = await _hotelService.GetHotelInfo(hotel.Id);
 
             return respone.ToResponse();
         }

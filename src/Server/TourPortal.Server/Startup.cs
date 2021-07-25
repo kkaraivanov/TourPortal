@@ -97,6 +97,7 @@ namespace TourPortal.Server
 
             services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
             services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IHotelService, HotelService>();
             services.AddControllers();
         }
 

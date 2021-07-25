@@ -5,97 +5,45 @@
 
 @if (!IsEditable)
 {
-    <div class="card card border-primary mb-3">
-        <div class="d-md-flex">
-            <div class="col-12 col-md-3 p-2 w-100 card" style="width: 25rem;">
-                @if (string.IsNullOrEmpty(HotelInfo.HotelImageUrl))
+    <HotelCardModelComponent HotelImageUrl="@HotelInfo.HotelImageUrl" HotelName="@HotelInfo.HotelName" City="@HotelInfo.City" Address="@HotelInfo.Address">
+        <ContactsSection>
+            @if (HotelInfo.Contacts.Any())
+            {
+                @foreach (var (contact, contactType) in HotelInfo.Contacts)
                 {
-                    <img class="card-img" src="/images/hotel.png" alt="Card image cap">
-                }
-                else
-                {
-                    <img class="card-img" src="@HotelInfo.HotelImageUrl" alt="Card image cap">
-                }
-            </div>
-            <div class="col-12 col-md-9 pl-0 pl-md-2">
-                <div class="mb-3 pl-2 d-flex flex-column justify-content-between h-100 p-2">
-                    <div class="card-body">
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Име:</label>
-                            <div class="col-sm-10">
-                                <input type="text" readonly class="form-control-plaintext" value="@HotelInfo.HotelName">
-                            </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">@contactType: </label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly class="form-control-plaintext" value="@contact">
                         </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Град:</label>
-                            <div class="col-sm-10">
-                                <input type="text" readonly class="form-control-plaintext" value="@HotelInfo.City">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Адрес:</label>
-                            <div class="col-sm-10">
-                                <input type="text" readonly class="form-control-plaintext" value="@HotelInfo.Address">
-                            </div>
-                        </div>
-                        @if (HotelInfo.Contacts.Any())
-                        {
-                            @foreach (var (contact, contactType) in HotelInfo.Contacts)
-                            {
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">@contactType: </label>
-                                    <div class="col-sm-10">
-                                        <input type="text" readonly class="form-control-plaintext" value="@contact">
-                                    </div>
-                                </div>
-                            }
-                        }
                     </div>
-                    @ButtonSection
-                </div>
-            </div>
-        </div>
-    </div>
+                }
+            }
+        </ContactsSection>
+        <ButtonSection>
+            @ButtonSection
+        </ButtonSection>
+    </HotelCardModelComponent>
 }
 else
 {
-    @if (HotelModel != null && HotelInfo == null)
+    @if (IsAddHotel)
     {
-        <div class="card card border-primary mb-3">
-            <div class="d-md-flex">
-                <div class="col-12 col-md-3 p-2 w-100 card" style="width: 25rem;">
-                    @if (string.IsNullOrEmpty(HotelModel.HotelImageUrl))
-                    {
-                        <img class="card-img" src="/images/hotel.png" alt="Card image cap">
-                    }
-                    else
-                    {
-                        <img class="card-img" src="@HotelModel.HotelImageUrl" alt="Card image cap">
-                    }
-                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelModel.HotelImageUrl" @oncuechange="@(() => FeeldIsChanged())" placeholder="Image url">
-                </div>
-                <div class="col-12 col-md-9 pl-0 pl-md-2">
-                    <div class="mb-3 pl-2 d-flex flex-column justify-content-between h-100 p-2">
-                        <div class="card-body">
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Име:</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelModel.HotelName" @oncuechange="@(() => FeeldIsChanged())">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Град:</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelModel.City" @oncuechange="@(() => FeeldIsChanged())">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Адрес:</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelModel.Address" @oncuechange="@(() => FeeldIsChanged())">
-                                </div>
-                            </div>
-                            @if (HotelModel.Contacts.Any())
+        <HotelCardModelComponent IsEditable="IsAddHotel">
+            <BindImageUrl>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelModel.HotelImageUrl" @oncuechange="@(() => FeeldIsChanged())" placeholder="Image url">
+            </BindImageUrl>
+            <BindHotelName>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelModel.HotelName" @oncuechange="@(() => FeeldIsChanged())">
+            </BindHotelName>
+            <BindCity>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelModel.City" @oncuechange="@(() => FeeldIsChanged())">
+            </BindCity>
+            <BindAddress>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelModel.Address" @oncuechange="@(() => FeeldIsChanged())">
+            </BindAddress>
+            <ContactsSection>
+                @if (HotelModel.Contacts.Any())
                             {
                                 @foreach (var hotelContact in HotelModel.Contacts)
                                 {
@@ -138,98 +86,76 @@ else
                                     </div>
                                 </div>
                             }
-                        </div>
-                        @ButtonSection
-                    </div>
-                </div>
-            </div>
-        </div>
+            </ContactsSection>
+            <ButtonSection>
+                @ButtonSection
+            </ButtonSection>
+        </HotelCardModelComponent>
     }
-    @if (HotelInfo != null && HotelModel == null)
+    @if (IsChangedHotel)
     {
-        <div class="card card border-primary mb-3">
-            <div class="d-md-flex">
-                <div class="col-12 col-md-3 p-2 w-100 card" style="width: 25rem;">
-                    @if (string.IsNullOrEmpty(HotelInfo.HotelImageUrl))
+        <HotelCardModelComponent IsEditable="IsChangedHotel">
+            <BindImageUrl>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelInfo.HotelImageUrl" @oncuechange="@(() => FeeldIsChanged())" placeholder="Image url">
+            </BindImageUrl>
+            <BindHotelName>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelInfo.HotelName" @oncuechange="@(() => FeeldIsChanged())">
+            </BindHotelName>
+            <BindCity>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelInfo.City" @oncuechange="@(() => FeeldIsChanged())">
+            </BindCity>
+            <BindAddress>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelInfo.Address" @oncuechange="@(() => FeeldIsChanged())">
+            </BindAddress>
+            <ContactsSection>
+                @if (HotelInfo.Contacts.Any())
                     {
-                        <img class="card-img" src="/images/hotel.png" alt="Card image cap">
+                        @foreach (var hotelContact in HotelInfo.Contacts)
+                        {
+                            ContactType contactType = hotelContact.Value;
+                            string contact = hotelContact.Key;
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">@contactType: </label>
+                                <div class="col-sm-10 contact">
+                                    <input type="text" id="contact" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@contact">
+                                    <button @onclick="@(() => RemoveContact(contact))">Премахни</button>
+                                </div>
+                            </div>
+                        }
+                    }
+                    @if (!isAdd)
+                    {
+                        <div class="row d-flex justify-content-end">
+                            <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => IsAddChange()) Text="Добави контакти" ButtonStyle="ButtonStyle.Primary"/>
+                        </div>
                     }
                     else
                     {
-                        <img class="card-img" src="@HotelInfo.HotelImageUrl" alt="Card image cap">
-                    }
-                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelInfo.HotelImageUrl" @oncuechange="@(() => FeeldIsChanged())" placeholder="Image url">
-                </div>
-                <div class="col-12 col-md-9 pl-0 pl-md-2">
-                    <div class="mb-3 pl-2 d-flex flex-column justify-content-between h-100 p-2">
-                        <div class="card-body">
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Име:</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelInfo.HotelName" @oncuechange="@(() => FeeldIsChanged())">
+                        <div class="row">
+                            <div class="col-12 d-flex p-0">
+                                <div class="col-6">
+                                    <select class="custom-select" @bind="@newContactType">
+                                        @foreach (var value in contactTypes)
+                                        {
+                                            <option value="@value">@value</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@newContact">
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Град:</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelInfo.City" @oncuechange="@(() => FeeldIsChanged())">
-                                </div>
+                            <div class="col-12 d-flex justify-content-end p-0 pt-3">
+                                <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => AddContact()) Text="Запази" ButtonStyle="ButtonStyle.Primary"/>
+                                <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => CancleAddContact()) Text="Отказ" ButtonStyle="ButtonStyle.Warning"/>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Адрес:</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@HotelInfo.Address" @oncuechange="@(() => FeeldIsChanged())">
-                                </div>
-                            </div>
-                            @if (HotelInfo.Contacts.Any())
-                            {
-                                @foreach (var hotelContact in HotelInfo.Contacts)
-                                {
-                                    ContactType contactType = hotelContact.Value;
-                                    string contact = hotelContact.Key;
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">@contactType: </label>
-                                        <div class="col-sm-10 contact">
-                                            <input type="text" id="contact" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@contact">
-                                            <button @onclick="@(() => RemoveContact(contact))">Премахни</button>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            @if (!isAdd)
-                            {
-                                <div class="row d-flex justify-content-end">
-                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => IsAddChange()) Text="Добави контакти" ButtonStyle="ButtonStyle.Primary"/>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="row">
-                                    <div class="col-12 d-flex p-0">
-                                        <div class="col-6">
-                                            <select class="custom-select" @bind="@newContactType">
-                                                @foreach (var value in contactTypes)
-                                                {
-                                                    <option value="@value">@value</option>
-                                                }
-                                            </select>
-                                        </div>
-                                        <div class="col-6">
-                                            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" @bind-value="@newContact">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 d-flex justify-content-end p-0 pt-3">
-                                        <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => AddContact()) Text="Запази" ButtonStyle="ButtonStyle.Primary"/>
-                                        <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => CancleAddContact()) Text="Отказ" ButtonStyle="ButtonStyle.Warning"/>
-                                    </div>
-                                </div>
-                            }
                         </div>
-                        @ButtonSection
-                    </div>
-                </div>
-            </div>
-        </div>
+                    }
+            </ContactsSection>
+            <ButtonSection>
+                @ButtonSection
+            </ButtonSection>
+        </HotelCardModelComponent>
     }
 }
 
@@ -239,6 +165,12 @@ else
     
     [Parameter]
     public bool IsEditable { get; set; }
+    
+    [Parameter]
+    public bool IsChangedHotel { get; set; }
+    
+    [Parameter]
+    public bool IsAddHotel { get; set; }
 
     [Parameter]
     public AddHotelModel HotelModel { get; set; } = new AddHotelModel();
@@ -248,9 +180,6 @@ else
 
     [Parameter]
     public EventCallback<AddHotelModel> OnChangedHotelModel { get; set; }
-    // TODO: Implemet property for visoalisation form
-    [Parameter]
-    public bool IsChangedHotel { get; set; }
 
     [Parameter]
     public EventCallback<HotelInfoModel> OnChangedHotelInfo { get; set; }

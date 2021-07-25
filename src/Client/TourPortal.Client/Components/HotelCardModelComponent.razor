@@ -1,0 +1,97 @@
+﻿<div class="card card border-primary mb-3">
+    <div class="d-md-flex">
+        <div class="col-12 col-md-3 p-2 w-100 card" style="width: 25rem;">
+            @if (string.IsNullOrEmpty(HotelImageUrl))
+            {
+                <img class="card-img" src="/images/hotel.png" alt="Card image cap">
+            }
+            else
+            {
+                <img class="card-img" src="@HotelImageUrl" alt="Card image cap">
+            }
+            @if (IsEditable)
+            {
+                @BindImageUrl
+            }
+        </div>
+        <div class="col-12 col-md-9 pl-0 pl-md-2">
+            <div class="mb-3 pl-2 d-flex flex-column justify-content-between h-100 p-2">
+                <div class="card-body">
+                    @if (!IsEditable)
+                    {
+                        <HotelCardFeeldComponent Label="Име">
+                            <Feeld>
+                                <input type="text" readonly class="form-control-plaintext" value="@HotelName">
+                            </Feeld>
+                        </HotelCardFeeldComponent>
+                        <HotelCardFeeldComponent Label="Град">
+                            <Feeld>
+                                <input type="text" readonly class="form-control-plaintext" value="@City">
+                            </Feeld>
+                        </HotelCardFeeldComponent>
+                        <HotelCardFeeldComponent Label="адрес">
+                            <Feeld>
+                                <input type="text" readonly class="form-control-plaintext" value="@Address">
+                            </Feeld>
+                        </HotelCardFeeldComponent>
+                    }
+                    else
+                    {
+                        <HotelCardFeeldComponent Label="Име">
+                            <Feeld>
+                                @BindHotelName
+                            </Feeld>
+                        </HotelCardFeeldComponent>
+                        <HotelCardFeeldComponent Label="Град">
+                            <Feeld>
+                                @BindCity
+                            </Feeld>
+                        </HotelCardFeeldComponent>
+                        <HotelCardFeeldComponent Label="Адрес">
+                            <Feeld>
+                                @BindAddress
+                            </Feeld>
+                        </HotelCardFeeldComponent>
+                    }
+                    @ContactsSection
+                </div>
+                @ButtonSection
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string HotelImageUrl { get; set; }
+    
+    [Parameter]
+    public string HotelName { get; set; }
+    
+    [Parameter]
+    public string City { get; set; }
+    
+    [Parameter]
+    public string Address { get; set; }
+
+    [Parameter]
+    public RenderFragment BindImageUrl { get; set; }
+    
+    [Parameter]
+    public RenderFragment BindHotelName { get; set; }
+    
+    [Parameter]
+    public RenderFragment BindCity { get; set; }
+    
+    [Parameter]
+    public RenderFragment BindAddress { get; set; }
+    
+    [Parameter]
+    public RenderFragment ContactsSection { get; set; }
+    
+    [Parameter]
+    public RenderFragment ButtonSection { get; set; }
+
+    [Parameter]
+    public bool IsEditable { get; set; }
+}
