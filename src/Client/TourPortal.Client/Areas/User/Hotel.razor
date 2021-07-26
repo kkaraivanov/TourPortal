@@ -1,5 +1,6 @@
 ﻿@attribute [Authorize(Roles = Security.Role.Owner)]
 @page "/user/hotel"
+@using Newtonsoft.Json
 @using TourPortal.Client.Data
 @using TourPortal.Infrastructure.Shared.Models.Hotel
 
@@ -9,36 +10,6 @@
 	</PageHeader>
     <PageBody>
         @if (isHotelExist)
-        {
-            @if (!isAddButtonClick)
-            {
-                <HotelCardComponent HotelInfo="@hoteInfolModel">
-                    <ButtonSection>
-                        <div class="row d-flex justify-content-end">
-                            <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => OnAddButtonClick()) Text="Добави хотел" ButtonStyle="ButtonStyle.Primary"/>
-                        </div>
-                    </ButtonSection>
-                </HotelCardComponent>
-            }
-            else
-            {
-                <EditForm OnValidSubmit="AddHotelToDatabase" Model="hotelModel" Context="HotelForm">
-                    <HotelCardComponent HotelModel="@hotelModel" IsAddHotel="@isHotelExist" IsEditable="@isHotelExist" OnChangedHotelModel="@HotelIsChanged">
-                        <ButtonSection>
-                            <div class="row d-flex flex-row justify-content-end">
-                                <div>
-                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => OnAddButtonClick()) Text="Отказ" ButtonStyle="ButtonStyle.Primary"/>
-                                </div>
-                                <div>
-                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => AddHotelToDatabase()) Text="Запази" ButtonStyle="ButtonStyle.Success"/>
-                                </div>
-                            </div>
-                        </ButtonSection>
-                    </HotelCardComponent>
-                </EditForm>
-            }
-        }
-        else
         {
             @if (!isChangeButtonClick)
             {
@@ -67,6 +38,32 @@
                     </HotelCardComponent>
                 </EditForm>
             }
+
+            @if (!isRoomExist)
+            {
+                <div class="card card border-primary mb-3">
+                    <div class="col-12">
+                        <h4 class="text-center">Нямате добавени хотелски стаи</h4>
+                        <br/>
+                        <div class="row d-flex justify-content-end pr-2">
+                            <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(() => NavigationManager.NavigateTo($"/user/hotel/new/room/{hoteInfolModel.Id}")) Text="Добави стая" ButtonStyle="ButtonStyle.Primary"/>
+                        </div>
+                    </div>
+                </div>
+            }
+            {
+
+            }
+        }
+        else
+        {
+            <div class="card card border-primary mb-3">
+                <h4 class="text-center">Нямате добавен хотел</h4>
+                <br />
+                <div class="row d-flex justify-content-end pr-2">
+                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(() => NavigationManager.NavigateTo($"/user/hotel/new/hotel")) Text="Добави хотел" ButtonStyle="ButtonStyle.Primary"/>
+                </div>
+            </div>
         }
     </PageBody>
 </PageModelComponent>
@@ -75,18 +72,32 @@
     private bool isHotelExist;
     private bool isAddButtonClick;
     private bool isChangeButtonClick;
+    private bool isRoomExist;
     private string hotelName = string.Empty;
-    private AddHotelModel hotelModel = new AddHotelModel();
     private HotelInfoModel hoteInfolModel = new HotelInfoModel();
+    private List<RoomResponse> rooms = new List<RoomResponse>();
 
     protected override async Task OnParametersSetAsync()
     {
-        isHotelExist = User.Hotel == null;
+        
+    }
 
-        if (!isHotelExist)
+    protected override async Task OnInitializedAsync()
+    {
+        isHotelExist =  User.Hotel.Id != null;
+
+        if (isHotelExist)
         {
             hotelName = User.Hotel.HotelName;
             hoteInfolModel = User.Hotel;
+
+            var request = await ApiService.GetRooms(hoteInfolModel.Id);
+
+            if (request.IsOk)
+            {
+                isRoomExist = request.ResponseData.Any();
+                rooms.AddRange(request.ResponseData);
+            }
         }
     }
 
@@ -100,45 +111,39 @@
             {
                 return;
             }
-        }
-    }
 
-    private async Task AddHotelToDatabase()
-    {
-        if (hotelModel != null)
-        {
-            if (string.IsNullOrEmpty(hotelModel.HotelName) ||
-                string.IsNullOrEmpty(hotelModel.City) ||
-                string.IsNullOrEmpty(hotelModel.Address))
-            {
-                return;
-            }
-
-            var request = await ApiService.AddNewHotel(hotelModel);
+            var serialize = JsonConvert.SerializeObject(hoteInfolModel);
+            var deserialize = JsonConvert.DeserializeObject<ChangeHotelModel>(serialize);
+            var request = await ApiService.ChangeHotel(deserialize);
 
             if (request.IsOk)
             {
-                var newHotelData = request.ResponseData;
-                var newHotel = new HotelInfoModel
+                var response = request.ResponseData;
+                if (response)
                 {
-                    Id = newHotelData.Id,
-                    HotelName = newHotelData.HotelName,
-                    City = newHotelData.City,
-                    Address = newHotelData.Address,
-                    Contacts = newHotelData.Contacts,
-                    HotelImageUrl = newHotelData.HotelImageUrl
-                };
+                    var hotelInfoRequest = await ApiService.GetHotelInfo();
 
-                hoteInfolModel = newHotel;
-                User.AddHotel(newHotel);
+                    if (hotelInfoRequest.IsOk)
+                    {
+                        var responseHotelInfo = hotelInfoRequest.ResponseData;
+
+                        if (responseHotelInfo != null)
+                        {
+                            var serializeData = JsonConvert.SerializeObject(responseHotelInfo);
+                            var converTohotelInfo = JsonConvert.DeserializeObject<HotelInfoModel>(serializeData);
+
+                            User.AddHotel(converTohotelInfo);
+                            hoteInfolModel = User.Hotel;
+                            StateHasChanged();
+                        }
+                    }
+                }
             }
 
-            hotelName = hoteInfolModel.HotelName;
-            isHotelExist = false;
-            StateHasChanged();
+            OnChangeButtonClick();
         }
     }
-    
+
     protected async Task OnAddButtonClick()
     {
         isAddButtonClick = isAddButtonClick != true;
@@ -148,11 +153,6 @@
     {
         hoteInfolModel = User.Hotel;
         isChangeButtonClick = isChangeButtonClick != true;
-    }
-
-    private void HotelIsChanged(AddHotelModel hotel)
-    {
-        hotelModel = hotel;
     }
     
     private void HotelIsChanged(HotelInfoModel hotel)

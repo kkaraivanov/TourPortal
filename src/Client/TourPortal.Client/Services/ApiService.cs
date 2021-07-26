@@ -8,15 +8,15 @@
     using System.Text.Json;
     using System.Threading.Tasks;
     using Blazored.LocalStorage;
-    using Data;
     using Microsoft.AspNetCore.Components.Authorization;
 
     using Infrastructure.Global;
-    using Infrastructure.Global.Types;
     using Infrastructure.Services;
     using Infrastructure.Shared.Models.Authentication;
     using Infrastructure.Shared.Models.Hotel;
     using Infrastructure.Shared.Models.Response;
+
+    using static Infrastructure.Global.Global;
 
     class ApiService : IApiService
     {
@@ -39,7 +39,7 @@
 
         public async Task<ApplicationResponse<LoginResponseModel>> Login(LoginModel loginModel)
         {
-            var response = await _httpClient.PostAsync(Global.Routes.Login,
+            var response = await _httpClient.PostAsync(Route.Login,
                 new FormUrlEncodedContent(
                     new List<KeyValuePair<string, string>>
                     {
@@ -80,20 +80,39 @@
             _httpClient.DefaultRequestHeaders.Authorization = null;
         }
 
-        public async Task<ApplicationResponse<RegisterResponseModel>> Register(RegisterModel registerModel) =>
-            await Post<RegisterModel, RegisterResponseModel>(Global.Routes.Register, registerModel);
+        #region GET requests
 
         public async Task<ApplicationResponse<UserRolesRespons>> GetUserRoles() =>
-            await Get<UserRolesRespons>(Global.Routes.GetRoles);
+            await Get<UserRolesRespons>(Route.GetRoles);
 
         public async Task<ApplicationResponse<UserInfoResponse>> GetUserInfo(string userEmail) =>
-            await Get<UserInfoResponse>(Global.Routes.GetUserInfo + userEmail);
+            await Get<UserInfoResponse>(Route.GetUserInfo + userEmail);
+
+        public async Task<ApplicationResponse<IEnumerable<RoomResponse>>> GetRooms(string hotelId) =>
+            await Get<IEnumerable<RoomResponse>>(Route.GetRooms + hotelId);
+
+        public async Task<ApplicationResponse<ICollection<string>>> GetRoomTypes() =>
+            await Get<ICollection<string>>(Route.GetRoomTypes);
 
         public async Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfo() =>
-            await Get<HotelInfoResponse>(Global.Routes.GetHotelInfo);
+            await Get<HotelInfoResponse>(Route.GetHotelInfo);
+
+        #endregion
+
+        #region POST requests
+
+        public async Task<ApplicationResponse<RegisterResponseModel>> Register(RegisterModel registerModel) =>
+            await Post<RegisterModel, RegisterResponseModel>(Route.Register, registerModel);
 
         public async Task<ApplicationResponse<HotelInfoResponse>> AddNewHotel(AddHotelModel hotelModel) =>
-            await Post<AddHotelModel, HotelInfoResponse>(Global.Routes.AddNewHotel, hotelModel);
+            await Post<AddHotelModel, HotelInfoResponse>(Route.AddNewHotel, hotelModel);
+
+        public async Task<ApplicationResponse<bool>> ChangeHotel(ChangeHotelModel hotelModel) =>
+            await Post<ChangeHotelModel, bool>(Route.ChangeHotel, hotelModel);
+
+        #endregion
+
+        #region Helper private methods
 
         private async Task<ApplicationResponse<T>> Get<T>(string url)
         {
@@ -117,7 +136,6 @@
 
         private async Task<ApplicationResponse<TResponse>> Post<TRequest, TResponse>(string url, TRequest request)
         {
-            //(_authenticationStateProvider as ApiAuthenticationStateProvider)?.GetAuthenticationStateAsync();
             var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
             var token = await _localStorage.GetItemAsync<string>(ApplicationConstants.AuthenticatedTokenString);
 
@@ -137,5 +155,7 @@
                 return new ApplicationResponse<TResponse>(new ApplicationError("HTTP Client", ex.Message));
             }
         }
+
+        #endregion
     }
 }

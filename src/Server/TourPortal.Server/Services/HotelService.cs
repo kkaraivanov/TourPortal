@@ -1,7 +1,6 @@
 ﻿namespace TourPortal.Server.Services
 {
     using System.Collections.Generic;
-    using System.Formats.Asn1;
     using System.Linq;
     using System.Threading.Tasks;
     using Infrastructure.Shared.Enums;
@@ -9,6 +8,7 @@
     using Infrastructure.Shared.Models.Response;
     using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
     using Storage;
 
     public interface IHotelService
@@ -23,9 +23,17 @@
 
         Task<HotelInfoResponse> GetHotelInfo(string hotelId);
 
+        Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfoResponse(string hotelId);
+
         Task<Hotel> AddNewHotel(AddHotelModel hotelModel, Owner owner);
 
         Task AddNewHotlContacts(List<Contact> contacts);
+
+        Task<IQueryable<Room>> GetRooms(string hotelId);
+
+        Task<ICollection<string>> GetRoomTypes();
+
+        Task<bool> ChangeHotel(Hotel hotelModel);
     }
 
     public class HotelService : IHotelService
@@ -80,6 +88,13 @@
             };
         }
 
+        public async Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfoResponse(string hotelId)
+        {
+            var result = await GetHotelInfo(hotelId);
+
+            return result.ToResponse();
+        }
+
         public async Task<Hotel> AddNewHotel(AddHotelModel hotelModel, Owner owner)
         {
             var hotel = new Hotel
@@ -103,11 +118,32 @@
             return result;
         }
 
+        public async Task<bool> ChangeHotel(Hotel hotelModel)
+        {
+            if (hotelModel is null)
+            {
+                return false;
+            }
+
+            var hotel = await GetHotelById(hotelModel.Id);
+
+            _context.Hotels.Update(hotelModel);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task AddNewHotlContacts(List<Contact> contacts)
         {
             await _context.AddRangeAsync(contacts);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IQueryable<Room>> GetRooms(string hotelId) =>
+            _context.Rooms.Where(x => x.HotelId == hotelId);
+
+        public async Task<ICollection<string>> GetRoomTypes() =>
+            await _context.RoomTypes.Select(x => x.Type).ToListAsync();
 
         private string GetOwnerId(string userId) =>
             GetOwner(userId)?.Id;

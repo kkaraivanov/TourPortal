@@ -134,6 +134,7 @@
             });
 
             builder.SeedRolesToDatabase();
+            builder.SeedRoomTypes();
             builder.SoftDeletableProperties();
             builder.Entity<Message>().ToTable("Messages");
             builder.ApplyConfiguration(new MessageConfiguration());

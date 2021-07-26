@@ -1,7 +1,6 @@
 ﻿namespace TourPortal.Server.Controllers
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Infrastructure.Global.Types;
     using Infrastructure.Services;
@@ -12,6 +11,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Newtonsoft.Json;
     using Services;
     using Storage;
 
@@ -110,5 +110,43 @@
 
             return respone.ToResponse();
         }
+
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<bool>> ChangeHotel([FromBody] ChangeHotelModel hotelModel)
+        {
+            if (hotelModel is null)
+            {
+                return new ApplicationResponse<bool>(new ApplicationError("", "Change model can't be null."));
+            }
+
+            var serialize = JsonConvert.SerializeObject(hotelModel);
+            var mapp = JsonConvert.DeserializeObject<Hotel>(serialize);
+            var respons = await _hotelService.ChangeHotel(mapp);
+
+            return respons.ToResponse();
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<List<RoomResponse>>> GetRooms(string hotelId)
+        {
+            var rooms = await _hotelService.GetRooms(hotelId);
+            var response = new List<RoomResponse>();
+            foreach (var room in rooms)
+            {
+                var serialize = JsonConvert.SerializeObject(room); 
+                var mapp = JsonConvert.DeserializeObject<RoomResponse>(serialize);
+
+                response.Add(mapp);
+            }
+            
+            return response.ToResponse();
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<ICollection<string>>> GetRoomTypes() =>
+            new ApplicationResponse<ICollection<string>>(await _hotelService.GetRoomTypes());
     }
 }

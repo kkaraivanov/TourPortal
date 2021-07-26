@@ -1,0 +1,124 @@
+﻿@using TourPortal.Infrastructure.Shared.Models.Hotel
+<section>
+	<div class="container border-primary p-2 w-50">
+		<h1 style="margin: 2%; text-align: center;">Стая @roomNumber</h1>
+		<div style="padding: 5%;">
+			<EditForm OnValidSubmit="AddRoom" Model="roomModel" Context="AddRoomForm">
+				<div class="form-group">
+					<label for="roomNumber">Стая №</label>
+					<input type="number" class="form-control" id="roomNumber" name="roomNumber" @bind-value="roomModel.RoomNumber" @oncuechange="@(args => ChangeRoomNumber(args))" placeholder="Номер на стаята">
+				</div>
+				<div class="form-group">
+					<label for="countOfBeds">Брой легла</label>
+					<input min="1" max="6" type="number" class="form-control" id="countOfBeds" name="countOfBeds" @bind-value="roomModel.CountOfBeds">
+				</div>
+				<div class="form-group">
+					<label for="countOfPersons">Брой посетители</label>
+					<input min="1" max="6" type="number" class="form-control" id="countOfPersons" name="countOfPersons" @bind-value="roomModel.CountOfPersons">
+				</div>
+                <div class="form-group">
+                    <label for="price">Цена за нощувка</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">лв.</span>
+                        </div>
+                        <input type="number" class="form-control" id="price" name="price" @bind-value="roomModel.Price">
+                        <div class="input-group-append">
+                            <span class="input-group-text">.00</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="roomType">Тип на стаята</label>
+                    <select class="custom-select" id="roomType" name="roomType" @bind="roomModel.RoomType">
+                        @foreach (var roomType in RoomTypes)
+                        {
+                            <option value="@roomType">@ParsType(roomType)</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="roomImages">Снимки</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Снимка на стаята" @bind-value="@roomImage" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <RadzenButton 
+                                Click=@(() =>
+                                                {
+                                                    roomModel.RoomImages.Add(roomImage);
+                                                    roomImage = string.Empty;
+                                                })
+                                          Text="Добави" 
+                                          ButtonStyle="ButtonStyle.Primary"/>
+                        </div>
+                    </div>
+                    <div class="card-deck" id="roomImages" name="roomImages">
+                        @if (roomModel.RoomImages.Any())
+                        {
+                            <div class="container">
+                                <div class="row">
+                                    @foreach (var room in roomModel.RoomImages)
+                                    {
+                                        <div class="col-lg-4">
+                                            <div class="card">
+                                                <img class="card-img-top" src="@room" alt="Card image cap">
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+			</EditForm>
+		</div>
+	</div>
+</section>
+
+@code {
+	[Parameter]
+	public EventCallback<bool> RoomIsAdded { get; set; }
+
+	private List<string> RoomTypes = new List<string>();
+	private AddNewRoomModel roomModel = new AddNewRoomModel();
+	private string roomNumber = string.Empty;
+	private string roomImage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!RoomTypes.Any())
+        {
+            var request = await ApiService.GetRoomTypes();
+            if (request.IsOk)
+            {
+                RoomTypes.AddRange(request.ResponseData);
+            }
+        }
+    }
+
+	private async Task AddRoom()
+	{
+
+	}
+
+    private string ParsType(string roomType) => roomType switch
+    {
+        "Single" => "Единична",
+        "Double" => "Двойна",
+        "Double with 2 single beds" => "Двойна с 2 единични легла",
+        "Apartment" => "Апартамент",
+        _ => ""
+    };
+
+	private void ChangeRoomNumber(object value)
+	{
+		roomNumber = $"№:{(int)value}";
+		StateHasChanged();
+	}
+}
+
+<style>
+    input.ImageString {
+        max-height: 32px;
+    }
+</style>

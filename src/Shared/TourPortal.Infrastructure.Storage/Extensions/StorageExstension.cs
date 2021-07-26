@@ -46,6 +46,11 @@
                     NormalizedName = Security.Role.Employe.ToUpper()
                 });
 
+            return builder;
+        }
+
+        public static ModelBuilder SeedRoomTypes(this ModelBuilder builder)
+        {
             builder.Entity<RoomType>()
                 .HasData(new RoomType[]
                 {

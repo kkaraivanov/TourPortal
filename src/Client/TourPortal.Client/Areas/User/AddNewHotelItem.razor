@@ -1,0 +1,126 @@
+﻿@page "/user/{from}/new/{item}"
+@page "/user/{from}/new/{item}/{hotel}"
+@using TourPortal.Client.Data
+@using TourPortal.Infrastructure.Shared.Models.Hotel
+
+<AuthorizeView Roles="@($"{Security.Role.Owner}, {Security.Role.Employe}")">
+    <PageModelComponent>
+        <PageHeader>
+            <h3>@headerTitle</h3>
+        </PageHeader>
+        <PageBody>
+            @if (isAddRoom)
+            {
+                <NewRoomComponent RoomIsAdded="@AddRoom">
+
+                </NewRoomComponent>
+                <div class="row d-flex justify-content-end">
+                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(() => NavigationManager.NavigateTo($"/user/{From}")) Text="Добави" ButtonStyle="ButtonStyle.Primary"/>
+                </div>
+            }
+            
+            @if (isAddHotel)
+            {
+                <EditForm OnValidSubmit="AddHotelToDatabase" Model="hotelModel" Context="AddHotelForm">
+                    <HotelCardComponent HotelModel="@hotelModel" IsAddHotel="@isAddHotel" IsEditable="@isAddHotel" OnChangedHotelModel="@HotelIsChanged">
+                        <ButtonSection>
+                            <div class="row d-flex flex-row justify-content-end">
+                                <div>
+                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => GoBack()) Text="Отказ" ButtonStyle="ButtonStyle.Primary"/>
+                                </div>
+                                <div>
+                                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => AddHotelToDatabase()) Text="Запази" ButtonStyle="ButtonStyle.Success"/>
+                                </div>
+                            </div>
+                        </ButtonSection>
+                    </HotelCardComponent>
+                </EditForm>
+            }
+        </PageBody>
+    </PageModelComponent>
+</AuthorizeView>
+
+
+@code {
+    [Parameter]
+	public string Item { get; set; }
+    
+    [Parameter]
+	public string From { get; set; }
+    
+    [Parameter]
+	public string Hotel { get; set; }
+
+    private AddHotelModel hotelModel = new AddHotelModel();
+    private bool isAddRoom => Item == "room".ToLower();
+    private bool isAddHotel => Item == "hotel".ToLower();
+    private string headerTitle = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (isAddRoom)
+        {
+            headerTitle = "Добавяне на нова стая";
+        }
+
+        if (isAddHotel)
+        {
+            headerTitle = "Добавяне на нова хотел";
+        }
+    }
+
+    private async Task AddRoom()
+    {
+        
+    }
+
+    private async Task AddHotelToDatabase()
+    {
+        if (hotelModel != null)
+        {
+            if (string.IsNullOrEmpty(hotelModel.HotelName) ||
+                string.IsNullOrEmpty(hotelModel.City) ||
+                string.IsNullOrEmpty(hotelModel.Address))
+            {
+                return;
+            }
+
+            var request = await ApiService.AddNewHotel(hotelModel);
+
+            if (request.IsOk)
+            {
+                var newHotelData = request.ResponseData;
+
+                if (newHotelData is null)
+                {
+                    // TODO: add error vew message
+                }
+
+                var newHotel = new HotelInfoModel
+                {
+                    Id = newHotelData.Id,
+                    HotelName = newHotelData.HotelName,
+                    City = newHotelData.City,
+                    Address = newHotelData.Address,
+                    Contacts = newHotelData.Contacts,
+                    HotelImageUrl = newHotelData.HotelImageUrl
+                };
+
+                User.AddHotel(newHotel);
+                StateHasChanged();
+            }
+
+            GoBack();
+        }
+    }
+
+    private void HotelIsChanged()
+    {
+
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo($"/user/{From}");
+    }
+}

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TourPortal.Storage;
 
 namespace TourPortal.Storage.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210726074040_AddRoomTypesInHotel")]
+    partial class AddRoomTypesInHotel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -156,29 +158,29 @@ namespace TourPortal.Storage.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "bed1740a-1858-4d69-ab50-891d01ff3967",
-                            ConcurrencyStamp = "da225f62-60ff-4ca0-849e-24834aba6942",
+                            Id = "afa60348-2877-4c51-ab7d-a3b04318a820",
+                            ConcurrencyStamp = "3bd89fc6-a94a-4cdb-b30b-65fed573e02e",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "58977f6a-e449-4a8a-8ad5-bdc978f999bf",
-                            ConcurrencyStamp = "d8c68ca2-f8af-442b-87e6-2a2e42c77664",
+                            Id = "7f5f6f54-6051-47bb-9a8d-f3a17d3f582b",
+                            ConcurrencyStamp = "9a6b60ae-9716-41b0-a9e5-bc6002a11da4",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "117df84f-168b-4de4-a4e3-71f92dec3eda",
-                            ConcurrencyStamp = "65231424-fe63-42da-86dc-fb4bb1dfa919",
+                            Id = "d2a8987e-3fe6-47cc-8289-2e6405bfa1c0",
+                            ConcurrencyStamp = "aec7b79a-2fd3-4ff3-9a2a-c4d003a4a83e",
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
-                            Id = "fa797f56-0646-4b0a-8404-3bd576db56aa",
-                            ConcurrencyStamp = "c59fe5f9-87b1-4091-9290-6c42490775da",
+                            Id = "f9b34a1d-f3b8-4511-a6e5-7684d484bdce",
+                            ConcurrencyStamp = "7ede0299-9f57-4f0d-94c7-d49d566e4769",
                             Name = "Employe",
                             NormalizedName = "EMPLOYE"
                         });
@@ -521,32 +523,37 @@ namespace TourPortal.Storage.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("HotelId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HotelId");
 
                     b.ToTable("RoomTypes");
 
                     b.HasData(
                         new
                         {
-                            Id = "8a78fd6e-5675-40b0-b940-38fb071e6e54",
+                            Id = "92244421-22ba-4c92-87f0-22bfc13cb30d",
                             Type = "Single"
                         },
                         new
                         {
-                            Id = "148232ac-223a-4c04-93f9-ac66fdbe9698",
+                            Id = "93e4d726-552d-43cb-914a-795d88525dd4",
                             Type = "Double"
                         },
                         new
                         {
-                            Id = "82dd054a-e073-4492-b709-d47bc44a1cbd",
+                            Id = "ba809515-70a3-4886-ad29-a6cf2819b428",
                             Type = "Double with 2 single beds"
                         },
                         new
                         {
-                            Id = "8ab2f733-343e-4348-b52e-39897959a982",
+                            Id = "83e38a63-6db6-4d0a-8321-67bb4b7a3540",
                             Type = "Apartment"
                         });
                 });
@@ -728,6 +735,15 @@ namespace TourPortal.Storage.Data.Migrations
                     b.Navigation("RoomType");
                 });
 
+            modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.RoomType", b =>
+                {
+                    b.HasOne("TourPortal.Infrastructure.Storage.Models.Hotel", "Hotel")
+                        .WithMany("RoomTypes")
+                        .HasForeignKey("HotelId");
+
+                    b.Navigation("Hotel");
+                });
+
             modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.UserProfile", b =>
                 {
                     b.HasOne("TourPortal.Infrastructure.Storage.Models.ApplicationUser", "ApplicationUser")
@@ -779,6 +795,8 @@ namespace TourPortal.Storage.Data.Migrations
                     b.Navigation("Reservations");
 
                     b.Navigation("Rooms");
+
+                    b.Navigation("RoomTypes");
                 });
 
             modelBuilder.Entity("TourPortal.Infrastructure.Storage.Models.Owner", b =>

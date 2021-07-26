@@ -1,5 +1,6 @@
 ﻿namespace TourPortal.Infrastructure.Services
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Shared.Models.Authentication;
@@ -21,5 +22,11 @@
         Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfo();
 
         Task<ApplicationResponse<HotelInfoResponse>> AddNewHotel(AddHotelModel hotelModel);
+
+        Task<ApplicationResponse<bool>> ChangeHotel(ChangeHotelModel hotelModel);
+
+        Task<ApplicationResponse<IEnumerable<RoomResponse>>> GetRooms(string hotelId);
+
+        Task<ApplicationResponse<ICollection<string>>> GetRoomTypes();
     }
 }

@@ -184,7 +184,6 @@ else
     [Parameter]
     public EventCallback<HotelInfoModel> OnChangedHotelInfo { get; set; }
 
-    private AddHotelModel hotelModel = new AddHotelModel();
     private bool isAdd = false;
     private string newContact = string.Empty;
     private Regex phoneRegex = new Regex(@"08[789]\d{7}\b");
