@@ -11,12 +11,7 @@
         <PageBody>
             @if (isAddRoom)
             {
-                <NewRoomComponent RoomIsAdded="@AddRoom">
-
-                </NewRoomComponent>
-                <div class="row d-flex justify-content-end">
-                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(() => NavigationManager.NavigateTo($"/user/{From}")) Text="Добави" ButtonStyle="ButtonStyle.Primary"/>
-                </div>
+                <NewRoomComponent RoomIsAdded="@AddRoom" />
             }
             
             @if (isAddHotel)
@@ -71,7 +66,7 @@
 
     private async Task AddRoom()
     {
-        
+        NavigationManager.NavigateTo($"/user/{From}");
     }
 
     private async Task AddHotelToDatabase()

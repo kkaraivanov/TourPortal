@@ -1,7 +1,9 @@
 ﻿namespace TourPortal.Server.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Infrastructure.Shared.Enums;
     using Infrastructure.Shared.Models.Hotel;
@@ -29,11 +31,13 @@
 
         Task AddNewHotlContacts(List<Contact> contacts);
 
+        Task UpdateHotlContacts(List<Contact> contacts, string hotelId);
+
         Task<IQueryable<Room>> GetRooms(string hotelId);
 
         Task<ICollection<string>> GetRoomTypes();
 
-        Task<bool> ChangeHotel(Hotel hotelModel);
+        Task<bool> ChangeHotel(ChangeHotelModel hotelModel);
     }
 
     public class HotelService : IHotelService
@@ -118,16 +122,32 @@
             return result;
         }
 
-        public async Task<bool> ChangeHotel(Hotel hotelModel)
+        public async Task<bool> ChangeHotel(ChangeHotelModel hotelModel)
         {
-            if (hotelModel is null)
+            var hotel = await GetHotelById(hotelModel.Id);
+            Thread.Sleep(200);
+            hotel.HotelName = hotelModel.HotelName;
+            hotel.Address = hotelModel.Address;
+            hotel.City = hotelModel.City;
+            hotel.HotelImageUrl = hotelModel.HotelImageUrl;
+            hotel.ModifiedOn = DateTime.Now;
+
+            var contacts = new List<Contact>();
+            foreach (var (contact, contactType) in hotelModel.Contacts)
             {
-                return false;
+                var newContact = new Contact
+                {
+                    ContactString = contact,
+                    ContactType = contactType,
+                    HotelId = hotel.Id
+                };
+
+                contacts.Add(newContact);
             }
 
-            var hotel = await GetHotelById(hotelModel.Id);
+            await UpdateHotlContacts(contacts, hotel.Id);
 
-            _context.Hotels.Update(hotelModel);
+            _context.Hotels.Update(hotel);
             await _context.SaveChangesAsync();
 
             return true;
@@ -135,7 +155,52 @@
 
         public async Task AddNewHotlContacts(List<Contact> contacts)
         {
-            await _context.AddRangeAsync(contacts);
+            await _context.Contacts.AddRangeAsync(contacts);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateHotlContacts(List<Contact> contacts, string hotelId)
+        {
+            var databaseContacts = _context.Contacts
+                .Where(x => x.HotelId == hotelId)
+                .ToList();
+            var temp = new Stack<Contact>(contacts);
+
+            while (databaseContacts.Any() && contacts.Any())
+            {
+                var tempContact = temp.Pop();
+
+                if (tempContact.Id is null)
+                {
+                    _context.Contacts.Add(tempContact);
+                }
+                else
+                {
+                    var contact = databaseContacts.FirstOrDefault(x => x.Id == tempContact.Id);
+
+                    if (contact != null)
+                    {
+                        _context.Contacts.Update(tempContact);
+                        databaseContacts.Remove(contact);
+                    }
+                }
+            }
+
+            if (!databaseContacts.Any())
+            {
+                foreach (var contact in contacts)
+                {
+                    _context.Contacts.Add(contact);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < databaseContacts.Count; i++)
+                {
+                    _context.Contacts.Remove(databaseContacts[i]);
+                }
+            }
+
             await _context.SaveChangesAsync();
         }
 

@@ -1,6 +1,7 @@
 ﻿namespace TourPortal.Server.Controllers
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Infrastructure.Global.Types;
     using Infrastructure.Services;
@@ -41,7 +42,11 @@
         [Route("[action]")]
         public async Task<ApplicationResponse<RegisterResponseModel>> RegisterEmploye([FromBody] RegisterModel model)
         {
-            ModelStateErrors<RegisterModel>();
+            if (model is null || !ModelState.IsValid)
+            {
+                return ModelStateErrors<RegisterResponseModel>();
+            }
+            
             var respons = new RegisterResponseModel();
             var role = await _roleManager.FindByIdAsync(model.RoleId);
             await _accountService.AddNewUser(
@@ -68,11 +73,9 @@
         [Route("[action]")]
         public async Task<ApplicationResponse<HotelInfoResponse>> AddNewHotel([FromBody] AddHotelModel hotelModel)
         {
-            ModelStateErrors<AddHotelModel>();
-
-            if (hotelModel == null)
+            if (hotelModel is null || !ModelState.IsValid)
             {
-                return new ApplicationResponse<HotelInfoResponse>(new ApplicationError("", "Hotel model can't be null."));
+                return ModelStateErrors<HotelInfoResponse>();
             }
 
             var userId = _userManager.GetUserId(User);
@@ -115,33 +118,14 @@
         [Route("[action]")]
         public async Task<ApplicationResponse<bool>> ChangeHotel([FromBody] ChangeHotelModel hotelModel)
         {
-            if (hotelModel is null)
+            if (hotelModel is null || !ModelState.IsValid)
             {
-                return new ApplicationResponse<bool>(new ApplicationError("", "Change model can't be null."));
+                return ModelStateErrors<bool>();
             }
 
-            var serialize = JsonConvert.SerializeObject(hotelModel);
-            var mapp = JsonConvert.DeserializeObject<Hotel>(serialize);
-            var respons = await _hotelService.ChangeHotel(mapp);
+            var respons = await _hotelService.ChangeHotel(hotelModel);
 
             return respons.ToResponse();
-        }
-
-        [HttpGet]
-        [Route("[action]")]
-        public async Task<ApplicationResponse<List<RoomResponse>>> GetRooms(string hotelId)
-        {
-            var rooms = await _hotelService.GetRooms(hotelId);
-            var response = new List<RoomResponse>();
-            foreach (var room in rooms)
-            {
-                var serialize = JsonConvert.SerializeObject(room); 
-                var mapp = JsonConvert.DeserializeObject<RoomResponse>(serialize);
-
-                response.Add(mapp);
-            }
-            
-            return response.ToResponse();
         }
 
         [HttpGet]

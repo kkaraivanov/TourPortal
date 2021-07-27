@@ -1,6 +1,6 @@
 ﻿@using TourPortal.Infrastructure.Shared.Models.Hotel
 <section>
-	<div class="container border-primary p-2 w-50">
+	<div class="container col-12 col-md-8 border-primary p-2">
 		<h1 style="margin: 2%; text-align: center;">Стая @roomNumber</h1>
 		<div style="padding: 5%;">
 			<EditForm OnValidSubmit="AddRoom" Model="roomModel" Context="AddRoomForm">
@@ -44,12 +44,12 @@
                         <div class="input-group-append">
                             <RadzenButton 
                                 Click=@(() =>
-                                                {
-                                                    roomModel.RoomImages.Add(roomImage);
-                                                    roomImage = string.Empty;
-                                                })
-                                          Text="Добави" 
-                                          ButtonStyle="ButtonStyle.Primary"/>
+                                      {
+                                          roomModel.RoomImages.Add(roomImage);
+                                          roomImage = string.Empty;
+                                      })
+                                Text="Добави" 
+                                ButtonStyle="ButtonStyle.Primary"/>
                         </div>
                     </div>
                     <div class="card-deck" id="roomImages" name="roomImages">
@@ -70,7 +70,13 @@
                         }
                     </div>
                 </div>
-			</EditForm>
+                @if (!DisableAddButton)
+                {
+                    <div class="row d-flex justify-content-end">
+                        <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(() => AddRoom()) Text="Добави" ButtonStyle="ButtonStyle.Primary"/>
+                    </div>
+                }
+            </EditForm>
 		</div>
 	</div>
 </section>
@@ -78,6 +84,9 @@
 @code {
 	[Parameter]
 	public EventCallback<bool> RoomIsAdded { get; set; }
+
+    [Parameter]
+    public bool DisableAddButton { get; set; }
 
 	private List<string> RoomTypes = new List<string>();
 	private AddNewRoomModel roomModel = new AddNewRoomModel();
@@ -99,6 +108,7 @@
 	private async Task AddRoom()
 	{
 
+        await RoomIsAdded.InvokeAsync(true);
 	}
 
     private string ParsType(string roomType) => roomType switch

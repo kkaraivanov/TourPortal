@@ -41,7 +41,7 @@
 
             @if (!isRoomExist)
             {
-                <div class="card card border-primary mb-3">
+                <div class="card card border-primary mb-3 p-2">
                     <div class="col-12">
                         <h4 class="text-center">Нямате добавени хотелски стаи</h4>
                         <br/>
@@ -57,7 +57,7 @@
         }
         else
         {
-            <div class="card card border-primary mb-3">
+            <div class="card card border-primary mb-3 p-2">
                 <h4 class="text-center">Нямате добавен хотел</h4>
                 <br />
                 <div class="row d-flex justify-content-end pr-2">
@@ -84,7 +84,36 @@
 
     protected override async Task OnInitializedAsync()
     {
-        isHotelExist =  User.Hotel.Id != null;
+        if (User.Hotel is null)
+        {
+            var hotelInfoRequest = await ApiService.GetHotelInfo();
+
+            if (hotelInfoRequest.IsOk)
+            {
+                var hotelInfo = hotelInfoRequest.ResponseData;
+
+                if (hotelInfo != null)
+                {
+                    var hotel = new HotelInfoModel
+                    {
+                        Id = hotelInfo.Id,
+                        HotelName = hotelInfo.HotelName,
+                        City = hotelInfo.City,
+                        Address = hotelInfo.Address,
+                        Contacts = hotelInfo.Contacts,
+                        HotelImageUrl = hotelInfo.HotelImageUrl
+                    };
+
+                    User.AddHotel(hotel);
+                    isHotelExist =  true;
+                    StateHasChanged();
+                }
+            }
+        }
+        else
+        {
+            isHotelExist =  User.Hotel != null;
+        }
 
         if (isHotelExist)
         {
@@ -119,7 +148,6 @@
             if (request.IsOk)
             {
                 var response = request.ResponseData;
-                if (response)
                 {
                     var hotelInfoRequest = await ApiService.GetHotelInfo();
 
@@ -140,7 +168,7 @@
                 }
             }
 
-            OnChangeButtonClick();
+            await OnChangeButtonClick();
         }
     }
 
@@ -153,6 +181,8 @@
     {
         hoteInfolModel = User.Hotel;
         isChangeButtonClick = isChangeButtonClick != true;
+
+        StateHasChanged();
     }
     
     private void HotelIsChanged(HotelInfoModel hotel)

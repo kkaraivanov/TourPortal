@@ -1,12 +1,15 @@
 ﻿namespace TourPortal.Server.Controllers
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Infrastructure.Global.Types;
+    using Infrastructure.Shared.Models.Hotel;
     using Infrastructure.Shared.Models.Response;
     using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Newtonsoft.Json;
     using Services;
     using Storage;
 
@@ -44,6 +47,23 @@
             }
 
             return await _hotelService.GetHotelInfoResponse(hotelId);
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<List<RoomResponse>>> GetRooms(string hotelId)
+        {
+            var rooms = await _hotelService.GetRooms(hotelId);
+            var response = new List<RoomResponse>();
+            foreach (var room in rooms)
+            {
+                var serialize = JsonConvert.SerializeObject(room);
+                var mapp = JsonConvert.DeserializeObject<RoomResponse>(serialize);
+
+                response.Add(mapp);
+            }
+
+            return response.ToResponse();
         }
 
         [HttpGet]
