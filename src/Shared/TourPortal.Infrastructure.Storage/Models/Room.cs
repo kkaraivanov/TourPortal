@@ -1,7 +1,6 @@
 ﻿namespace TourPortal.Infrastructure.Storage.Models
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
@@ -11,6 +10,7 @@
         {
             Id = Guid.NewGuid().ToString();
             RoomInTypes = new HashSet<RoomInType>();
+            RoomImages = new HashSet<RoomImages>();
         }
 
         [Key]

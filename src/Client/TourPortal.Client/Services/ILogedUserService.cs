@@ -14,6 +14,8 @@
         HotelInfoModel Hotel { get; }
 
         bool IsLoggedIn { get; }
+
+        bool IsHotelExist { get; }
     }
 
     class LogedUserService : ILogedUserService
@@ -23,6 +25,8 @@
         public HotelInfoModel Hotel { get; private set; }
 
         public bool IsLoggedIn => User != null;
+
+        public bool IsHotelExist => Hotel != null;
 
         public void LogedInUser(LogedUserModel user)
         {

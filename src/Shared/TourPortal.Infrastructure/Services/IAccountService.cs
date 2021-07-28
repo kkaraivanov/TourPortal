@@ -18,6 +18,6 @@
 
         Task AddUserToOwner(string userIde);
 
-        Task AddUserToEmploye(string userIde, string ownerId);
+        Task AddUserToEmploye(string userId, string ownerId);
     }
 }

@@ -147,16 +147,16 @@
             }
         }
 
-        public async Task AddUserToEmploye(string userIde, string ownerId)
+        public async Task AddUserToEmploye(string userId, string ownerId)
         {
             try
             {
-                var userProfile = await _context
-                    .UserProfiles
-                    .FirstOrDefaultAsync(x => x.UserId == userIde);
-                var hotel = _context
-                    .Hotels
-                    .FirstOrDefault(x => x.OwnerId == ownerId);
+                var userProfile = await _context.UserProfiles
+                    .FirstOrDefaultAsync(x => x.UserId == userId);
+                var owner = _context.Owners
+                    .FirstOrDefault(x => x.Profile.UserId == ownerId);
+                var hotel = _context.Hotels
+                    .FirstOrDefault(x => x.OwnerId == owner.Id);
 
                 if (userProfile != null)
                 {

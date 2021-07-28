@@ -1,6 +1,7 @@
 ﻿namespace TourPortal.Server.Controllers
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Infrastructure.Global.Types;
     using Infrastructure.Shared.Models.Hotel;
@@ -58,9 +59,10 @@
             foreach (var room in rooms)
             {
                 var serialize = JsonConvert.SerializeObject(room);
-                var mapp = JsonConvert.DeserializeObject<RoomResponse>(serialize);
-
-                response.Add(mapp);
+                var roomForResponse = JsonConvert.DeserializeObject<RoomResponse>(serialize);
+                var images = await _hotelService.GetRoomImages(roomForResponse.Id);
+                roomForResponse.RoomImages.AddRange(images.Select(x => x.ImageUrl));
+                response.Add(roomForResponse);
             }
 
             return response.ToResponse();

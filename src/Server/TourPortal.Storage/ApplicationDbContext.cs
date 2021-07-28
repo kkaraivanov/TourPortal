@@ -31,6 +31,8 @@
 
         public DbSet<Room> Rooms { get; set; }
 
+        public DbSet<RoomImages> RoomImageses { get; set; }
+
         public DbSet<RoomType> RoomTypes { get; set; }
 
         public DbSet<RoomInType> RoomsInType { get; set; }

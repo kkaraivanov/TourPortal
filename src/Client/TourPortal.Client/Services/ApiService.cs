@@ -110,6 +110,9 @@
         public async Task<ApplicationResponse<bool>> ChangeHotel(ChangeHotelModel hotelModel) =>
             await Post<ChangeHotelModel, bool>(Route.ChangeHotel, hotelModel);
 
+        public async Task<ApplicationResponse<bool>> AddNewRoom(AddNewRoomModel roomModel) =>
+            await Post<AddNewRoomModel, bool>(Route.AddNewRoom, roomModel);
+
         #endregion
 
         #region Helper private methods

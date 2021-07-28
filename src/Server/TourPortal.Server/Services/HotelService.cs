@@ -11,6 +11,7 @@
     using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Newtonsoft.Json;
     using Storage;
 
     public interface IHotelService
@@ -33,7 +34,11 @@
 
         Task UpdateHotlContacts(List<Contact> contacts, string hotelId);
 
-        Task<IQueryable<Room>> GetRooms(string hotelId);
+        Task<bool> AddNewRooms(AddNewRoomModel roomModel, Hotel hotel);
+
+        Task<ICollection<Room>> GetRooms(string hotelId);
+
+        Task<ICollection<RoomImages>> GetRoomImages(string roomId);
 
         Task<ICollection<string>> GetRoomTypes();
 
@@ -110,9 +115,9 @@
                 Address = hotelModel.Address,
                 HotelImageUrl = hotelModel.HotelImageUrl
             };
-            
+
             _context.Hotels.Add(hotel);
-             _context.SaveChanges();
+            _context.SaveChanges();
             var result = _context.Hotels.FirstOrDefault(x => x.OwnerId == owner.Id);
 
             owner.Hotel = result;
@@ -145,10 +150,10 @@
                 contacts.Add(newContact);
             }
 
+            _context.Hotels.Update(hotel);
             await UpdateHotlContacts(contacts, hotel.Id);
 
-            _context.Hotels.Update(hotel);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return true;
         }
@@ -166,23 +171,19 @@
                 .ToList();
             var temp = new Stack<Contact>(contacts);
 
-            while (databaseContacts.Any() && contacts.Any())
+            while (databaseContacts.Any() && temp.Any())
             {
                 var tempContact = temp.Pop();
+                var contact = databaseContacts.FirstOrDefault(x => x.Id == tempContact.Id);
 
-                if (tempContact.Id is null)
+                if (contact is null)
                 {
                     _context.Contacts.Add(tempContact);
                 }
                 else
                 {
-                    var contact = databaseContacts.FirstOrDefault(x => x.Id == tempContact.Id);
-
-                    if (contact != null)
-                    {
-                        _context.Contacts.Update(tempContact);
-                        databaseContacts.Remove(contact);
-                    }
+                    _context.Contacts.Update(tempContact);
+                    databaseContacts.Remove(contact);
                 }
             }
 
@@ -204,8 +205,49 @@
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IQueryable<Room>> GetRooms(string hotelId) =>
-            _context.Rooms.Where(x => x.HotelId == hotelId);
+        public async Task<bool> AddNewRooms(AddNewRoomModel roomModel, Hotel hotel)
+        {
+            if (roomModel is null)
+            {
+                return false;
+            }
+
+            var room = new Room
+            {
+                RoomNumber = roomModel.RoomNumber,
+                CountOfBeds = roomModel.CountOfBeds,
+                CountOfPersons = roomModel.CountOfPersons,
+                Price = roomModel.Price,
+                HotelId = hotel.Id,
+                Hotel = hotel
+            };
+
+            foreach (var roomImage in roomModel.RoomImages)
+            {
+                room.RoomImages.Add(new RoomImages { ImageUrl = roomImage });
+            }
+
+            var roomType = _context.RoomTypes.FirstOrDefault(x => x.Type == roomModel.RoomType);
+            var roomInType = new RoomInType
+            {
+                RoomType = roomType,
+                RoomTypeId = roomType.Id,
+                Room = room,
+                RoomId = room.Id
+            };
+
+            room.RoomInTypes.Add(roomInType);
+            _context.Rooms.Add(room);
+            _context.SaveChanges();
+
+            return true;
+        }
+
+        public async Task<ICollection<Room>> GetRooms(string hotelId) =>
+            _context.Rooms.Where(x => x.HotelId == hotelId).ToList();
+
+        public async Task<ICollection<RoomImages>> GetRoomImages(string roomId) =>
+            _context.RoomImageses.Where(x => x.RoomId == roomId).ToList();
 
         public async Task<ICollection<string>> GetRoomTypes() =>
             await _context.RoomTypes.Select(x => x.Type).ToListAsync();

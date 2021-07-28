@@ -1,0 +1,79 @@
+﻿@typeparam TItem
+<div class="col-12">
+    <div>
+        <table class="table table-hover table-responsive">
+            <thead class="bg-head">
+            <tr class="text-center">
+                @Columns
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in ItemList)
+            {
+                <tr>@Row(item)</tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+@if (ItemList.Any())
+{
+    <div>
+        <button class="btn-primary pr-2" @onclick="@(e => Navigate("prev"))">Назад</button>
+        @for (int i = 0; i < TotalPages; i++)
+        {
+            <button class="btn @(CurrentPages == i ? "btn-dark disabled" : "btn-info")" @onclick="@(e => UpdateList(i))">@(i + 1)</button>
+        }
+        <button class="btn-primary pl-2" @onclick="@(e => Navigate("next"))">Напред</button>
+    </div>
+}
+
+@code {
+    [Parameter]
+	public RenderFragment Columns { get; set; }
+
+	[Parameter]
+	public RenderFragment<TItem> Row { get; set; }
+
+	[Parameter] 
+	public List<TItem> Items { get; set; }
+
+    public List<TItem> ItemList { get; set; }
+
+    public int PageSize { get; set; }
+    public int TotalPages { get; set; }
+    public int CurrentPages { get; set; }
+
+    protected override void OnInitialized()
+    {
+        PageSize = 5;
+        ItemList = Items.Take(PageSize).ToList();
+        TotalPages = (int)Math.Ceiling(Items.Count / (decimal)PageSize);
+    }
+
+    private void UpdateList(int pageNumber)
+    {
+        ItemList = Items.Skip(pageNumber * PageSize).Take(PageSize).ToList();
+        CurrentPages = pageNumber;
+    }
+
+    private void Navigate(string direction)
+    {
+        if (direction == "prev" && CurrentPages != 0)
+        {
+            CurrentPages -= 1;
+        }
+
+        if (direction == "next" && CurrentPages != TotalPages-1)
+        {
+            CurrentPages += 1;
+        }
+
+        UpdateList(CurrentPages);
+    }
+}
+<style>
+    thead.bg-head {
+
+    }
+</style>

@@ -128,9 +128,35 @@
             return respons.ToResponse();
         }
 
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<bool>> AddNewRoom([FromBody] AddNewRoomModel roomModel)
+        {
+            if (roomModel is null || !ModelState.IsValid)
+            {
+                return ModelStateErrors<bool>();
+            }
+
+            var hotel = await _hotelService.GetHotelByOwnerId(UserId);
+            var rooms = await _hotelService.GetRooms(hotel.Id);
+            var roomExsist = rooms.Any(x => x.RoomNumber == roomModel.RoomNumber);
+
+            if (roomExsist)
+            {
+                return new ApplicationResponse<bool>(new ApplicationError("", $"Room number {roomModel.RoomNumber} already exist."));
+            }
+
+            var response = await _hotelService.AddNewRooms(roomModel, hotel);
+
+            return response.ToResponse();
+        }
+
         [HttpGet]
         [Route("[action]")]
         public async Task<ApplicationResponse<ICollection<string>>> GetRoomTypes() =>
             new ApplicationResponse<ICollection<string>>(await _hotelService.GetRoomTypes());
+
+        private string UserId =>
+            _userManager.GetUserId(User);
     }
 }
