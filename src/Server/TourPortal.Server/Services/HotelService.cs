@@ -218,13 +218,13 @@
                 CountOfBeds = roomModel.CountOfBeds,
                 CountOfPersons = roomModel.CountOfPersons,
                 Price = roomModel.Price,
-                HotelId = hotel.Id,
-                Hotel = hotel
+                Hotel = hotel,
+                HotelId = hotel.Id
             };
 
             foreach (var roomImage in roomModel.RoomImages)
             {
-                room.RoomImages.Add(new RoomImages { ImageUrl = roomImage });
+                room.RoomImages.Add(new RoomImages {ImageUrl = roomImage});
             }
 
             var roomType = _context.RoomTypes.FirstOrDefault(x => x.Type == roomModel.RoomType);
@@ -244,15 +244,48 @@
         }
 
         public async Task<ICollection<Room>> GetRooms(string hotelId) =>
-            _context.Rooms.Where(x => x.HotelId == hotelId).ToList();
+            DistinctRoomNumber(hotelId);
 
         public async Task<ICollection<RoomImages>> GetRoomImages(string roomId) =>
-            _context.RoomImageses.Where(x => x.RoomId == roomId).ToList();
+            _context.RoomImageses
+                .Where(x => x.RoomId == roomId)
+                .OrderByDescending(x => x.Id)
+                .ToList();
 
         public async Task<ICollection<string>> GetRoomTypes() =>
-            await _context.RoomTypes.Select(x => x.Type).ToListAsync();
+            await _context.RoomTypes
+                .OrderByDescending(x => x.Type)
+                .Select(x => x.Type)
+                .ToListAsync();
 
         private string GetOwnerId(string userId) =>
             GetOwner(userId)?.Id;
+
+        // this method is return distinct records in rooms table and check errors from AddNewRooms() method
+        private ICollection<Room> DistinctRoomNumber(string hotelId)
+        { 
+            var rooms = _context.Rooms
+                .Where(x => x.HotelId == hotelId)
+                .ToList();
+            var temp = new List<Room>(rooms);
+
+            for(int i = 0; i < temp.Count; i++)
+            {
+                var current = temp[i];
+                var removed = rooms
+                    .Where(x => x.RoomNumber == current.RoomNumber)
+                    .FirstOrDefault(x => x.Id != current.Id);
+
+                if (removed != null)
+                {
+                    rooms.Remove(removed);
+                    temp.Remove(removed);
+                }
+            }
+
+            return rooms;
+        }
+            
+
     }
 }

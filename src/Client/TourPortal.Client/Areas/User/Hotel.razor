@@ -51,8 +51,14 @@
                     </div>
                 </div>
             }
-            {
+            else{
                 <div class="card card border-primary mb-3 p-2">
+                    <div class="col-12">
+                        <br/>
+                        <div class="row d-flex justify-content-end pr-2">
+                            <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(() => NavigationManager.NavigateTo($"/user/hotel/new/room/{hoteInfolModel.Id}")) Text="Добави стая" ButtonStyle="ButtonStyle.Primary"/>
+                        </div>
+                    </div>
                     @if (rooms.Any())
                     {
                         <RoomsTableComponent Items="rooms">
@@ -82,14 +88,8 @@
                             </Row>
                         </RoomsTableComponent>
                     }
-                    <div class="col-12">
-                        <br/>
-                        <div class="row d-flex justify-content-end pr-2">
-                            <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(() => NavigationManager.NavigateTo($"/user/hotel/new/room/{hoteInfolModel.Id}")) Text="Добави стая" ButtonStyle="ButtonStyle.Primary"/>
-                        </div>
-                    </div>
                 </div>
-            }
+                }
         }
         else
         {

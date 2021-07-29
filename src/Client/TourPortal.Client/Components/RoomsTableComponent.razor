@@ -19,12 +19,13 @@
 @if (ItemList.Any())
 {
     <div>
-        <button class="btn-primary pr-2" @onclick="@(e => Navigate("prev"))">Назад</button>
+        <button class="btn-primary mr-2" @onclick="@(e => Navigate("prev"))">Назад</button>
         @for (int i = 0; i < TotalPages; i++)
         {
-            <button class="btn @(CurrentPages == i ? "btn-dark disabled" : "btn-info")" @onclick="@(e => UpdateList(i))">@(i + 1)</button>
+            var pageNumbe = i;
+            <button class="btn @(CurrentPage == pageNumbe ? "btn-dark disable" : "btn-info")" @onclick="@(e => UpdateList(pageNumbe))">@(i + 1)</button>
         }
-        <button class="btn-primary pl-2" @onclick="@(e => Navigate("next"))">Напред</button>
+        <button class="btn-primary ml-2" @onclick="@(e => Navigate("next"))">Напред</button>
     </div>
 }
 
@@ -38,38 +39,61 @@
 	[Parameter] 
 	public List<TItem> Items { get; set; }
 
+    [Parameter]
+    public bool ReloadList { get; set; }
+
     public List<TItem> ItemList { get; set; }
 
     public int PageSize { get; set; }
     public int TotalPages { get; set; }
-    public int CurrentPages { get; set; }
+    public int CurrentPage { get; set; }
 
     protected override void OnInitialized()
     {
         PageSize = 5;
-        ItemList = Items.Take(PageSize).ToList();
-        TotalPages = (int)Math.Ceiling(Items.Count / (decimal)PageSize);
+        if (Items != null)
+        {
+            ItemList = Items.Take(PageSize).ToList();
+            TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+        }
     }
 
-    private void UpdateList(int pageNumber)
+    protected override void OnAfterRender(bool firstRender)
     {
-        ItemList = Items.Skip(pageNumber * PageSize).Take(PageSize).ToList();
-        CurrentPages = pageNumber;
+        if (!firstRender && ReloadList)
+        {
+            UpdateList();
+            ReloadList = false;
+
+            StateHasChanged();
+        }
+
+        base.OnAfterRender(firstRender);
+    }
+
+    private void UpdateList(int pageNumber = 0)
+    {
+        if (Items != null)
+        {
+            ItemList = Items.Skip(pageNumber * PageSize).Take(PageSize).ToList();
+            TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+            CurrentPage = pageNumber;
+        }
     }
 
     private void Navigate(string direction)
     {
-        if (direction == "prev" && CurrentPages != 0)
+        if (direction == "prev" && CurrentPage != 0)
         {
-            CurrentPages -= 1;
+            CurrentPage -= 1;
         }
 
-        if (direction == "next" && CurrentPages != TotalPages-1)
+        if (direction == "next" && CurrentPage != TotalPages-1)
         {
-            CurrentPages += 1;
+            CurrentPage += 1;
         }
 
-        UpdateList(CurrentPages);
+        UpdateList(CurrentPage);
     }
 }
 <style>

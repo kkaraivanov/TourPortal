@@ -39,7 +39,7 @@
                         <option value="" disabled selected hidden>Изберети тип стая</option>
                         @foreach (var roomType in RoomTypes)
                         {
-                            <option value="@roomType">@ParsType(roomType)</option>
+                            <option value="@roomType">@ParsType(roomType))</option>
                         }
                     </InputSelect>
                     <ValidationMessage For="@(() => roomModel.RoomType)"/>
