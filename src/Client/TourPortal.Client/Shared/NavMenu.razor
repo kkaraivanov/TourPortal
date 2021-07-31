@@ -10,11 +10,7 @@
         </div>
         <div id="myNav" class="overlay">
             <div class="overlay-content">
-                <AuthorizeView>
-                    <NotAuthorized>
-                        <DisplayNotAuthorized />
-                    </NotAuthorized>
-                </AuthorizeView>
+                <DisplayNotAuthorized />
             </div>
         </div>
     </div>
@@ -24,21 +20,9 @@
         </span>
     </a>
     <div class="user_option">
-        <AuthorizeView>
-            <NotAuthorized>
-                <NavLink class="nav-link" href="" @onclick=@(() => ShowForm())>
-                    <span aria-hidden="true"></span> Вход
-                </NavLink>
-            </NotAuthorized>
-            <Authorized>
-                <NavLink class="nav-link" href="/account/logout">
-                    <span aria-hidden="true"></span> Изход
-                </NavLink>
-            </Authorized>
-        </AuthorizeView>
-        <form class="form-inline ">
-            <button class="btn nav_search-btn" type="submit"></button>
-        </form>
+        <NavLink class="nav-link menu-login" href="" @onclick=@(() => ShowForm())>
+            <span aria-hidden="true"></span> Вход
+        </NavLink>
     </div>
 </div>
 
@@ -60,3 +44,14 @@
         Modal.Show<Login>("", options);
     }
 }
+
+<style>
+    a.menu-login {
+         text-decoration: none;
+    }
+    a.menu-login:visited,
+    a.menu-login:active,
+    a.menu-login:hover{
+        color: #fff
+    }
+</style>

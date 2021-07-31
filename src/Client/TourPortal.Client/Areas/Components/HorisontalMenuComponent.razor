@@ -1,0 +1,81 @@
+﻿<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="full">
+        <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
+        <div class="logo_section">
+            <a href="@HomeUrl">
+                <img class="img-responsive" src="images/logo/logo.png" alt="#"/>
+            </a>
+        </div>
+        <div class="right_topbar">
+            <div class="icon_info">
+                @*<ul>
+                    <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
+                    <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
+                    <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
+                </ul>*@
+                <ul class="user_profile_dd">
+                    <li>
+                        <a class="dropdown-toggle" data-toggle="dropdown">
+                            @if (string.IsNullOrEmpty(ProfileImage))
+                            {
+                                <img class="img-responsive rounded-circle" src="./images/user_img.jpg" alt="#" />
+                            }
+                            else
+                            {
+                                <img class="img-responsive rounded-circle" src="@ProfileImage" alt="#" />
+                            }
+                            <span class="name_user">@ProfileName</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" @onclick="(() => {Profile();})">Профил</a>
+                            <a class="dropdown-item" @onclick="(() => {Settings();})">Настроки</a>
+                            <a class="dropdown-item" @onclick="(() => {Logout();})">
+                                <span>Изход</span> <i class="fa fa-sign-out"></i>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+@code
+{
+	[Parameter]
+	public RenderFragment NavigationItem { get; set; }
+
+	[Parameter]
+	public string HomeUrl { get; set; }
+
+    [Parameter]
+	public string ProfileImage { get; set; }
+
+    [Parameter]
+	public string ProfileName { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        
+    }
+
+    private void Profile()
+    {
+        NavigationManager.NavigateTo($"{HomeUrl}/profile");
+    }
+
+    private void Settings()
+    {
+        NavigationManager.NavigateTo($"{HomeUrl}/profile/{Id}");
+    }
+
+    private void Logout()
+    {
+        ApiService.Logout();
+        StateHasChanged();
+        NavigationManager.NavigateTo("/account/logout", true);
+    }
+}

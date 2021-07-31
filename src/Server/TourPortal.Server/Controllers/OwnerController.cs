@@ -136,7 +136,7 @@
             {
                 return ModelStateErrors<bool>();
             }
-
+            
             var hotel = await _hotelService.GetHotelByOwnerId(UserId);
             var rooms = await _hotelService.GetRooms(hotel.Id);
             var roomExsist = rooms.Any(x => x.RoomNumber == roomModel.RoomNumber);

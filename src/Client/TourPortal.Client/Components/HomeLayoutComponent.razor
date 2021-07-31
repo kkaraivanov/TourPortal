@@ -1,0 +1,26 @@
+﻿<div style="padding-bottom: 100px;">
+    <div class="hero_area">
+        <header class="header_section">
+            @SiteHeaderRenderer
+        </header>
+        <section class=" slider_section position-relative">
+            <div class="container-fluid">
+                @SiteSliderRenderer
+            </div>
+        </section>
+        <div>
+            @SiteContentRenderer
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment SiteHeaderRenderer { get; set; }
+    
+    [Parameter]
+    public RenderFragment SiteSliderRenderer { get; set; }
+    
+    [Parameter]
+    public RenderFragment SiteContentRenderer { get; set; }
+}

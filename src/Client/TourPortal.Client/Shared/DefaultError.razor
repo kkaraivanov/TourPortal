@@ -1,8 +1,38 @@
 ﻿@page "/error"
-@layout MainLayout
+@page "/error/{item}"
+@layout HomeLayout
 
-<h3>DefaultRerror</h3>
+@if (isNotAuthorized)
+{
+    <h3>Внимание!</h3> <br />
+    <div class="card border-danger text-center">
+        <div class="card-header">
+            <h3>Внимание!</h3>
+        </div>
+        <div class="card-body text-danger">
+            <h5 class="card-title">Достъпът до този ресурс е отказан.</h5>
+            <h5 class="card-text">С цел защита данните на потребителите, достъпът до ресурси е ограничен. За повече информация admin@test.com</h5>
+            <br/>
+            <a href="/" class="btn btn-primary">Начало</a>
+        </div>
+    </div>
+}
 
 @code {
-	// TODO: add default view
+    [Parameter]
+    public string Item { get; set; }
+
+    private bool isNotAuthorized;
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(Item))
+        {
+            if (Item.ToLower().Contains("notauthorized"))
+            {
+                isNotAuthorized = true;
+            }
+        }
+    }
+
 }

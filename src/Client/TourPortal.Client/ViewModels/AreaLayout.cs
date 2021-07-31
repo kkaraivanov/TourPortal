@@ -1,4 +1,4 @@
-﻿namespace TourPortal.Client.Shared
+﻿namespace TourPortal.Client.Areas.Shared
 {
     using System.Threading;
     using System.Threading.Tasks;
@@ -28,6 +28,7 @@
             "css/area-style/css/custom.css"
         };
         private bool areaIsReady = false;
+        private string uri = string.Empty;
         private string ProfileImage = string.Empty;
         private string ProfileName = string.Empty;
         private string UserRole = string.Empty;
@@ -52,7 +53,12 @@
             var state = await _state.GetAuthenticationStateAsync();
             var userData = state.User.Identity.Name;
             var request = await ApiService.GetUserInfo(userData);
-            
+
+            if (!state.User.Identity.IsAuthenticated)
+            {
+                NavigationManager.NavigateTo("/error/notauthorized", true);
+            }
+
             if (request.IsOk)
             {
                 var responseData = request.ResponseData;

@@ -4,9 +4,11 @@
 <PageModelComponent>
     <PageHeader>
         <div class="d-flex justify-content-between">
-        @*<h3>Начало</h3>*@
             <AuthorizeView Roles="@Security.Role.User">
                 <HotelSearch SerchHotels="@hotels" OnChanged="@Change" />
+            </AuthorizeView>
+            <AuthorizeView Roles="@Security.Role.Owner">
+                <h3>Начало</h3>
             </AuthorizeView>
         </div>
     </PageHeader>

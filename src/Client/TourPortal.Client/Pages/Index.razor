@@ -1,39 +1,15 @@
 ﻿@page "/"
-@using TourPortal.Infrastructure.Global.Types
 
-<AuthorizeView>
-    <NotAuthorized>
-        <section class=" slider_section position-relative">
-            <div class="container-fluid">
-                <SiteSlider />
-            </div>
-        </section>
-        <section class="about_section layout_padding-bottom">
-            <DubaiViewComponent/>
-        </section>
-        <section class="client_section layout_padding">
-            <AboutMeComponent/>
-        </section>
+<section class="about_section layout_padding-bottom">
+    <DubaiViewComponent/>
+</section>
+<section class="client_section layout_padding">
+    <AboutMeComponent/>
+</section>
 
-        <SiteInfo/>
-    </NotAuthorized>
-</AuthorizeView>
+<SiteInfo/>
 
 @code
 {
-    protected override async Task OnInitializedAsync()
-    {
-        var state = await _state.GetAuthenticationStateAsync();
-        if (state.User.Identity.IsAuthenticated)
-        {
-            if (state.User.IsInRole(Security.Role.Owner) || state.User.IsInRole(Security.Role.User))
-            {
-                NavigationManager.NavigateTo("/user", true);
-            }
-            else
-            {
-                NavigationManager.NavigateTo("/administrator", true);
-            }
-        }
-    }
+    
 }

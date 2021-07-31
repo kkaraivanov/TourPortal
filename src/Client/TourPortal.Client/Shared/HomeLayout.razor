@@ -1,15 +1,58 @@
 ﻿@inherits LayoutComponentBase
 @layout MainLayout
 
-<div style="padding-bottom: 100px;">
-	<div class="hero_area">
-		<header class="header_section">
-			<SiteHeader />
-		</header>
-		@Body
-	</div>
-</div>
+@using TourPortal.Infrastructure.Global.Types
+
+<AuthorizeView>
+    <NotAuthorized>
+        <HomeLayoutComponent>
+            <SiteHeaderRenderer>
+                <SiteHeader />
+            </SiteHeaderRenderer>
+            <SiteSliderRenderer>
+                @if (!errorChecked)
+                {
+                    <SiteSlider/>
+                }
+            </SiteSliderRenderer>
+            <SiteContentRenderer>
+                @Body
+            </SiteContentRenderer>
+        </HomeLayoutComponent>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
-	
+    private bool errorChecked;
+
+    protected override void OnParametersSet()
+    {
+        var uri = NavigationManager.Uri;
+
+        if (uri.ToLower().Contains("error"))
+        {
+            errorChecked = true;
+        }
+        else
+        {
+            errorChecked = false;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await _state.GetAuthenticationStateAsync();
+
+        if (state.User.Identity.IsAuthenticated)
+        {
+            if (state.User.IsInRole(Security.Role.Owner) || state.User.IsInRole(Security.Role.User))
+            {
+                NavigationManager.NavigateTo("/user", true);
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/administrator", true);
+            }
+        }
+    }
 }
