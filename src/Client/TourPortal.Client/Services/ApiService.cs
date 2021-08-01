@@ -88,11 +88,14 @@
         public async Task<ApplicationResponse<UserInfoResponse>> GetUserInfo(string userEmail) =>
             await Get<UserInfoResponse>(Route.GetUserInfo + userEmail);
 
-        public async Task<ApplicationResponse<IEnumerable<RoomResponse>>> GetRooms(string hotelId) =>
-            await Get<IEnumerable<RoomResponse>>(Route.GetRooms + hotelId);
+        public async Task<ApplicationResponse<IEnumerable<RoomResponse>>> GetRooms(string hotelId, int skip, int take) =>
+            await Get<IEnumerable<RoomResponse>>($"{Route.GetRooms}hotelId={hotelId}&skip={skip}&take={take}");
 
         public async Task<ApplicationResponse<ICollection<string>>> GetRoomTypes() =>
             await Get<ICollection<string>>(Route.GetRoomTypes);
+
+        public async Task<ApplicationResponse<int>> GetRoomsCount(string hotelId) =>
+            await Get<int>(Route.GetRoomsCount + hotelId);
 
         public async Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfo() =>
             await Get<HotelInfoResponse>(Route.GetHotelInfo);

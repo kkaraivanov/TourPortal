@@ -1,0 +1,20 @@
+﻿<th>
+    <div class="col-12">
+        @Title
+        @if (Searchable)
+        {
+            <input class="form-control" placeholder="Намери" @oninput="OnSearchChanged" />
+        }
+    </div>    
+</th>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+    
+    [Parameter]
+    public bool Searchable { get; set; }
+
+    [Parameter]
+    public EventCallback<ChangeEventArgs> OnSearchChanged { get; set; }
+}

@@ -12,7 +12,8 @@
             public const string AddNewHotel = "api/owner/addNewHotel";
             public const string ChangeHotel = "api/owner/changeHotel";
             public const string AddNewRoom = "api/owner/addNewRoom";
-            public const string GetRooms = "api/applicationUser/getRooms?hotelId=";
+            public const string GetRooms = "api/applicationUser/getRooms?";
+            public const string GetRoomsCount = "api/applicationUser/getRoomsCout?hotelId=";
             public const string GetRoomTypes = "api/owner/getRoomTypes";
         }
     }

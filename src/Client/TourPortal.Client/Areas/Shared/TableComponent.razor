@@ -1,0 +1,29 @@
+﻿@typeparam TItem
+<div class="col-12">
+    <div>
+        <table class="table table-hover table-responsive">
+            <thead class="bg-head">
+            <tr class="text-center">
+                @Columns
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in TItems)
+            {
+                <tr>@Row(item)</tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment Columns { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem> Row { get; set; }
+
+    [Parameter] 
+    public List<TItem> TItems { get; set; }
+}

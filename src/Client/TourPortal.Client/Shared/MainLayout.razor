@@ -6,7 +6,14 @@
 <RadzenContextMenu />
 <RadzenTooltip />
 
-@Body
+<AuthorizeView>
+    <NotAuthorized>
+        @Body
+    </NotAuthorized>
+    <Authorized>
+        @Body
+    </Authorized>
+</AuthorizeView>
 
 @code {
     

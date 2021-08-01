@@ -1,87 +1,110 @@
-﻿@typeparam TItem
-<div class="col-12">
-    <div>
-        <table class="table table-hover table-responsive">
-            <thead class="bg-head">
-            <tr class="text-center">
-                @Columns
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var item in ItemList)
-            {
-                <tr>@Row(item)</tr>
-            }
-            </tbody>
-        </table>
-    </div>
-</div>
-@if (ItemList.Any())
-{
-    <div>
-        <button class="btn-primary mr-2" @onclick="@(e => Navigate("prev"))">Назад</button>
-        @for (int i = 0; i < TotalPages; i++)
+﻿@using TourPortal.Infrastructure.Shared.Models.Hotel
+
+<TableComponent TItems="rooms">
+    <Columns>
+        <ColumnComponent Title="Снимка"/>
+        <ColumnComponent Title="Стая №" Searchable="true" OnSearchChanged="@(e => OnSearchChanged(e, "roomNumber"))" />
+        <ColumnComponent Title="Брой легла"/>
+        <ColumnComponent Title="Брой посетители"/>
+        <ColumnComponent Title="Цена за нощувка"/>
+        <ColumnComponent Title="Тип на стаята"/>
+    </Columns>
+    <Row Context="roomResponse">
+        @if (roomResponse.RoomImages.Any())
         {
-            var pageNumbe = i;
-            <button class="btn @(CurrentPage == pageNumbe ? "btn-dark disable" : "btn-info")" @onclick="@(e => UpdateList(pageNumbe))">@(i + 1)</button>
+            var imageUrl = roomResponse.RoomImages.FirstOrDefault();
+            <td style="width: 20%"><img class="card-img-top" src="@imageUrl" alt="Card image cap"></td>
         }
-        <button class="btn-primary ml-2" @onclick="@(e => Navigate("next"))">Напред</button>
-    </div>
-}
+        else
+        {
+            <td style="width: 20%"><img class="card-img" src="/images/hotel.png" alt="Card image cap"></td>
+        }
+        <td class="text-center">@roomResponse.RoomNumber</td>
+        <td class="text-center">@roomResponse.CountOfBeds</td>
+        <td class="text-center">@roomResponse.CountOfPersons</td>
+        <td class="text-center">@roomResponse.Price</td>
+        <td class="text-center">@roomResponse.RoomType</td>
+    </Row>
+</TableComponent>
+
+<div>
+    <button class="btn-primary mr-2" @onclick="@(e => Navigate("prev"))">Назад</button>
+    @for (int i = 0; i < TotalPages; i++)
+    {
+        var pageNumbe = i;
+        <button class="btn @(CurrentPage == pageNumbe ? "btn-dark disable" : "btn-info") ml-1 mr-1" @onclick="@(e => UpdateList(pageNumbe))">@(i + 1)</button>
+    }
+    <button class="btn-primary ml-2" @onclick="@(e => Navigate("next"))">Напред</button>
+</div>
 
 @code {
     [Parameter]
-	public RenderFragment Columns { get; set; }
+    public string HotelId { get; set; }
 
-	[Parameter]
-	public RenderFragment<TItem> Row { get; set; }
+    private int PageSize => 5;
+    private int TotalPages = 0;
+    private int CurrentPage = 0;
+    private int Skip = 0;
+    private int count = 0;
+    private bool isSearchChanged;
+    private RoomResponse roomResponse = new RoomResponse();
+    private List<RoomResponse> rooms = new List<RoomResponse>();
+    private List<RoomResponse> selectRooms = new List<RoomResponse>();
 
-	[Parameter] 
-	public List<TItem> Items { get; set; }
-
-    [Parameter]
-    public bool ReloadList { get; set; }
-
-    public List<TItem> ItemList { get; set; }
-
-    public int PageSize { get; set; }
-    public int TotalPages { get; set; }
-    public int CurrentPage { get; set; }
-
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        PageSize = 5;
-        if (Items != null)
+        var requestRoomsCount = await ApiService.GetRoomsCount(HotelId);
+
+        if (requestRoomsCount.IsOk)
         {
-            ItemList = Items.Take(PageSize).ToList();
-            TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+            count = requestRoomsCount.ResponseData;
+            TotalPages = (int)Math.Ceiling(count / (decimal)PageSize);
         }
+
+        await GetData();
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender && ReloadList)
+        if (firstRender)
         {
-            UpdateList();
-            ReloadList = false;
-
+            await UpdateList();
             StateHasChanged();
         }
 
-        base.OnAfterRender(firstRender);
+        await base.OnAfterRenderAsync(firstRender);
     }
 
-    private void UpdateList(int pageNumber = 0)
+    private async Task UpdateList(int pageNumber = 0)
     {
-        if (Items != null)
+        if (rooms != null && !string.IsNullOrEmpty(HotelId))
         {
-            ItemList = Items.Skip(pageNumber * PageSize).Take(PageSize).ToList();
-            TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+            var requestRooms = await ApiService.GetRooms(HotelId, pageNumber * PageSize, PageSize);
+            if (requestRooms.IsOk)
+            {
+                rooms = requestRooms.ResponseData.ToList();
+                selectRooms = rooms.ToList();
+            }
+
+            TotalPages = (int)Math.Ceiling(count / (decimal)PageSize);
             CurrentPage = pageNumber;
         }
     }
 
-    private void Navigate(string direction)
+    private async Task GetData()
+    {
+        if (rooms != null && !string.IsNullOrEmpty(HotelId)) 
+        {
+            var requestRooms = await ApiService.GetRooms(HotelId, 0, PageSize);
+            if (requestRooms.IsOk)
+            {
+                rooms = requestRooms.ResponseData.ToList();
+                selectRooms = rooms.ToList();
+            }
+        }
+    }
+
+    private async Task Navigate(string direction)
     {
         if (direction == "prev" && CurrentPage != 0)
         {
@@ -93,9 +116,26 @@
             CurrentPage += 1;
         }
 
-        UpdateList(CurrentPage);
+        await UpdateList(CurrentPage);
+    }
+
+    private void OnSearchChanged(ChangeEventArgs onChanged, string columnName)
+    {
+        var stringFromEvent = onChanged.Value.ToString();
+        isSearchChanged = true;
+
+        if (!string.IsNullOrEmpty(stringFromEvent))
+        {
+            var roomNumber = int.Parse(stringFromEvent);
+            rooms = selectRooms.Where(x => x.RoomNumber == roomNumber).ToList();
+        }
+        else
+        {
+            rooms = selectRooms.ToList();
+        }
     }
 }
+
 <style>
     thead.bg-head {
 

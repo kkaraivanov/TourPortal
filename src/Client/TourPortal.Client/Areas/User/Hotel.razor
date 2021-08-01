@@ -38,7 +38,6 @@
                     </HotelCardComponent>
                 </EditForm>
             }
-
             @if (!isRoomExist)
             {
                 <div class="card card border-primary mb-3 p-2">
@@ -51,7 +50,8 @@
                     </div>
                 </div>
             }
-            else{
+            else
+            {
                 <div class="card card border-primary mb-3 p-2">
                     <div class="col-12">
                         <br/>
@@ -59,43 +59,16 @@
                             <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(() => NavigationManager.NavigateTo($"/user/hotel/new/room/{hoteInfolModel.Id}")) Text="Добави стая" ButtonStyle="ButtonStyle.Primary"/>
                         </div>
                     </div>
-                    @if (rooms.Any())
-                    {
-                        <RoomsTableComponent Items="rooms">
-                            <Columns>
-                                <ColumnComponent Title="Снимка"/>
-                                <ColumnComponent Title="Стая №"/>
-                                <ColumnComponent Title="Брой легла"/>
-                                <ColumnComponent Title="Брой посетители"/>
-                                <ColumnComponent Title="Цена за нощувка"/>
-                                <ColumnComponent Title="Тип на стаята"/>
-                            </Columns>
-                            <Row Context="roomResponse">
-                                @if (roomResponse.RoomImages.Any())
-                                {
-                                    var imageUrl = roomResponse.RoomImages.FirstOrDefault();
-                                    <td style="width: 20%"><img class="card-img-top" src="@imageUrl" alt="Card image cap"></td>
-                                }
-                                else
-                                {
-                                    <td style="width: 20%"><img class="card-img" src="/images/hotel.png" alt="Card image cap"></td>
-                                }
-                                <td class="text-center">@roomResponse.RoomNumber</td>
-                                <td class="text-center">@roomResponse.CountOfBeds</td>
-                                <td class="text-center">@roomResponse.CountOfPersons</td>
-                                <td class="text-center">@roomResponse.Price</td>
-                                <td class="text-center">@roomResponse.RoomType</td>
-                            </Row>
-                        </RoomsTableComponent>
-                    }
+                    
+                    <RoomsTableComponent HotelId="@hotelId" />
                 </div>
-                }
+            }
         }
         else
         {
             <div class="card card border-primary mb-3 p-2">
                 <h4 class="text-center">Нямате добавен хотел</h4>
-                <br />
+                <br/>
                 <div class="row d-flex justify-content-end pr-2">
                     <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(() => NavigationManager.NavigateTo($"/user/hotel/new/hotel")) Text="Добави хотел" ButtonStyle="ButtonStyle.Primary"/>
                 </div>
@@ -106,14 +79,12 @@
 
 @code {
     private bool isHotelExist;
-    private bool isAddButtonClick;
     private bool isChangeButtonClick;
     private bool isRoomExist;
+    private bool isSearchChanged;
     private string hotelName = string.Empty;
+    private string hotelId = string.Empty;
     private HotelInfoModel hoteInfolModel = new HotelInfoModel();
-    private RoomResponse roomResponse = new RoomResponse();
-    private List<RoomResponse> rooms = new List<RoomResponse>();
-    private List<RoomResponse> selectRooms = new List<RoomResponse>();
 
     protected override async Task OnParametersSetAsync()
     {
@@ -160,16 +131,9 @@
         if (isHotelExist)
         {
             hotelName = User.Hotel.HotelName;
+            hotelId = User.Hotel.Id;
             hoteInfolModel = User.Hotel;
-
-            var request = await ApiService.GetRooms(hoteInfolModel.Id);
-
-            if (request.IsOk)
-            {
-                isRoomExist = request.ResponseData.Any();
-                rooms.AddRange(request.ResponseData);
-                rooms = rooms.Distinct().ToList();
-            }
+            isRoomExist = isHotelExist;
         }
     }
 
@@ -218,11 +182,6 @@
     private void OnSelectedRoom()
     {
 
-    }
-
-    protected async Task OnAddButtonClick()
-    {
-        isAddButtonClick = isAddButtonClick != true;
     }
 
     protected async Task OnChangeButtonClick()

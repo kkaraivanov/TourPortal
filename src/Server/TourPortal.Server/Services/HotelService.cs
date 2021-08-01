@@ -42,6 +42,8 @@
 
         Task<ICollection<string>> GetRoomTypes();
 
+        Task<string> GetRoomType(string roomId);
+
         Task<bool> ChangeHotel(ChangeHotelModel hotelModel);
     }
 
@@ -258,6 +260,12 @@
                 .Select(x => x.Type)
                 .ToListAsync();
 
+        public async Task<string> GetRoomType(string roomId) =>
+            _context.RoomsInType
+                .Where(x => x.RoomId == roomId)
+                .Select(x => x.RoomType.Type)
+                .FirstOrDefault();
+
         private string GetOwnerId(string userId) =>
             GetOwner(userId)?.Id;
 
@@ -266,6 +274,7 @@
         { 
             var rooms = _context.Rooms
                 .Where(x => x.HotelId == hotelId)
+                .OrderByDescending(x => x.RoomNumber)
                 .ToList();
             var temp = new List<Room>(rooms);
 

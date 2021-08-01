@@ -27,7 +27,9 @@
 
         Task<ApplicationResponse<bool>> AddNewRoom(AddNewRoomModel roomModel);
 
-        Task<ApplicationResponse<IEnumerable<RoomResponse>>> GetRooms(string hotelId);
+        Task<ApplicationResponse<IEnumerable<RoomResponse>>> GetRooms(string hotelId, int skip, int take);
+
+        Task<ApplicationResponse<int>> GetRoomsCount(string hotelId);
 
         Task<ApplicationResponse<ICollection<string>>> GetRoomTypes();
     }

@@ -52,21 +52,53 @@
 
         [HttpGet]
         [Route("[action]")]
-        public async Task<ApplicationResponse<List<RoomResponse>>> GetRooms(string hotelId)
+        public async Task<ApplicationResponse<List<RoomResponse>>> GetRooms(string hotelId, int skip, int take)
         {
             var rooms = await _hotelService.GetRooms(hotelId);
-            var response = new List<RoomResponse>();
+            rooms = rooms.Skip(skip).Take(take).ToList();
+            var roomsToResponse = await GetRoomsToRespone(rooms);
+
+            return roomsToResponse.ToResponse();
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<List<RoomResponse>>> GetRoomsByRoomNumber(string hotelId, int roomNumber)
+        {
+            var rooms = await _hotelService.GetRooms(hotelId);
+            rooms = rooms.Where(x => x.RoomNumber == roomNumber).ToList();
+            var roomsToResponse = await GetRoomsToRespone(rooms);
+
+            return roomsToResponse.ToResponse();
+        }
+
+        private async Task<List<RoomResponse>> GetRoomsToRespone(ICollection<Room> rooms)
+        {
+            var roomsToResponse = new List<RoomResponse>();
             foreach (var room in rooms)
             {
                 var serialize = JsonConvert.SerializeObject(room);
                 var roomForResponse = JsonConvert.DeserializeObject<RoomResponse>(serialize);
                 var images = await _hotelService.GetRoomImages(roomForResponse.Id);
                 roomForResponse.RoomImages.AddRange(images.Select(x => x.ImageUrl));
-                response.Add(roomForResponse);
+                var roomType = await _hotelService.GetRoomType(room.Id);
+                roomForResponse.RoomType = roomType;
+                roomsToResponse.Add(roomForResponse);
             }
 
-            return response.ToResponse();
+            return roomsToResponse;
         }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<int>> GetRoomsCout(string hotelId)
+        {
+            var rooms = await _hotelService.GetRooms(hotelId);
+            var count = rooms.Count;
+
+            return count.ToResponse();
+        }
+            
 
         [HttpGet]
         [Route("[action]")]
