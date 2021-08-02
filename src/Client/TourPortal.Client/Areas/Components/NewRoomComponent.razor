@@ -36,7 +36,7 @@
                 <div class="form-group">
                     <label for="roomType">Тип на стаята</label>
                     <InputSelect class="custom-select" name="roomType" @bind-Value="roomModel.RoomType">
-                        <option value="" disabled selected hidden>Изберети тип стая</option>
+                        <option value="" disabled selected hidden>Изберете тип стая</option>
                         @foreach (var roomType in RoomTypes)
                         {
                             <option value="@roomType">@ParsType(roomType))</option>

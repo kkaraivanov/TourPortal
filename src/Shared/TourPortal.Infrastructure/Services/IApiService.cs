@@ -21,6 +21,8 @@
 
         Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfo();
 
+        Task<ApplicationResponse<RegisterResponseModel>> RegisterEmploye(RegisterModel registerModel);
+
         Task<ApplicationResponse<HotelInfoResponse>> AddNewHotel(AddHotelModel hotelModel);
 
         Task<ApplicationResponse<bool>> ChangeHotel(ChangeHotelModel hotelModel);

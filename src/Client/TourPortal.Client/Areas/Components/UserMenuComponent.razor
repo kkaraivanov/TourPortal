@@ -1,21 +1,33 @@
-﻿@using TourPortal.Infrastructure.Global.Types
-<NavigationComponent NavigationLink="/user/">
+﻿<NavigationComponent NavigationLink="/user/">
     <NavigationContent>
-        <i class="mdi mdi-home menu-icon"></i>
-        <span class="menu-title">Начало</span>
+        <i class="fa fa-dashboard yellow_color"></i>
+        <span>Начало</span>
     </NavigationContent>
 </NavigationComponent>
 <AuthorizeView Roles="@Security.Role.Owner">
     <NavigationComponent NavigationLink="/user/hotel">
         <NavigationContent>
-            <i class="mdi mdi-home menu-icon"></i>
-            <span class="menu-title">Моят хотел</span>
+            <i class="fa fa-h-square orange_color"></i>
+            <span>Хотел</span>
+        </NavigationContent>
+    </NavigationComponent>
+    <NavigationComponent NavigationLink="/user/employe">
+        <NavigationContent>
+            <i class="fa fa-briefcase blue1_color"></i>
+            <span>Служители</span>
         </NavigationContent>
     </NavigationComponent>
 </AuthorizeView>
-<NavigationComponent NavigationLink="/user/test">
-    <NavigationContent>
-        <i class="mdi mdi-home menu-icon"></i>
-        <span class="menu-title">Тест страница</span>
-    </NavigationContent>
-</NavigationComponent>
+
+<AuthorizeView Roles="@Security.Role.Employe">
+    <NavigationComponent NavigationLink="/user/hotel">
+        <NavigationContent>
+            <i class="fa fa-h-square orange_color"></i>
+            <span>Хотел</span>
+        </NavigationContent>
+    </NavigationComponent>
+</AuthorizeView>
+
+<AuthorizeView Roles="@Security.Role.User">
+
+</AuthorizeView>

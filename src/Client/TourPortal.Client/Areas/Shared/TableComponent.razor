@@ -8,7 +8,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var item in TItems)
+            @foreach (var item in Items)
             {
                 <tr>@Row(item)</tr>
             }
@@ -25,5 +25,5 @@
     public RenderFragment<TItem> Row { get; set; }
 
     [Parameter] 
-    public List<TItem> TItems { get; set; }
+    public List<TItem> Items { get; set; }
 }

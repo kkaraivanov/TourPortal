@@ -1,7 +1,4 @@
-﻿<div id="loginModal" class="modal-form-panel">
-	<div class="panel-body">
-		<h3 class="text-center heading-text">Регистрация</h3>
-		<EditForm OnValidSubmit="OnSubmit" Model="register" Context="RegisterForm">
+﻿<EditForm OnValidSubmit="OnSubmit" Model="register" Context="RegisterForm">
 			<DataAnnotationsValidator />
             <div class="d-flex flex-column justify-content-between h-50 h-md-100">
                 <div class="row">
@@ -17,20 +14,6 @@
                             <label for="email" class="sr-only">Email</label>
                             <InputText id="email" type="text" class="form-control" placeholder="Email" autofocus @bind-Value="@register.Email"/>
                             <ValidationMessage For="@(() => register.Email)"/>
-                        </div>
-
-                        <div class="form-group">
-                            <InputSelect @bind-Value="@register.RoleId" class="form-control">
-                                @if (UserTypes.Count > 0)
-                                {
-                                    <option value="" disabled selected hidden>Избери роля</option>
-                                    @foreach (var role in UserTypes)
-                                    {
-                                        <option class="form-control" value="@role.RoleId">@role.RoleName</option>
-                                    }
-                                }
-                            </InputSelect>
-                            <ValidationMessage For="@(() => register.RoleId)"/>
                         </div>
 
                         <div class="form-group">
@@ -74,26 +57,61 @@
 
                     </div>
                 </div>
-                <div class="row pt-2">
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-sm-6 offset-sm-3">
-                                <button class="form-control btn btn-login" type="submit">Регистриране</button>
-                            </div>
-                        </div>
-                        <div class="row pt-2" role="alert">
-                            <label class="text-danger">@Error</label>
-                        </div>
-                    </div>
+                <div class="row d-flex justify-content-end">
+                    <RadzenButton style="margin: 0 1rem 1rem 0" Click="@(() => Refresh())" Text="Изчисти" ButtonStyle="ButtonStyle.Secondary"/>
+                    <RadzenButton style="margin: 0 1rem 1rem 0" type="submit" Click="@(() => OnSubmit())" Text="Добави" ButtonStyle="ButtonStyle.Primary"/>
                 </div>
             </div>
-         </EditForm>
-        <EditForm OnValidSubmit="OpenLoginForm" Model="Message" Context="SendMessageForm">
-            <div class="row text-center">
-	              <div class="col-12">
-	                  <button style="border: 0; background-color: transparent; color: white;" type="submit">Вече имате акаунт? Щракнете тук, за да влезете</button>
-	              </div>
-            </div>
-        </EditForm>
-    </div>
-</div>
+  </EditForm>
+
+@code {
+    [Parameter]
+    public EventCallback<string> EmployeHasAdded { get; set; }
+    private RegisterModel register = new RegisterModel();
+    private UserRoleModel employeRole = new UserRoleModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(employeRole.RoleId) || string.IsNullOrEmpty(employeRole.RoleName))
+        {
+            var request = await ApiService.GetUserRoles();
+            if (request.IsOk && request.ResponseData != null)
+            {
+                employeRole = request
+                    .ResponseData
+                    .UserRoles
+                    .Where(r => r.RoleName == Security.Role.Employe)
+                    .Select(x => new UserRoleModel
+                    {
+                        RoleId = x.RoleId,
+                        RoleName = x.RoleName
+                    })
+                    .FirstOrDefault();
+            }
+        }
+        
+    }
+
+    private async Task OnSubmit()
+    {
+        register.RoleId = employeRole.RoleId;
+        var registerRequest = await ApiService.RegisterEmploye(register);
+        if (registerRequest.IsOk)
+        {
+            var result = registerRequest.ResponseData;
+            if (result is null)
+            {
+                //TODO: return error
+            }
+            else
+            {
+                await EmployeHasAdded.InvokeAsync(result.UserId);
+            }
+        }
+    }
+
+    private async Task Refresh()
+    {
+        register = new RegisterModel();
+    }
+}

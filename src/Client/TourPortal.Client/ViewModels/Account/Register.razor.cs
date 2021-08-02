@@ -33,7 +33,7 @@
                     {
                         RoleId = x.RoleId,
                         RoleName = x.RoleName.Contains("User") ?
-                            x.RoleName.Replace("User", "Юзър") :
+                            x.RoleName.Replace("User", "Потребител") :
                             x.RoleName.Contains("Owner") ?
                                 x.RoleName.Replace("Owner", "Собственик на хотел") : null
                     })
@@ -47,8 +47,15 @@
 
             if (result.IsOk)
             {
-                await GoToLoginForm();
-                NavigationManager.NavigateTo("/");
+                if (result.ResponseData != null)
+                {
+                    await GoToLoginForm();
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    Error = $"{register.UserName} is not created";
+                }
             }
             else
             {

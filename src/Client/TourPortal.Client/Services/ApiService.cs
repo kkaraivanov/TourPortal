@@ -107,6 +107,9 @@
         public async Task<ApplicationResponse<RegisterResponseModel>> Register(RegisterModel registerModel) =>
             await Post<RegisterModel, RegisterResponseModel>(Route.Register, registerModel);
 
+        public async Task<ApplicationResponse<RegisterResponseModel>> RegisterEmploye(RegisterModel registerModel) =>
+            await Post<RegisterModel, RegisterResponseModel>(Route.RegisterEmploye, registerModel);
+
         public async Task<ApplicationResponse<HotelInfoResponse>> AddNewHotel(AddHotelModel hotelModel) =>
             await Post<AddHotelModel, HotelInfoResponse>(Route.AddNewHotel, hotelModel);
 
