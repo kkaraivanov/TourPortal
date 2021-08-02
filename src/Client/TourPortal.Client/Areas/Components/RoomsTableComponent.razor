@@ -28,13 +28,13 @@
 </TableComponent>
 
 <div>
-    <button class="btn-primary mr-2" @onclick="@(e => Navigate("prev"))">Назад</button>
+    <button class="btn-primary mr-2 p-1" @onclick="@(e => Navigate("prev"))">Назад</button>
     @for (int i = 0; i < TotalPages; i++)
     {
         var pageNumbe = i;
         <button class="btn @(CurrentPage == pageNumbe ? "btn-dark disable" : "btn-info") ml-1 mr-1" @onclick="@(e => UpdateList(pageNumbe))">@(i + 1)</button>
     }
-    <button class="btn-primary ml-2" @onclick="@(e => Navigate("next"))">Напред</button>
+    <button class="btn-primary ml-2 p-1" @onclick="@(e => Navigate("next"))">Напред</button>
 </div>
 
 @code {

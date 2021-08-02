@@ -791,7 +791,7 @@ a:focus {
     color: #212529;
     text-align: left;
     list-style: none;
-    background-color: #fff;
+    background-color: #FEA;
     background-clip: padding-box;
     border-radius: 0;
     width: 100%;
@@ -943,7 +943,7 @@ a[data-toggle="collapse"] {
 
 .topbar .navbar {
     padding: 0;
-    background: #15283c;
+    background: #ff5722;
     border: none;
     border-radius: 0;
 }

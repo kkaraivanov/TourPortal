@@ -54,7 +54,7 @@
     #sidebar.active .logo_section {
         padding: 0;
         margin-bottom: 10px;
-        background: #fff;
+        background: #214162;
         width: 100%;
     }
     #sidebar.active ul.components {
@@ -150,6 +150,13 @@
     }
 }
 
+@media (max-width: 990px) {
+
+    .search-field {
+        display: none;
+    }
+}
+
 @media (max-width: 575px) {
     body {
         overflow-x: hidden;
@@ -236,12 +243,18 @@
         transition: ease all 0.3s;
     }
     .right_topbar .icon_info ul.user_profile_dd {
+        /*display: none;*/
+    }
+    .dropdown-menu {
+        left: auto;
+    }
+    .icon_info ul.user_profile_dd > li span .profile-name {
         display: none;
     }
     .right_topbar {
         float: right;
         padding: 0;
-        margin: 5px 15px 5px 0;
+        /*margin: 5px 15px 5px 0;*/
     }
     .sidebar_toggle {
         padding: 14px 22px 13px;
