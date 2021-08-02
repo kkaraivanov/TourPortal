@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Infrastructure.Global.Types;
     using Infrastructure.Services;
@@ -63,6 +64,8 @@
             respons.UserId = user.Id;
             
             await _accountService.AddUserProfile(user.Id, model.UserName);
+            _context.SaveChanges();
+            Thread.Sleep(500);
             await _accountService.AddUserToEmploye(user.Id, _userManager.GetUserId(User));
             _context.SaveChanges();
 

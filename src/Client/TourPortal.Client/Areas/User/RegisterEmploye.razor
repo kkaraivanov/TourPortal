@@ -106,12 +106,13 @@
             else
             {
                 await EmployeHasAdded.InvokeAsync(result.UserId);
+                await Refresh();
             }
         }
     }
 
     private async Task Refresh()
     {
-        register = new RegisterModel();
+        await Task.Run(() => register = new RegisterModel());
     }
 }

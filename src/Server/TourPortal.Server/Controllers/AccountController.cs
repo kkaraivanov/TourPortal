@@ -51,15 +51,12 @@
         [Route("[action]")]
         public async Task<ApplicationResponse<RegisterResponseModel>> Register([FromBody] RegisterModel model)
         {
-            ModelStateErrors<RegisterModel>();
-
-            var respons = new RegisterResponseModel();
-
-            if (model is null)
+            if (model is null || !ModelState.IsValid)
             {
-                return new ApplicationResponse<RegisterResponseModel>(new ApplicationError("", "Model can't by null"));
+                return ModelStateErrors<RegisterResponseModel>();
             }
 
+            var respons = new RegisterResponseModel();
             var role = await _roleManager.FindByIdAsync(model.RoleId);
 
             if (role is null)
