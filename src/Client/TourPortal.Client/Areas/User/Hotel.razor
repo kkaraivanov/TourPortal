@@ -1,4 +1,4 @@
-﻿@attribute [Authorize(Roles = Security.Role.Owner)]
+﻿@attribute [Authorize(Roles = Security.Role.Owner + "," + Security.Role.Employe)]
 @page "/user/hotel"
 @using Newtonsoft.Json
 @using TourPortal.Client.Data

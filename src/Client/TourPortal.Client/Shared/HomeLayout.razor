@@ -45,7 +45,9 @@
 
         if (state.User.Identity.IsAuthenticated)
         {
-            if (state.User.IsInRole(Security.Role.Owner) || state.User.IsInRole(Security.Role.User))
+            if (state.User.IsInRole(Security.Role.Owner) || 
+                state.User.IsInRole(Security.Role.Employe) || 
+                state.User.IsInRole(Security.Role.User))
             {
                 NavigationManager.NavigateTo("/user", true);
             }
