@@ -21,6 +21,8 @@
 
         Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfo();
 
+        Task<ApplicationResponse<HotelInfoResponse>> GetHotelCardInfo(string hotelId);
+
         Task<ApplicationResponse<RegisterResponseModel>> RegisterEmploye(RegisterModel registerModel);
 
         Task<ApplicationResponse<HotelInfoResponse>> AddNewHotel(AddHotelModel hotelModel);
@@ -34,5 +36,7 @@
         Task<ApplicationResponse<int>> GetRoomsCount(string hotelId);
 
         Task<ApplicationResponse<ICollection<string>>> GetRoomTypes();
+
+        Task<ApplicationResponse<EmployeInfoResponse>> GetEmployeInfo();
     }
 }

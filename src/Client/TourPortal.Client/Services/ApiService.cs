@@ -100,6 +100,12 @@
         public async Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfo() =>
             await Get<HotelInfoResponse>(Route.GetHotelInfo);
 
+        public async Task<ApplicationResponse<HotelInfoResponse>> GetHotelCardInfo(string hotelId) =>
+            await Get<HotelInfoResponse>(Route.GetHotelCardInfo + hotelId);
+
+        public async Task<ApplicationResponse<EmployeInfoResponse>> GetEmployeInfo() =>
+            await Get<EmployeInfoResponse>(Route.GetEmployeInfo);
+
         #endregion
 
         #region POST requests

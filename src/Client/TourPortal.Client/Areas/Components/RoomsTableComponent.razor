@@ -1,4 +1,5 @@
-﻿@using TourPortal.Infrastructure.Shared.Models.Hotel
+﻿@using TourPortal.Client.Data
+@using TourPortal.Infrastructure.Shared.Models.Hotel
 
 <TableComponent Items="rooms">
     <Columns>
@@ -45,7 +46,7 @@
     private int TotalPages = 0;
     private int CurrentPage = 0;
     private int Skip = 0;
-    private int count = 0;
+    private int count;
     private bool isSearchChanged;
     private RoomResponse roomResponse = new RoomResponse();
     private List<RoomResponse> rooms = new List<RoomResponse>();
@@ -71,7 +72,7 @@
             await UpdateList();
             StateHasChanged();
         }
-
+    
         await base.OnAfterRenderAsync(firstRender);
     }
 
@@ -85,7 +86,7 @@
                 rooms = requestRooms.ResponseData.ToList();
                 selectRooms = rooms.ToList();
             }
-
+    
             TotalPages = (int)Math.Ceiling(count / (decimal)PageSize);
             CurrentPage = pageNumber;
         }

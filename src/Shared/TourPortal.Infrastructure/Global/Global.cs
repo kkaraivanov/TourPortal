@@ -9,6 +9,7 @@
             public const string GetRoles = "api/account/getUserRoles";
             public const string GetUserInfo = "api/account/getUserInfo?userEmail=";
             public const string GetHotelInfo = "api/applicationUser/getHotelInfo";
+            public const string GetHotelCardInfo = "api/applicationUser/getHotelCardInfo?hotelId=";
             public const string RegisterEmploye = "api/owner/registerEmploye";
             public const string AddNewHotel = "api/owner/addNewHotel";
             public const string ChangeHotel = "api/owner/changeHotel";
@@ -16,6 +17,7 @@
             public const string GetRooms = "api/applicationUser/getRooms?";
             public const string GetRoomsCount = "api/applicationUser/getRoomsCout?hotelId=";
             public const string GetRoomTypes = "api/owner/getRoomTypes";
+            public const string GetEmployeInfo = "api/employe/getInfo";
         }
     }
 }

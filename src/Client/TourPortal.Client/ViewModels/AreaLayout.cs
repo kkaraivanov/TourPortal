@@ -4,7 +4,9 @@
     using System.Threading.Tasks;
     using Data;
     using Infrastructure.Global.Types;
+    using Infrastructure.Shared.Models.Response;
     using Microsoft.JSInterop;
+    using Newtonsoft.Json;
 
     public partial class AreaLayout
     {
@@ -69,9 +71,11 @@
                         Id = responseData.Id,
                         ProfileName = responseData.ProfileName,
                         ProfileImage = responseData.ProfileImage,
-                        UserRole = responseData.UserRole.Contains(Security.Role.Administrator) ? "Администратор" :
-                        responseData.UserRole.Contains(Security.Role.Owner) ? "Собственик хотел" :
-                        "Потребител"
+                        UserRole = 
+                            responseData.UserRole.Contains(Security.Role.Administrator) ? "Администратор" :
+                            responseData.UserRole.Contains(Security.Role.Owner) ? "Собственик хотел" :
+                            responseData.UserRole.Contains(Security.Role.Employe) ? "Служител хотел" :
+                            "Потребител"
                     };
 
                     User.LogedInUser(user);
@@ -90,19 +94,33 @@
 
                 if (hotelInfoRequest.IsOk)
                 {
-                    var hotelInfo = hotelInfoRequest.ResponseData;
-
-                    if (hotelInfo != null)
+                    var responseData = hotelInfoRequest.ResponseData;
+                   
+                    if (responseData != null)
                     {
-                        var hotel = new HotelInfoModel
-                        {
-                            Id = hotelInfo.Id,
-                            HotelName = hotelInfo.HotelName,
-                            City = hotelInfo.City,
-                            Address = hotelInfo.Address,
-                            Contacts = hotelInfo.Contacts,
-                            HotelImageUrl = hotelInfo.HotelImageUrl
-                        };
+                        var serialize = JsonConvert.SerializeObject(responseData);
+                        var hotel = JsonConvert.DeserializeObject<HotelInfoModel>(serialize);
+
+                        User.AddHotel(hotel);
+                        StateHasChanged();
+                    }
+                }
+            }
+
+            if (state.User.IsInRole(Security.Role.Employe))
+            {
+                var employeInfoRequest = await ApiService.GetEmployeInfo();
+                var responseData = employeInfoRequest.ResponseData;
+
+                if (responseData != null)
+                {
+                    var hoteCardlInfo = await ApiService.GetHotelCardInfo(responseData.HotelId);
+                    var hotelResponseData = hoteCardlInfo.ResponseData;
+
+                    if (hotelResponseData != null)
+                    {
+                        var serialize = JsonConvert.SerializeObject(hotelResponseData);
+                        var hotel = JsonConvert.DeserializeObject<HotelInfoModel>(serialize);
 
                         User.AddHotel(hotel);
                         StateHasChanged();

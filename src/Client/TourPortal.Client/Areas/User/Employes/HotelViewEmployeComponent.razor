@@ -1,0 +1,62 @@
+﻿@using Newtonsoft.Json
+@using TourPortal.Client.Data
+
+@if (isHotelExist)
+{
+    <HotelCardComponent HotelInfo="@hoteInfolModel">
+        <ButtonSection>
+        
+        </ButtonSection>
+    </HotelCardComponent>
+}
+
+
+@code {
+    [Parameter]
+    public EventCallback<string> HotelName { get; set; }
+
+    private bool isHotelExist;
+    private HotelInfoModel hoteInfolModel = new HotelInfoModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!User.IsHotelExist)
+        {
+            var employeInfoRequest = await ApiService.GetEmployeInfo();
+            var responseData = employeInfoRequest.ResponseData;
+
+            if (responseData != null)
+            {
+                var hoteCardlInfo = await ApiService.GetHotelCardInfo(responseData.HotelId);
+                var hotelResponseData = hoteCardlInfo.ResponseData;
+
+                if (hotelResponseData != null)
+                {
+                    var serialize = JsonConvert.SerializeObject(hotelResponseData);
+                    var hotel = JsonConvert.DeserializeObject<HotelInfoModel>(serialize);
+
+                    User.AddHotel(hotel);
+                    StateHasChanged();
+                    isHotelExist = User.IsHotelExist;
+                }
+                else
+                {
+                    isHotelExist = User.IsHotelExist;
+                }
+            }
+        }
+        else
+        {
+            isHotelExist = User.IsHotelExist;
+        }
+
+        if (isHotelExist)
+        {
+            var hotelName = User.Hotel.HotelName;
+            hoteInfolModel = User.Hotel;
+
+            await HotelName.InvokeAsync(hotelName);
+        }
+    }
+
+}
