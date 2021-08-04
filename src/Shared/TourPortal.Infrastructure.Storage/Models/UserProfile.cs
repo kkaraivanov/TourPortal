@@ -19,6 +19,8 @@
 
         public string Address { get; set; }
 
+        public byte[] ProfilaImage { get; set; }
+
         public DateTime CreatedOn { get; set; }
 
         public DateTime? ModifiedOn { get; set; }

@@ -1,7 +1,7 @@
 ﻿@using TourPortal.Client.Data
 @using TourPortal.Infrastructure.Shared.Models.Hotel
 
-<TableComponent Items="rooms">
+<TableComponent Items="rooms" IsHover="true" IsHeaderTextCenter="true">
     <Columns>
         <ColumnComponent Title="Снимка"/>
         <ColumnComponent Title="Стая №" Searchable="true" OnSearchChanged="@(e => OnSearchChanged(e, "roomNumber"))" />

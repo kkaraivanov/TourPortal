@@ -1,0 +1,44 @@
+﻿@using TourPortal.Infrastructure.Shared.Models
+
+@if (!string.IsNullOrEmpty(EmployeId) && employe != null)
+{
+    <ProfileSettingsComponent Model="@employe" ChangeEmploye="ChangeEmploye" />
+}
+
+
+
+@code {
+    private UserDataModel employe;
+
+    [Parameter]
+    public string EmployeId { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ChangeEmploye { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = await ApiService.GetEmploye(EmployeId);
+        var responseData = request.ResponseData;
+
+        if (responseData != null)
+        {
+            employe = responseData;
+        }
+    }
+
+    private void OnSubmit()
+    {
+
+    }
+    
+    private void Deleted()
+    {
+
+    }
+
+    private async Task Cancel()
+    {
+        await ChangeEmploye.InvokeAsync(string.Empty);
+    }
+}

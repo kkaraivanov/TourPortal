@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
+    using Shared.Models;
     using Shared.Models.Authentication;
     using Shared.Models.Hotel;
     using Shared.Models.Response;
@@ -38,5 +38,9 @@
         Task<ApplicationResponse<ICollection<string>>> GetRoomTypes();
 
         Task<ApplicationResponse<EmployeInfoResponse>> GetEmployeInfo();
+
+        Task<ApplicationResponse<IEnumerable<GetEmployeResponse>>> GetEmployes();
+
+        Task<ApplicationResponse<FullUserDataModel>> GetEmploye(string employeId);
     }
 }

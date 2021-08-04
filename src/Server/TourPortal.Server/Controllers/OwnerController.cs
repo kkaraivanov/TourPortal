@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Infrastructure.Global.Types;
     using Infrastructure.Services;
+    using Infrastructure.Shared.Models;
     using Infrastructure.Shared.Models.Authentication;
     using Infrastructure.Shared.Models.Hotel;
     using Infrastructure.Shared.Models.Response;
@@ -25,18 +26,21 @@
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IAccountService _accountService;
         private readonly IHotelService _hotelService;
+        private readonly IUserService _userService;
 
         public OwnerController(
             ApplicationDbContext context, 
             UserManager<ApplicationUser> userManager, 
             RoleManager<ApplicationRole> roleManager, 
-            IAccountService accountService, IHotelService hotelService)
+            IAccountService accountService, IHotelService hotelService, 
+            IUserService userService)
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
             _accountService = accountService;
             _hotelService = hotelService;
+            _userService = userService;
         }
 
         [HttpPost]
@@ -158,6 +162,27 @@
         [Route("[action]")]
         public async Task<ApplicationResponse<ICollection<string>>> GetRoomTypes() =>
             new ApplicationResponse<ICollection<string>>(await _hotelService.GetRoomTypes());
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<List<GetEmployeResponse>>> GetEmployes()
+        {
+            var hotelId = _hotelService.GetHotelId(UserId);
+            var employes = await _userService.GetEmployes(hotelId);
+            var serialize = JsonConvert.SerializeObject(employes);
+            var response = JsonConvert.DeserializeObject<List<GetEmployeResponse>>(serialize);
+
+            return response.ToResponse();
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<FullUserDataModel>> GetEmploye(string employeId)
+        {
+            var employe = await _userService.GetEmployeData(employeId);
+
+            return employe.ToResponse();
+        }
 
         private string UserId =>
             _userManager.GetUserId(User);

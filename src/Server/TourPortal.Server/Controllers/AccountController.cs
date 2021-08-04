@@ -159,10 +159,11 @@
 
             var role = await _roleManager
                 .FindByIdAsync(roles.FirstOrDefault()?.RoleId);
+            var profile = _context.UserProfiles.FirstOrDefault(x => x.UserId == user.Id);
             var response = new UserInfoResponse
             {
                 Id = user.Id,
-                ProfileImage = "",
+                ProfileImage = profile.ProfilaImage,
                 ProfileName = $"{user.FirstName} {user.LastName}",
                 UserRole = role.Name,
             };

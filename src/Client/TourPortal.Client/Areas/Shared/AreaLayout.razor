@@ -8,7 +8,7 @@
         <AreaLayoutComponent>
             <VerticalMenueRenderer>
                     <AuthorizeView Policy="IsUser">
-                        <VerticalMenuComponent HomeUrl="/user" ProfileName="@ProfileName" ProfileImage="@ProfileImage" UserRole="@UserRole">
+                        <VerticalMenuComponent HomeUrl="/user" ProfileName="@ProfileName" ProfileImg="@ProfileImage" UserRole="@UserRole">
                             <NavigationItem >
                                 <UserMenuComponent/>
                             </NavigationItem>
@@ -16,7 +16,7 @@
                     </AuthorizeView>
                     <AuthorizeView Policy="IsAdministrator">
                         <Authorized>
-                            <VerticalMenuComponent HomeUrl="/Administrator" ProfileName="@ProfileName" ProfileImage="@ProfileImage" UserRole="@UserRole">
+                            <VerticalMenuComponent HomeUrl="/Administrator" ProfileName="@ProfileName" ProfileImg="@ProfileImage" UserRole="@UserRole">
                                 <NavigationItem >
                                     <AdminMenuComponent/>
                                 </NavigationItem>
@@ -26,10 +26,10 @@
             </VerticalMenueRenderer>
             <HorisontalMenueRenderer>
                 <AuthorizeView Policy="IsUser">
-                    <HorisontalMenuComponent HomeUrl="/user" ProfileName="@ProfileName" ProfileImage="@ProfileImage" Id="@Id"/>
+                    <HorisontalMenuComponent HomeUrl="/user" ProfileName="@ProfileName" ProfileImg="@ProfileImage" Id="@Id"/>
                 </AuthorizeView>
                 <AuthorizeView Policy="IsAdministrator">
-                    <HorisontalMenuComponent HomeUrl="/Administrator" ProfileName="@ProfileName" ProfileImage="@ProfileImage" Id="@Id"/>
+                    <HorisontalMenuComponent HomeUrl="/Administrator" ProfileName="@ProfileName" ProfileImg="@ProfileImage" Id="@Id"/>
                 </AuthorizeView>
             </HorisontalMenueRenderer>
             <BodyRenderer>

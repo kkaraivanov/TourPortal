@@ -8,6 +8,6 @@
 
         public string UserRole { get; set; }
 
-        public string ProfileImage { get; set; }
+        public byte[] ProfileImage { get; set; }
     }
 }

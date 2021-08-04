@@ -1,4 +1,5 @@
-﻿<div class="sidebar_blog_1">
+﻿@using static TourPortal.Infrastructure.Global.Global
+<div class="sidebar_blog_1">
 	<div class="sidebar-header">
 		<div class="logo_section">
 			<a href="@HomeUrl"><img class="logo_icon img-responsive" src="images/logo/logo_icon.png" alt="#" /></a>
@@ -7,13 +8,13 @@
 	<div class="sidebar_user_info">
 		<div class="icon_setting"></div>
 		<div class="user_profle_side">
-			@if (string.IsNullOrEmpty(ProfileImage))
+			@if (ProfileImg == null)
 			{
-	   <div class="user_img"><img class="img-responsive" src="./images/user_img.jpg" alt="#" /></div>
+	            <div class="user_img"><img class="img-responsive" src="./images/user_img.jpg" alt="#" /></div>
 			}
 			else
 			{
-	   <div class="user_img"><img class="img-responsive" src="@ProfileImage" alt="#" /></div>
+	            <div class="user_img"><img class="img-responsive" src="@ProfileImages.GetImageUrl(ProfileImg)" alt="#" /></div>
 			}
    <div class="user_info">
 	<h6>@ProfileName</h6>
@@ -38,7 +39,7 @@
 	public string HomeUrl { get; set; }
 
 	[Parameter]
-	public string ProfileImage { get; set; }
+	public byte[] ProfileImg { get; set; }
 
 	[Parameter]
 	public string ProfileName { get; set; }

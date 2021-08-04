@@ -1,0 +1,155 @@
+﻿@using System.IO
+@using Newtonsoft.Json
+@using TourPortal.Infrastructure.Shared.Models
+@using static TourPortal.Infrastructure.Global.Global
+@typeparam TModel
+
+<div class="card card border-primary mb-3 p-4">
+    <EditForm OnValidSubmit="OnSubmit" Model="employe" Context="RegisterForm">
+        <DataAnnotationsValidator/>
+        <div class="d-flex flex-column justify-content-between h-50 h-md-100">
+            <div class="row">
+                <div class="col-12 col-md-6">
+
+                    <div class="form-group">
+                        <label for="firstName">Име</label>
+                        <InputText id="firstName" type="text" class="form-control" placeholder="Име" autofocus @bind-Value="@employe.FirstName"/>
+                        <ValidationMessage For="@(() => employe.FirstName)"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="midleName">Презиме</label>
+                        <InputText id="midleName" type="text" class="form-control" placeholder="Презиме" @bind-Value="@employe.MidleName"/>
+                        <ValidationMessage For="@(() => employe.MidleName)"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">Фамилия</label>
+                        <InputText id="lastName" type="text" class="form-control" placeholder="Фамилия" @bind-Value="@employe.LastName"/>
+                        <ValidationMessage For="@(() => employe.LastName)"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sity">Град</label>
+                        <InputText id="sity" type="text" class="form-control" placeholder="Град" autofocus @bind-Value="@employe.Sity"/>
+                        <ValidationMessage For="@(() => employe.Sity)"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Адрес</label>
+                        <InputText id="address" type="text" class="form-control" placeholder="Адрес" autofocus @bind-Value="@employe.Address"/>
+                        <ValidationMessage For="@(() => employe.Address)"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phoneNumber">Телефон</label>
+                        <InputText id="phoneNumber" type="text" class="form-control" placeholder="Телефон" autofocus @bind-Value="@employe.PhoneNumber"/>
+                        <ValidationMessage For="@(() => employe.PhoneNumber)"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="oldPassword">Стара парола</label>
+                        <InputText type="oldPassword" id="password" class="form-control" placeholder="Парола" @bind-Value="@employe.OldPassword"/>
+                        <ValidationMessage For="@(() => employe.OldPassword)"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newPassword">Нова парола</label>
+                        <InputText type="newPassword" id="password" class="form-control" placeholder="Парола" @bind-Value="@employe.NewPassword"/>
+                        <ValidationMessage For="@(() => employe.NewPassword)"/>
+                    </div>
+
+                </div>
+
+                <div class="col-12 col-md-6">
+
+                    <div class="d-flex flex-column">
+                        <label for="newPassword">Снимка на профила</label>
+                        <div class="form-group">
+                            @if (employe.ProfilaImage == null)
+                            {
+                                <div class="img-thumbnail text-center"><img class="img-responsive" src="./images/user_img.jpg" alt="#"/></div>
+                            }
+                            else
+                            {
+                                <div class="img-thumbnail text-center"><img class="img-responsive" src="@ProfileImages.GetImageUrl(employe.ProfilaImage)" alt="#"/></div>
+                            }
+                        </div>
+                        <div class="form-group d-flex justify-content-end">
+                            <label for="file-upload" class="btn btn-primary">
+                                <i class="fa fa-cloud-upload"></i> Качи снимка
+                            </label>
+                            <InputFile name="file-upload" id="file-upload" OnChange="FileForUploadSelected" accept="image/*"/>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="username">Потребителско имеe</label>
+                        <InputText id="username" type="text" class="form-control" placeholder="Потребителско име" autofocus @bind-Value="@employe.UserName" disabled="true"/>
+                        <ValidationMessage For="@(() => employe.UserName)"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <InputText id="email" type="text" class="form-control" placeholder="Email" autofocus @bind-Value="@employe.Email" disabled="true"/>
+                        <ValidationMessage For="@(() => employe.Email)"/>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row d-flex justify-content-end">
+                <RadzenButton style="margin: 0 1rem 1rem 0" Click="@(() => Deleted())" Text="Изтрии" ButtonStyle="ButtonStyle.Danger"/>
+                <RadzenButton style="margin: 0 1rem 1rem 0" type="submit" Click="@(() => OnSubmit())" Text="Редактирай" ButtonStyle="ButtonStyle.Primary"/>
+                <RadzenButton style="margin: 0 1rem 1rem 0" Click="@(() => Cancel())" Text="Отказ" ButtonStyle="ButtonStyle.Secondary"/>
+            </div>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private UserSettingModel employe = new UserSettingModel();
+	
+    [Parameter]
+	public TModel Model { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ChangeEmploye { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var serialize = JsonConvert.SerializeObject(Model);
+        employe = JsonConvert.DeserializeObject<UserSettingModel>(serialize);
+        base.OnInitialized();
+    }
+
+    private async Task FileForUploadSelected(InputFileChangeEventArgs args)
+    {
+        var file = args.File.OpenReadStream();
+        {
+            var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+            employe.ProfilaImage = ms.ToArray();
+        }
+    }
+
+    private void OnSubmit()
+    {
+
+    }
+    
+    private void Deleted()
+    {
+
+    }
+
+    private async Task Cancel()
+    {
+        await ChangeEmploye.InvokeAsync(string.Empty);
+    }
+}
+
+<style>
+    input[type="file"] {
+        display: none;
+    }
+</style>

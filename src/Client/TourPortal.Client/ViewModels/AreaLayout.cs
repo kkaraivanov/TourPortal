@@ -31,7 +31,7 @@
         };
         private bool areaIsReady = false;
         private string uri = string.Empty;
-        private string ProfileImage = string.Empty;
+        private byte[] ProfileImage;
         private string ProfileName = string.Empty;
         private string UserRole = string.Empty;
         private string Id = string.Empty;

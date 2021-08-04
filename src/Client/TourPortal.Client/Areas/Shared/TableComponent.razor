@@ -1,9 +1,9 @@
 ﻿@typeparam TItem
 <div class="col-12">
-    <div>
-        <table class="table table-hover table-responsive">
+    <div class="table-responsive">
+        <table class="table @(IsHover ? "table-hover" : "")">
             <thead class="bg-head">
-            <tr class="text-center">
+            <tr class="@(IsHeaderTextCenter ? "text-center" : "")">
                 @Columns
             </tr>
             </thead>
@@ -26,4 +26,10 @@
 
     [Parameter] 
     public List<TItem> Items { get; set; }
+
+    [Parameter]
+    public bool IsHover { get; set; }
+
+    [Parameter]
+    public bool IsHeaderTextCenter { get; set; }
 }

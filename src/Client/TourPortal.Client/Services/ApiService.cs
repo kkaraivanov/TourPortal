@@ -12,6 +12,7 @@
 
     using Infrastructure.Global;
     using Infrastructure.Services;
+    using Infrastructure.Shared.Models;
     using Infrastructure.Shared.Models.Authentication;
     using Infrastructure.Shared.Models.Hotel;
     using Infrastructure.Shared.Models.Response;
@@ -105,6 +106,12 @@
 
         public async Task<ApplicationResponse<EmployeInfoResponse>> GetEmployeInfo() =>
             await Get<EmployeInfoResponse>(Route.GetEmployeInfo);
+        
+        public async Task<ApplicationResponse<IEnumerable<GetEmployeResponse>>> GetEmployes() =>
+            await Get<IEnumerable<GetEmployeResponse>>(Route.GetEmployes);
+        
+        public async Task<ApplicationResponse<FullUserDataModel>> GetEmploye(string employeId) =>
+            await Get<FullUserDataModel>(Route.GetEmploye + employeId);
 
         #endregion
 

@@ -1,0 +1,64 @@
+﻿@using TourPortal.Infrastructure.Shared.Models.Hotel
+
+@if (employes.Any())
+{
+    <div class="card border-primary mb-3 p-2">
+        <TableComponent Items="employes">
+            <Columns>
+                <ColumnComponent Title="Име"/>
+                <ColumnComponent Title="Презиме"/>
+                <ColumnComponent Title="Фамилия"/>
+                <ColumnComponent Title="Град"/>
+                <ColumnComponent Title="Адрес"/>
+                <ColumnComponent Title="Телефон"/>
+                <ColumnComponent Title="Регистриран"/>
+                <ColumnComponent Title=""/>
+            </Columns>
+            <Row Context="employe">
+                <td>@employe.FirstName</td>
+                <td>@employe.MidleName</td>
+                <td>@employe.LastName</td>
+                <td>@employe.Sity</td>
+                <td>@employe.Address</td>
+                <td>@employe.PhoneNumber</td>
+                <td>@employe.CreatedOn.ToShortDateString()</td>
+                <td class="d-flex justify-content-end p-0 pt-2">
+                    <button class="btn btn-info" @onclick="@(() => EmployeHasChange(employe.Id))">Редактирай</button>
+                </td>
+            </Row>
+        </TableComponent>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public EventCallback<string> ChangeEmploye { get; set; }
+
+    private GetEmployeResponse employe = new GetEmployeResponse();
+    private List<GetEmployeResponse> employes = new List<GetEmployeResponse>();
+
+    private async Task EmployeHasChange(string employeId)
+    {
+        await ChangeEmploye.InvokeAsync(employeId);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !employes.Any())
+        {
+            await LoadData();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadData()
+    {
+        var request = await ApiService.GetEmployes();
+        var responseData = request.ResponseData;
+        ;
+        if (responseData != null)
+        {
+            employes.AddRange(responseData);
+        }
+    }
+}
