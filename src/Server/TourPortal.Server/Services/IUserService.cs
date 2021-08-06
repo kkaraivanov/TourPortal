@@ -15,8 +15,6 @@
         Task<FullUserDataModel> GetEmployeData(string employeId);
 
         Task<IEnumerable<UserDataModel>> GetEmployes(string hotelId);
-
-        //Task<IEnumerable<bool>> ChangeUserData(UserSettingsModel model);
     }
 
     class UserService : IUserService

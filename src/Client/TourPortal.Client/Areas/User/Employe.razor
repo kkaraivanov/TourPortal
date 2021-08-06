@@ -1,47 +1,65 @@
 ﻿@attribute [Authorize(Roles = Security.Role.Owner)]
 @page "/user/employe"
-@using TourPortal.Infrastructure.Shared.Models.Hotel
+@using static TourPortal.Infrastructure.Global.Global.AllertClass
 
 <PageModelComponent>
     <PageHeader>
         <h3>Служители</h3>
     </PageHeader>
     <PageBody>
+        <AlertComponent AlertShow="alertView" Message="message" CssClass="alertClass"/>
         @if (string.IsNullOrEmpty(EmployeId))
         {
             <div class="card card border-primary mb-3 p-2">
                 <div class="d-md-flex flex-column">
                     <div class="col-12">
-                        <RegisterEmploye EmployeHasAdded="@EmployeHasAdded" />
+                        <RegisterEmploye EmployeHasAdded="@EmployeHasAdded"/>
                     </div>
                 </div>
             </div>
-            <EmployesTableComponent ChangeEmploye="OnChangeEmploye" />
+            <EmployesTableComponent ChangeEmployeId="OnChangeEmploye"/>
         }
         else
         {
-            <ChangeEmployeComponent EmployeId="@EmployeId" ChangeEmploye="OnChangeEmploye" />
+            <ChangeEmployeComponent EmployeId="@EmployeId" ChangeEmploye="EmployeHasChanged"/>
         }
     </PageBody>
 </PageModelComponent>
 @code {
     private string EmployeId = string.Empty;
+    private string message = string.Empty;
+    private string alertClass = string.Empty;
+    private bool alertView;
 
     protected override async Task OnInitializedAsync()
     {
         
     }
 
-    private void OnChangeEmploye(string employeId)
-    {
-        EmployeId = employeId;
-    }
+    private void OnChangeEmploye(string employeId) => EmployeId = employeId;
 
     private void EmployeHasAdded(string arg)
     {
-        if (!string.IsNullOrEmpty(arg))  
+        AlertMessage(arg);
+        alertClass = Success;
+    }
+    
+    private void EmployeHasChanged(string arg)
+    {
+        AlertMessage(arg);
+    }
+
+    private void AlertMessage(string arg)
+    {
+        if (!string.IsNullOrEmpty(arg))
         {
-            
+            message = arg;
+            alertView = true;
+            EmployeId = string.Empty;
+        }
+        else
+        {
+            EmployeId = string.Empty;
         }
     }
 }

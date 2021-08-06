@@ -23,7 +23,7 @@
                 <td>@employe.PhoneNumber</td>
                 <td>@employe.CreatedOn.ToShortDateString()</td>
                 <td class="d-flex justify-content-end p-0 pt-2">
-                    <button class="btn btn-info" @onclick="@(() => EmployeHasChange(employe.Id))">Редактирай</button>
+                    <button class="btn btn-info" @onclick="@(() => SendEmployeId(employe.Id))">Редактирай</button>
                 </td>
             </Row>
         </TableComponent>
@@ -32,14 +32,14 @@
 
 @code {
     [Parameter]
-    public EventCallback<string> ChangeEmploye { get; set; }
+    public EventCallback<string> ChangeEmployeId { get; set; }
 
     private GetEmployeResponse employe = new GetEmployeResponse();
     private List<GetEmployeResponse> employes = new List<GetEmployeResponse>();
 
-    private async Task EmployeHasChange(string employeId)
+    private async Task SendEmployeId(string employeId)
     {
-        await ChangeEmploye.InvokeAsync(employeId);
+        await ChangeEmployeId.InvokeAsync(employeId);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

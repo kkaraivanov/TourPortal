@@ -29,7 +29,7 @@
 
         Task<ApplicationResponse<bool>> ChangeHotel(ChangeHotelModel hotelModel);
 
-        Task<ApplicationResponse<bool>> AddNewRoom(AddNewRoomModel roomModel);
+        Task<ApplicationResponse<bool>> AddNewRoom(RoomModel roomModel);
 
         Task<ApplicationResponse<IEnumerable<RoomResponse>>> GetRooms(string hotelId, int skip, int take);
 
@@ -42,5 +42,9 @@
         Task<ApplicationResponse<IEnumerable<GetEmployeResponse>>> GetEmployes();
 
         Task<ApplicationResponse<FullUserDataModel>> GetEmploye(string employeId);
+
+        Task<ApplicationResponse<FullUserDataModel>> GetUserData();
+
+        Task<ApplicationResponse<bool>> ChangeUserData(UserSettingModel model);
     }
 }

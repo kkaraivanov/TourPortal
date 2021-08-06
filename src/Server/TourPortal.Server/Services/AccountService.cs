@@ -1,11 +1,13 @@
 ﻿namespace TourPortal.Server.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using IdentityModel;
     using Infrastructure.Services;
+    using Infrastructure.Shared.Models.Response;
     using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -177,6 +179,49 @@
             {
                 throw;
             }
+        }
+
+        public async Task<bool> ChangeUserData(
+            string userId,
+            string firstName,
+            string midleName,
+            string lastName,
+            string phoneNumber,
+            string sity,
+            string address,
+            byte[] profilaImage)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            user.FirstName = firstName;
+            user.MidleName = midleName;
+            user.LastName = lastName;
+            user.PhoneNumber = phoneNumber;
+            var profile = _context.UserProfiles.FirstOrDefault(x => x.UserId == userId);
+            profile.Sity = sity;
+            profile.Address = address;
+            profile.ProfilaImage = profilaImage;
+            profile.ModifiedOn = DateTime.Now;
+            user.Profile = profile;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            return result.Succeeded;
+        }
+
+        public async Task<bool> ChangeUserPassword(string userId, string oldPassword, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            var validator = new PasswordValidator<ApplicationUser>();
+            var password = await validator.ValidateAsync(_userManager, user, oldPassword);
+
+            if (!password.Succeeded)
+            {
+                return false;
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+
+            return result.Succeeded;
         }
     }
 }

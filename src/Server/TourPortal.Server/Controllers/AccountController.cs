@@ -1,12 +1,15 @@
 ﻿namespace TourPortal.Server.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Http.Json;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using IdentityModel;
     using Infrastructure.Global.Types;
     using Infrastructure.Services;
+    using Infrastructure.Shared.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Identity;
@@ -14,6 +17,8 @@
     using Infrastructure.Shared.Models.Authentication;
     using Infrastructure.Shared.Models.Response;
     using Infrastructure.Storage.Models;
+    using Newtonsoft.Json;
+    using Services;
     using Storage;
 
     public class AccountController : ApiController
@@ -22,28 +27,20 @@
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IAccountService _accountService;
+        private readonly IUserService _userService;
 
         public AccountController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager, 
-            IAccountService accountService)
+            IAccountService accountService, 
+            IUserService userService)
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
             _accountService = accountService;
-        }
-
-        [HttpGet]
-        [Route("[action]")]
-        [Authorize(Roles = "Administrator")]
-        //[Authorize(Roles = "Employe")]
-        //[Authorize(Policy = "IsUser")]
-        //[Authorize(Policy = "IsAdministrator")]
-        public async Task<IActionResult> TestToken()
-        {
-            return Ok("Hallo from account controller");
+            _userService = userService;
         }
 
         [HttpPost]
@@ -113,6 +110,58 @@
         [Route("[action]")]
         public async Task<ApplicationResponse<RegisterResponseModel>> RegisterEmploye([FromBody] RegisterModel model) =>
             await Register(model);
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<bool>> ChangeUserData([FromBody] UserSettingModel model)
+        {
+            if (model is null || !ModelState.IsValid)
+            {
+                return ModelStateErrors<bool>();
+            }
+
+            var user = await _userManager.FindByIdAsync(model.Id);
+            if (user is null)
+            {
+                return new ApplicationResponse<bool>(new ApplicationError("", "Incorect user."));
+            }
+
+            var userId = user.Id;
+            if (model.Id != userId)
+            {
+                return new ApplicationResponse<bool>(new ApplicationError("", "Incorect user."));
+            }
+
+            var serialize = JsonConvert.SerializeObject(model);
+            user = JsonConvert.DeserializeObject<ApplicationUser>(serialize);
+            var profile = JsonConvert.DeserializeObject<UserProfile>(serialize);
+            var updateUser = await _accountService.ChangeUserData(
+                userId,
+                user.FirstName,
+                user.MidleName,
+                user.LastName,
+                user.PhoneNumber,
+                profile.Sity,
+                profile.Address,
+                profile.ProfilaImage);
+
+            if (!updateUser)
+            {
+                return new ApplicationResponse<bool>(new ApplicationError("", "User can't by update."));
+            }
+
+            if (!string.IsNullOrEmpty(model.OldPassword) && !string.IsNullOrEmpty(model.NewPassword))
+            {
+                var paswordChanged = await _accountService.ChangeUserPassword(userId, model.OldPassword, model.NewPassword);
+                if (!paswordChanged)
+                {
+                    return new ApplicationResponse<bool>(new ApplicationError("", "Incorect password."));
+                }
+            }
+
+            return true.ToResponse();
+        }
 
         [HttpGet]
         [AllowAnonymous]
@@ -234,5 +283,22 @@
                 throw;
             }
         }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<FullUserDataModel>> GetUserData()
+        {
+            var userId = _userManager.GetUserId(User);
+            var userData = await _userService.GetFullUserData(userId);
+
+            if (userData is null)
+            {
+                return new ApplicationResponse<FullUserDataModel>(new ApplicationError("", "User data is null!"));
+            }
+
+            return userData.ToResponse();
+        }
+
+
     }
 }

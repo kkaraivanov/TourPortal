@@ -1,0 +1,28 @@
+﻿@page "/user/{from}/room/{roomId}"
+@using TourPortal.Infrastructure.Shared.Models.Hotel
+<PageModelComponent>
+    <PageHeader>
+        <h3>Служители</h3>
+    </PageHeader>
+    <PageBody>
+        <div class="card card border-primary mb-3 p-2">
+            <div class="d-md-flex flex-column">
+                <div class="col-12">
+                    @if (!string.IsNullOrWhiteSpace(RoomId))
+                    {
+                        @RoomId
+                    }
+                </div>
+            </div>
+        </div>
+    </PageBody>
+</PageModelComponent>
+@code {
+    [Parameter]
+    public string From { get; set; }
+    
+    [Parameter]
+    public string RoomId { get; set; }
+
+    private GetRoomByIdResponse room = new GetRoomByIdResponse();
+}

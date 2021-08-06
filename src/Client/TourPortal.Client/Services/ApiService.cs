@@ -113,6 +113,9 @@
         public async Task<ApplicationResponse<FullUserDataModel>> GetEmploye(string employeId) =>
             await Get<FullUserDataModel>(Route.GetEmploye + employeId);
 
+        public async Task<ApplicationResponse<FullUserDataModel>> GetUserData() =>
+            await Get<FullUserDataModel>(Route.GetUserData);
+
         #endregion
 
         #region POST requests
@@ -129,8 +132,11 @@
         public async Task<ApplicationResponse<bool>> ChangeHotel(ChangeHotelModel hotelModel) =>
             await Post<ChangeHotelModel, bool>(Route.ChangeHotel, hotelModel);
 
-        public async Task<ApplicationResponse<bool>> AddNewRoom(AddNewRoomModel roomModel) =>
-            await Post<AddNewRoomModel, bool>(Route.AddNewRoom, roomModel);
+        public async Task<ApplicationResponse<bool>> AddNewRoom(RoomModel roomModel) =>
+            await Post<RoomModel, bool>(Route.AddNewRoom, roomModel);
+
+        public async Task<ApplicationResponse<bool>> ChangeUserData(UserSettingModel model) =>
+            await Post<UserSettingModel, bool>(Route.ChangeUserData, model);
 
         #endregion
 

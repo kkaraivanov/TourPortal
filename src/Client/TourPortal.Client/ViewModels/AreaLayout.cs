@@ -2,9 +2,10 @@
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using Components;
     using Data;
     using Infrastructure.Global.Types;
-    using Infrastructure.Shared.Models.Response;
+    using Microsoft.AspNetCore.Components;
     using Microsoft.JSInterop;
     using Newtonsoft.Json;
 
@@ -30,11 +31,17 @@
             "css/area-style/css/custom.css"
         };
         private bool areaIsReady = false;
-        private string uri = string.Empty;
         private byte[] ProfileImage;
         private string ProfileName = string.Empty;
         private string UserRole = string.Empty;
         private string Id = string.Empty;
+
+        public EventCallback SetUserInfo => EventCallback.Factory.Create(this, SetUserInfoProparties);
+
+        public async Task SetUserInfoProparties()
+        {
+            await LoadUserData();
+        }
 
         protected override async Task OnInitializedAsync()
         {
@@ -53,40 +60,13 @@
             }
 
             var state = await _state.GetAuthenticationStateAsync();
-            var userData = state.User.Identity.Name;
-            var request = await ApiService.GetUserInfo(userData);
 
             if (!state.User.Identity.IsAuthenticated)
             {
                 NavigationManager.NavigateTo("/error/notauthorized", true);
             }
 
-            if (request.IsOk)
-            {
-                var responseData = request.ResponseData;
-                if (!User.IsLoggedIn)
-                {
-                    var user = new LogedUserModel
-                    {
-                        Id = responseData.Id,
-                        ProfileName = responseData.ProfileName,
-                        ProfileImage = responseData.ProfileImage,
-                        UserRole = 
-                            responseData.UserRole.Contains(Security.Role.Administrator) ? "Администратор" :
-                            responseData.UserRole.Contains(Security.Role.Owner) ? "Собственик хотел" :
-                            responseData.UserRole.Contains(Security.Role.Employe) ? "Служител хотел" :
-                            "Потребител"
-                    };
-
-                    User.LogedInUser(user);
-                    StateHasChanged();
-                }
-
-                Id = User.User.Id;
-                ProfileName = User.User.ProfileName;
-                ProfileImage = User.User.ProfileImage;
-                UserRole = User.User.UserRole;
-            }
+            await LoadUserData();
 
             if (state.User.IsInRole(Security.Role.Owner))
             {
@@ -126,6 +106,36 @@
                         StateHasChanged();
                     }
                 }
+            }
+        }
+
+        private async Task LoadUserData()
+        {
+            var state = await _state.GetAuthenticationStateAsync();
+            var userData = state.User.Identity.Name;
+            var request = await ApiService.GetUserInfo(userData);
+            if (request.IsOk)
+            {
+                var responseData = request.ResponseData;
+                var user = new LogedUserModel
+                {
+                    Id = responseData.Id,
+                    ProfileName = responseData.ProfileName,
+                    ProfileImage = responseData.ProfileImage,
+                    UserRole =
+                        responseData.UserRole.Contains(Security.Role.Administrator) ? "Администратор" :
+                        responseData.UserRole.Contains(Security.Role.Owner) ? "Собственик хотел" :
+                        responseData.UserRole.Contains(Security.Role.Employe) ? "Служител хотел" :
+                        "Потребител"
+                };
+
+                User.LogedInUser(user);
+                Id = User.User.Id;
+                ProfileName = User.User.ProfileName;
+                ProfileImage = User.User.ProfileImage;
+                UserRole = User.User.UserRole;
+
+                StateHasChanged();
             }
         }
 

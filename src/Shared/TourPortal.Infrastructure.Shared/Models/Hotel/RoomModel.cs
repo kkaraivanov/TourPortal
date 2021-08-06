@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class AddNewRoomModel
+    public class RoomModel
     {
         [Required]
         public int RoomNumber { get; set; }

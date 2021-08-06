@@ -137,7 +137,7 @@
 
         [HttpPost]
         [Route("[action]")]
-        public async Task<ApplicationResponse<bool>> AddNewRoom([FromBody] AddNewRoomModel roomModel)
+        public async Task<ApplicationResponse<bool>> AddNewRoom([FromBody] RoomModel roomModel)
         {
             if (roomModel is null || !ModelState.IsValid)
             {

@@ -34,7 +34,7 @@
 
         Task UpdateHotlContacts(List<Contact> contacts, string hotelId);
 
-        Task<bool> AddNewRooms(AddNewRoomModel roomModel, Hotel hotel);
+        Task<bool> AddNewRooms(RoomModel roomModel, Hotel hotel);
 
         Task<ICollection<Room>> GetRooms(string hotelId);
 
@@ -207,7 +207,7 @@
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> AddNewRooms(AddNewRoomModel roomModel, Hotel hotel)
+        public async Task<bool> AddNewRooms(RoomModel roomModel, Hotel hotel)
         {
             if (roomModel is null)
             {

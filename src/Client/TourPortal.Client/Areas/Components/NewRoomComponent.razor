@@ -91,7 +91,8 @@
                 @if (!DisableAddButton)
                 {
                     <div class="row d-flex justify-content-end">
-                        <RadzenButton style="margin: 0 1rem 1rem 0" type="submit" Click="@(() => AddRoom())" Text="Добави" ButtonStyle="ButtonStyle.Primary"/>
+                        <RadzenButton style="margin: 0 1rem 1rem 0" type="submit" Click="@(() => Cancel())" Text="Отказ" ButtonStyle="ButtonStyle.Secondary"/>
+                        <RadzenButton style="margin: 0 1rem 1rem 0" type="submit" Click="@(() => AddRoom())" Text="Запази" ButtonStyle="ButtonStyle.Primary"/>
                     </div>
                 }
             </EditForm>
@@ -107,7 +108,7 @@
     public bool DisableAddButton { get; set; }
 
 	private List<string> RoomTypes = new List<string>();
-	private AddNewRoomModel roomModel = new AddNewRoomModel();
+	private RoomModel roomModel = new RoomModel();
 	private string roomNumber = string.Empty;
 	private string roomNumberExist = string.Empty;
 	private string roomImage = string.Empty;
@@ -122,6 +123,11 @@
                 RoomTypes.AddRange(request.ResponseData);
             }
         }
+    }
+
+    private async Task Cancel()
+    {
+        await RoomIsAdded.InvokeAsync(true);
     }
 
 	private async Task AddRoom()

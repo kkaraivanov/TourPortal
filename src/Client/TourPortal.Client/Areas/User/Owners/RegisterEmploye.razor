@@ -106,7 +106,8 @@
             }
             else
             {
-                await EmployeHasAdded.InvokeAsync(result.UserId);
+                var message = $"Провилът на {register.FirstName} {register.LastName} е създаден!";
+                await EmployeHasAdded.InvokeAsync(message);
                 await Refresh();
             }
         }

@@ -1,0 +1,26 @@
+﻿@if (AlertShow)
+{
+    <div class="alert @CssClass alert-dismissible fade show" role="alert">
+        <strong>@User.User.ProfileName! </strong>@Message
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" @onclick="@OnAlertButtonClick">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool AlertShow { get; set; }
+
+    [Parameter]
+    public string Message { get; set; }
+
+    [Parameter]
+    public string CssClass { get; set; } = AllertClass.Primary;
+
+    private void OnAlertButtonClick()
+    {
+        AlertShow = AlertShow != true;
+        Message = string.Empty;
+    }
+}

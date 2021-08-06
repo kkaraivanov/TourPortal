@@ -1,62 +1,147 @@
 ﻿@using System.IO
 @using Newtonsoft.Json
+@using TourPortal.Client.Data
 @using TourPortal.Infrastructure.Shared.Models
-@using static TourPortal.Infrastructure.Global.Global
 @typeparam TModel
 
+
 <div class="card card border-primary mb-3 p-4">
-    <EditForm OnValidSubmit="OnSubmit" Model="employe" Context="RegisterForm">
-        <DataAnnotationsValidator/>
+    @if (IsEditable)
+    {
+        <EditForm OnValidSubmit="OnSubmit" Model="userProfile" Context="RegisterForm">
+            <DataAnnotationsValidator/>
+            <div class="d-flex flex-column justify-content-between h-50 h-md-100">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+
+                        <div class="form-group">
+                            <label for="firstName">Име</label>
+                            <InputText id="firstName" type="text" class="form-control" placeholder="Име" autofocus @bind-Value="@userProfile.FirstName"/>
+                            <ValidationMessage For="@(() => userProfile.FirstName)"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="midleName">Презиме</label>
+                            <InputText id="midleName" type="text" class="form-control" placeholder="Презиме" @bind-Value="@userProfile.MidleName"/>
+                            <ValidationMessage For="@(() => userProfile.MidleName)"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastName">Фамилия</label>
+                            <InputText id="lastName" type="text" class="form-control" placeholder="Фамилия" @bind-Value="@userProfile.LastName"/>
+                            <ValidationMessage For="@(() => userProfile.LastName)"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sity">Град</label>
+                            <InputText id="sity" type="text" class="form-control" placeholder="Град" autofocus @bind-Value="@userProfile.Sity"/>
+                            <ValidationMessage For="@(() => userProfile.Sity)"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Адрес</label>
+                            <InputText id="address" type="text" class="form-control" placeholder="Адрес" autofocus @bind-Value="@userProfile.Address"/>
+                            <ValidationMessage For="@(() => userProfile.Address)"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phoneNumber">Телефон</label>
+                            <InputText id="phoneNumber" type="text" class="form-control" placeholder="Телефон" autofocus @bind-Value="@userProfile.PhoneNumber"/>
+                            <ValidationMessage For="@(() => userProfile.PhoneNumber)"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="oldPassword">Стара парола</label>
+                            <InputText type="oldPassword" id="password" class="form-control" placeholder="Парола" @bind-Value="@userProfile.OldPassword"/>
+                            <ValidationMessage For="@(() => userProfile.OldPassword)"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPassword">Нова парола</label>
+                            <InputText type="newPassword" id="password" class="form-control" placeholder="Парола" @bind-Value="@userProfile.NewPassword"/>
+                            <ValidationMessage For="@(() => userProfile.NewPassword)"/>
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 col-md-6">
+
+                        <div class="d-flex flex-column">
+                            <label for="newPassword">Снимка на профила</label>
+                            <div class="form-group">
+                                @if (userProfile.ProfilaImage == null)
+                                {
+                                    <div class="img-thumbnail text-center"><img class="img-responsive" src="./images/user_img.jpg" alt="#"/></div>
+                                }
+                                else
+                                {
+                                    <div class="img-thumbnail text-center"><img class="img-responsive" src="@ProfileImages.GetImageUrl(userProfile.ProfilaImage)" alt="#"/></div>
+                                }
+                            </div>
+                            <div class="form-group d-flex justify-content-end">
+                                <label for="file-upload" class="btn btn-primary">
+                                    <i class="fa fa-cloud-upload"></i> Качи снимка
+                                </label>
+                                <InputFile name="file-upload" id="file-upload" OnChange="FileForUploadSelected" accept="image/*"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="username">Потребителско имеe</label>
+                            <InputText id="username" type="text" class="form-control" placeholder="Потребителско име" autofocus @bind-Value="@userProfile.UserName" disabled="true"/>
+                            <ValidationMessage For="@(() => userProfile.UserName)"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <InputText id="email" type="text" class="form-control" placeholder="Email" autofocus @bind-Value="@userProfile.Email" disabled="true"/>
+                            <ValidationMessage For="@(() => userProfile.Email)"/>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-end">
+                    <RadzenButton style="margin: 0 1rem 1rem 0" Click="@(() => Deleted())" Text="Изтрии" ButtonStyle="ButtonStyle.Danger"/>
+                    <RadzenButton style="margin: 0 1rem 1rem 0" type="submit" Click="@(() => OnSubmit())" Text="Редактирай" ButtonStyle="ButtonStyle.Primary"/>
+                    <RadzenButton style="margin: 0 1rem 1rem 0" Click="@(() => Cancel())" Text="Отказ" ButtonStyle="ButtonStyle.Secondary"/>
+                </div>
+            </div>
+        </EditForm>
+    }
+    else
+    {
         <div class="d-flex flex-column justify-content-between h-50 h-md-100">
             <div class="row">
                 <div class="col-12 col-md-6">
 
                     <div class="form-group">
                         <label for="firstName">Име</label>
-                        <InputText id="firstName" type="text" class="form-control" placeholder="Име" autofocus @bind-Value="@employe.FirstName"/>
-                        <ValidationMessage For="@(() => employe.FirstName)"/>
+                        <input id="firstName" type="text" readonly class="form-control-plaintext no-editable" value="@userProfile.FirstName">
                     </div>
 
                     <div class="form-group">
                         <label for="midleName">Презиме</label>
-                        <InputText id="midleName" type="text" class="form-control" placeholder="Презиме" @bind-Value="@employe.MidleName"/>
-                        <ValidationMessage For="@(() => employe.MidleName)"/>
+                        <input id="midleName" type="text" readonly class="form-control-plaintext no-editable" value="@userProfile.MidleName">
                     </div>
 
                     <div class="form-group">
                         <label for="lastName">Фамилия</label>
-                        <InputText id="lastName" type="text" class="form-control" placeholder="Фамилия" @bind-Value="@employe.LastName"/>
-                        <ValidationMessage For="@(() => employe.LastName)"/>
+                        <input id="lastName" type="text" readonly class="form-control-plaintext no-editable" value="@userProfile.LastName">
                     </div>
 
                     <div class="form-group">
                         <label for="sity">Град</label>
-                        <InputText id="sity" type="text" class="form-control" placeholder="Град" autofocus @bind-Value="@employe.Sity"/>
-                        <ValidationMessage For="@(() => employe.Sity)"/>
+                        <input id="sity" type="text" readonly class="form-control-plaintext no-editable" value="@userProfile.Sity">
                     </div>
 
                     <div class="form-group">
                         <label for="address">Адрес</label>
-                        <InputText id="address" type="text" class="form-control" placeholder="Адрес" autofocus @bind-Value="@employe.Address"/>
-                        <ValidationMessage For="@(() => employe.Address)"/>
+                        <input id="address" type="text" readonly class="form-control-plaintext no-editable" value="@userProfile.Address">
                     </div>
 
                     <div class="form-group">
                         <label for="phoneNumber">Телефон</label>
-                        <InputText id="phoneNumber" type="text" class="form-control" placeholder="Телефон" autofocus @bind-Value="@employe.PhoneNumber"/>
-                        <ValidationMessage For="@(() => employe.PhoneNumber)"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="oldPassword">Стара парола</label>
-                        <InputText type="oldPassword" id="password" class="form-control" placeholder="Парола" @bind-Value="@employe.OldPassword"/>
-                        <ValidationMessage For="@(() => employe.OldPassword)"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="newPassword">Нова парола</label>
-                        <InputText type="newPassword" id="password" class="form-control" placeholder="Парола" @bind-Value="@employe.NewPassword"/>
-                        <ValidationMessage For="@(() => employe.NewPassword)"/>
+                        <input id="phoneNumber" type="text" readonly class="form-control-plaintext no-editable" value="@userProfile.PhoneNumber">
                     </div>
 
                 </div>
@@ -66,59 +151,58 @@
                     <div class="d-flex flex-column">
                         <label for="newPassword">Снимка на профила</label>
                         <div class="form-group">
-                            @if (employe.ProfilaImage == null)
+                            @if (userProfile.ProfilaImage == null)
                             {
                                 <div class="img-thumbnail text-center"><img class="img-responsive" src="./images/user_img.jpg" alt="#"/></div>
                             }
                             else
                             {
-                                <div class="img-thumbnail text-center"><img class="img-responsive" src="@ProfileImages.GetImageUrl(employe.ProfilaImage)" alt="#"/></div>
+                                <div class="img-thumbnail text-center"><img class="img-responsive" src="@ProfileImages.GetImageUrl(userProfile.ProfilaImage)" alt="#"/></div>
                             }
                         </div>
-                        <div class="form-group d-flex justify-content-end">
-                            <label for="file-upload" class="btn btn-primary">
-                                <i class="fa fa-cloud-upload"></i> Качи снимка
-                            </label>
-                            <InputFile name="file-upload" id="file-upload" OnChange="FileForUploadSelected" accept="image/*"/>
-                        </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="username">Потребителско имеe</label>
-                        <InputText id="username" type="text" class="form-control" placeholder="Потребителско име" autofocus @bind-Value="@employe.UserName" disabled="true"/>
-                        <ValidationMessage For="@(() => employe.UserName)"/>
+                        <input id="username" type="text" readonly class="form-control-plaintext no-editable" value="@userProfile.UserName">
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <InputText id="email" type="text" class="form-control" placeholder="Email" autofocus @bind-Value="@employe.Email" disabled="true"/>
-                        <ValidationMessage For="@(() => employe.Email)"/>
+                        <input id="email" type="text" readonly class="form-control-plaintext no-editable" value="@userProfile.Email">
                     </div>
 
                 </div>
             </div>
             <div class="row d-flex justify-content-end">
-                <RadzenButton style="margin: 0 1rem 1rem 0" Click="@(() => Deleted())" Text="Изтрии" ButtonStyle="ButtonStyle.Danger"/>
-                <RadzenButton style="margin: 0 1rem 1rem 0" type="submit" Click="@(() => OnSubmit())" Text="Редактирай" ButtonStyle="ButtonStyle.Primary"/>
-                <RadzenButton style="margin: 0 1rem 1rem 0" Click="@(() => Cancel())" Text="Отказ" ButtonStyle="ButtonStyle.Secondary"/>
+                <RadzenButton style="margin: 0 1rem 1rem 0" type="submit" Click="@(() => OnEditable())" Text="Редактирай" ButtonStyle="ButtonStyle.Primary"/>
             </div>
         </div>
-    </EditForm>
+    }
 </div>
 
 @code {
-    private UserSettingModel employe = new UserSettingModel();
+    private UserSettingModel userProfile = new UserSettingModel();
 	
     [Parameter]
 	public TModel Model { get; set; }
 
     [Parameter]
-    public EventCallback<string> ChangeEmploye { get; set; }
+    public EventCallback<string> ChangeProfile { get; set; }
+    
+    [Parameter]
+    public EventCallback<bool> CancelChanged { get; set; }
+
+    [Parameter]
+    public bool IsEditable { get; set; } = true;
+
+    [CascadingParameter]
+    public EventCallback SetUserInfo { get; set; }
 
     protected override void OnInitialized()
     {
         var serialize = JsonConvert.SerializeObject(Model);
-        employe = JsonConvert.DeserializeObject<UserSettingModel>(serialize);
+        userProfile = JsonConvert.DeserializeObject<UserSettingModel>(serialize);
         base.OnInitialized();
     }
 
@@ -128,28 +212,57 @@
         {
             var ms = new MemoryStream();
             await file.CopyToAsync(ms);
-            employe.ProfilaImage = ms.ToArray();
+            userProfile.ProfilaImage = ms.ToArray();
         }
     }
 
-    private void OnSubmit()
+    private async Task OnEditable()
     {
+        await CancelChanged.InvokeAsync(true);
+    }
 
+    private async Task OnSubmit()
+    {
+        var request = await ApiService.ChangeUserData(userProfile);
+        var responsData = request.ResponseData;
+
+        if (responsData != null)
+        {
+            var message = $"Профилът на {userProfile.FirstName} {userProfile.LastName} беше променен!";
+            await ChangeProfile.InvokeAsync(message);
+            await CancelChanged.InvokeAsync(false);
+
+            await SetUserInfo.InvokeAsync();
+        }
+        else
+        {
+            var message = $"{string.Join(Environment.NewLine, request.Errors.Select(x => x.Error))}";
+            await ChangeProfile.InvokeAsync(message);
+            await CancelChanged.InvokeAsync(false);
+        }
     }
     
-    private void Deleted()
+    private async Task Deleted()
     {
-
+        var message = $"Профилът на {userProfile.FirstName} {userProfile.LastName} беше изтрит!";
+        await ChangeProfile.InvokeAsync(message);
     }
 
     private async Task Cancel()
     {
-        await ChangeEmploye.InvokeAsync(string.Empty);
+        var message = "Промени по профила са отказани!";
+        await ChangeProfile.InvokeAsync(message);
+        await CancelChanged.InvokeAsync(false);
     }
 }
 
 <style>
     input[type="file"] {
         display: none;
+    }
+    input.no-editable {
+        border-bottom: solid 1px;
+        border-top: none;
+        border-color: #007bff!important;
     }
 </style>

@@ -2,7 +2,7 @@
 
 @if (!string.IsNullOrEmpty(EmployeId) && employe != null)
 {
-    <ProfileSettingsComponent Model="@employe" ChangeEmploye="ChangeEmploye" />
+    <ProfileSettingsComponent Model="@employe" ChangeProfile="ChangeEmploye" />
 }
 
 
@@ -25,20 +25,5 @@
         {
             employe = responseData;
         }
-    }
-
-    private void OnSubmit()
-    {
-
-    }
-    
-    private void Deleted()
-    {
-
-    }
-
-    private async Task Cancel()
-    {
-        await ChangeEmploye.InvokeAsync(string.Empty);
     }
 }

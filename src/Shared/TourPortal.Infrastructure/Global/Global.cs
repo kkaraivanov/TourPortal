@@ -10,6 +10,8 @@
             public const string Register = "api/account/register";
             public const string GetRoles = "api/account/getUserRoles";
             public const string GetUserInfo = "api/account/getUserInfo?userEmail=";
+            public const string GetUserData = "api/account/getUserData";
+            public const string ChangeUserData = "api/account/changeUserData";
             public const string RegisterEmploye = "api/owner/registerEmploye";
             public const string AddNewHotel = "api/owner/addNewHotel";
             public const string ChangeHotel = "api/owner/changeHotel";
@@ -37,6 +39,15 @@
 
                 return "";
             }
+        }
+
+        public static class AllertClass
+        {
+            public const string Primary = "alert-primary";
+            public const string Secondary = "alert-secondary";
+            public const string Success = "alert-success";
+            public const string Danger = "alert-danger";
+            public const string Warning = "alert-warning";
         }
     }
 }

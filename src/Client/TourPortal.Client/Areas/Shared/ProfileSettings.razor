@@ -1,5 +1,7 @@
 ﻿@page "/{homeUrl}/profile"
-@page "/{homeUrl}/profile/{id}"
+@page "/{homeUrl}/profile/{settings}"
+@using TourPortal.Infrastructure.Shared.Models
+@using TourPortal.Client.Data
 @layout AreaLayout
 
 <AuthorizeView Policy = "IsAdministrator">
@@ -16,22 +18,85 @@
 <AuthorizeView Policy="IsUser">
     <PageModelComponent>
         <PageHeader>
-            <h3>@User.User.ProfileName Settings</h3>
+            @if (!isSettings)
+            {
+                <h3>Профил</h3>
+            }
+            else
+            {
+                <h3>Промяна</h3>
+            }
         </PageHeader>
         <PageBody>
-            <h4>@User.User.Id</h4>
-            <h4>@User.User.ProfileName</h4>
-            <h4>@User.User.UserRole</h4>
-            <h4>@User.User.ProfileImage</h4>
+            @if (profile != null)
+            {
+                <ProfileSettingsComponent Model="@profile" CancelChanged="@IsCanceled" IsEditable="@isSettings"/>
+            }
         </PageBody>
     </PageModelComponent>
 </AuthorizeView>
 
 @code {
+    private bool isSettings;
+    private UserDataModel profile;
+
 	[Parameter]
 	public string HomeUrl { get; set; }
 
 	[Parameter]
-	public string Id { get; set; }
+	public string Settings { get; set; }
 
+    [Parameter]
+    public string EmployeId { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ChangeEmploye { get; set; }
+
+    public LogedUserModel LogedUser { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        
+        if (!string.IsNullOrEmpty(Settings) && Settings == "settings")
+        {
+            IsCanceled(true);
+        }
+        else if (!string.IsNullOrEmpty(Settings) && Settings != "settings")
+        {
+            NavigationManager.NavigateTo($"/{HomeUrl}");
+        }
+
+        if (string.IsNullOrEmpty(Settings))
+        {
+            IsCanceled(false);
+        }
+
+        
+        base.OnParametersSet();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = await ApiService.GetUserData();
+        var responseData = request.ResponseData;
+
+        if (responseData != null)
+        {
+            profile = responseData;
+        }
+    }
+
+    private void IsCanceled(bool arg)
+    {
+        if (!arg)
+        {
+            NavigationManager.NavigateTo($"/{HomeUrl}/profile");
+        }
+        else
+        {
+            NavigationManager.NavigateTo($"/{HomeUrl}/profile/settings");
+        }
+
+        isSettings = arg;
+    }
 }
