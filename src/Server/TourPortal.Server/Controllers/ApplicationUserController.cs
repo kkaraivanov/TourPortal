@@ -91,6 +91,40 @@
 
         [HttpGet]
         [Route("[action]")]
+        public async Task<ApplicationResponse<GetRoomByIdResponse>> GetRoom(string roomId)
+        {
+            var room = await _hotelService.GetRoom(roomId);
+            if (room is null)
+            {
+                return new ApplicationResponse<GetRoomByIdResponse>(new ApplicationError("", "Room is not exist."));
+            }
+
+            var hotel = await _hotelService.GetHotelById(room.HotelId);
+            var roomType = await _hotelService.GetRoomType(room.Id);
+            var roomImages = await _hotelService.GetRoomImages(room.Id);
+            var roomIsFree = await _hotelService.CheckRoomIsFree(room.Id);
+
+            var response = new GetRoomByIdResponse
+            {
+                Id = room.Id,
+                RoomNumber = room.RoomNumber,
+                CountOfBeds = room.CountOfBeds,
+                CountOfPersons = room.CountOfPersons,
+                Price = room.Price,
+                RoomType = roomType,
+                RoomImages = roomImages.Select(x => x.ImageUrl).ToList(),
+                HotelId = hotel.Id,
+                HotelName = hotel.HotelName,
+                City = hotel.City,
+                Address = hotel.Address,
+                IsFree = roomIsFree
+            };
+
+            return response.ToResponse();
+        }
+
+        [HttpGet]
+        [Route("[action]")]
         public async Task<ApplicationResponse<int>> GetRoomsCout(string hotelId)
         {
             var rooms = await _hotelService.GetRooms(hotelId);

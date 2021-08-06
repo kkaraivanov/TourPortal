@@ -33,6 +33,8 @@
 
         Task<ApplicationResponse<IEnumerable<RoomResponse>>> GetRooms(string hotelId, int skip, int take);
 
+        Task<ApplicationResponse<GetRoomByIdResponse>> GetRoom(string roomId);
+
         Task<ApplicationResponse<int>> GetRoomsCount(string hotelId);
 
         Task<ApplicationResponse<ICollection<string>>> GetRoomTypes();

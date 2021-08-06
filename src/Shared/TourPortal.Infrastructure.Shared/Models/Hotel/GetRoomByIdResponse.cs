@@ -2,6 +2,8 @@
 {
     public class GetRoomByIdResponse : RoomModel
     {
+        public string Id { get; set; }
+
         public string HotelId { get; set; }
 
         public string HotelName { get; set; }
@@ -10,6 +12,6 @@
 
         public string Address { get; set; }
 
-        public bool IsFree { get; set; }
+        public bool IsFree { get; set; } = true;
     }
 }

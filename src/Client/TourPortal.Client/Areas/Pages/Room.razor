@@ -1,0 +1,100 @@
+﻿@page "/user/{from}/room/{roomId}"
+@using TourPortal.Infrastructure.Shared.Models.Hotel
+<PageModelComponent>
+	<PageHeader>
+		@if (roomModel != null)
+		{
+            <h3>Стая №: @roomModel.RoomNumber</h3>
+		}
+	</PageHeader>
+	<PageBody>
+		<AlertComponent AlertShow="@alert" Message="@alertMessage" />
+		@if (roomModel != null)
+		{
+		    <div class="card card border-primary mb-3 p-2">
+                <div class="d-flex flex-column align-items-center">
+                    @if (!string.IsNullOrEmpty(TopImageUrl))
+                    {
+                        <div class="img-fluid w-50">
+                            <img class="card-img" src="@TopImageUrl" alt="Card image cap">
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="img-fluid">
+                            <img class="card-img" src="/images/hotel.png" alt="Card image cap">
+                        </div>
+                    }
+                    <div class="container pt-5 pb-4">
+                        <RoomCardComponent RoomModel="@roomModel" ShowViewButton="false" />
+                    </div>
+                    <div class="col-12 p-2">
+                        <div class="card-deck">
+                            @if (roomModel.RoomImages.Any())
+                            {
+                                <div class="container">
+                                    <div class="row">
+                                        @foreach (var room in roomModel.RoomImages)
+                                        {
+                                            <div class="col-4 col-lg-3">
+                                                <div class="card">
+                                                    <img class="img-thumbnail" src="@room" alt="Card image cap">
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-end">
+
+                </div>
+            </div>
+		}
+	</PageBody>
+</PageModelComponent>
+@code {
+	[Parameter]
+	public string From { get; set; }
+
+	[Parameter]
+	public string RoomId { get; set; }
+
+	private GetRoomByIdResponse roomModel = new GetRoomByIdResponse();
+	private bool alert;
+	private string alertMessage = string.Empty;
+	private string TopImageUrl = string.Empty;
+
+	protected override async Task OnInitializedAsync()
+	{
+		var request = await ApiService.GetRoom(RoomId);
+		var responsData = request.ResponseData;
+
+		if (responsData is null)
+		{
+			alert = true;
+			alertMessage = string.Join(Environment.NewLine, request.Errors.Select(x => x.Error));
+		}
+		else
+		{
+		    if (responsData.RoomImages.Any())
+		    {
+		        var firstImage = responsData.RoomImages.ElementAt(0);
+		        TopImageUrl = firstImage;
+		        responsData.RoomImages.Remove(firstImage);
+		    }
+			roomModel = responsData;
+		}
+	}
+
+	private string ParsType(string roomType) => roomType switch
+	{
+		"Single" => "Единична",
+		"Double" => "Двойна",
+		"Double with 2 single beds" => "Двойна с 2 единични легла",
+		"Apartment" => "Апартамент",
+		_ => ""
+	};
+}

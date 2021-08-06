@@ -20,6 +20,7 @@
             public const string GetEmploye = "api/owner/getEmploye?employeId=";
             public const string GetRoomTypes = "api/owner/getRoomTypes";
             public const string GetRooms = "api/applicationUser/getRooms?";
+            public const string GetRoom = "api/applicationUser/getRoom?roomId=";
             public const string GetRoomsCount = "api/applicationUser/getRoomsCout?hotelId=";
             public const string GetHotelInfo = "api/applicationUser/getHotelInfo";
             public const string GetHotelCardInfo = "api/applicationUser/getHotelCardInfo?hotelId=";

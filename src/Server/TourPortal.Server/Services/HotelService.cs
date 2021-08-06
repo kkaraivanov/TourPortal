@@ -11,41 +11,7 @@
     using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
-    using Newtonsoft.Json;
     using Storage;
-
-    public interface IHotelService
-    {
-        Owner GetOwner(string userId);
-
-        string GetHotelId(string userId);
-
-        Task<Hotel> GetHotelById(string hotelId);
-
-        Task<Hotel> GetHotelByOwnerId(string ownerId);
-
-        Task<HotelInfoResponse> GetHotelInfo(string hotelId);
-
-        Task<ApplicationResponse<HotelInfoResponse>> GetHotelInfoResponse(string hotelId);
-
-        Task<Hotel> AddNewHotel(AddHotelModel hotelModel, Owner owner);
-
-        Task AddNewHotlContacts(List<Contact> contacts);
-
-        Task UpdateHotlContacts(List<Contact> contacts, string hotelId);
-
-        Task<bool> AddNewRooms(RoomModel roomModel, Hotel hotel);
-
-        Task<ICollection<Room>> GetRooms(string hotelId);
-
-        Task<ICollection<RoomImages>> GetRoomImages(string roomId);
-
-        Task<ICollection<string>> GetRoomTypes();
-
-        Task<string> GetRoomType(string roomId);
-
-        Task<bool> ChangeHotel(ChangeHotelModel hotelModel);
-    }
 
     public class HotelService : IHotelService
     {
@@ -245,18 +211,22 @@
             return true;
         }
 
+        public async Task<Room> GetRoom(string roomId) =>
+            _context.Rooms
+                .FirstOrDefault(x => x.Id == roomId);
+
         public async Task<ICollection<Room>> GetRooms(string hotelId) =>
             DistinctRoomNumber(hotelId);
 
         public async Task<ICollection<RoomImages>> GetRoomImages(string roomId) =>
             _context.RoomImageses
-                .Where(x => x.RoomId == roomId)
-                .OrderByDescending(x => x.Id)
+                .Where(x => x.RoomId == roomId && x.IsDeleted == false)
+                .OrderBy(x => x.Id)
                 .ToList();
 
         public async Task<ICollection<string>> GetRoomTypes() =>
             await _context.RoomTypes
-                .OrderByDescending(x => x.Type)
+                .OrderBy(x => x.Type)
                 .Select(x => x.Type)
                 .ToListAsync();
 
@@ -266,6 +236,10 @@
                 .Select(x => x.RoomType.Type)
                 .FirstOrDefault();
 
+        public async Task<bool> CheckRoomIsFree(string roomId) =>
+            _context.Reservations
+                .Any(x => x.RoomId == roomId && x.IsCompleted == false);
+
         private string GetOwnerId(string userId) =>
             GetOwner(userId)?.Id;
 
@@ -274,7 +248,7 @@
         { 
             var rooms = _context.Rooms
                 .Where(x => x.HotelId == hotelId)
-                .OrderByDescending(x => x.RoomNumber)
+                .OrderBy(x => x.RoomNumber)
                 .ToList();
             var temp = new List<Room>(rooms);
 

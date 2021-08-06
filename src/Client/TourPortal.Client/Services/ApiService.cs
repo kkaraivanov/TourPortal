@@ -92,6 +92,9 @@
         public async Task<ApplicationResponse<IEnumerable<RoomResponse>>> GetRooms(string hotelId, int skip, int take) =>
             await Get<IEnumerable<RoomResponse>>($"{Route.GetRooms}hotelId={hotelId}&skip={skip}&take={take}");
 
+        public async Task<ApplicationResponse<GetRoomByIdResponse>> GetRoom(string roomId) =>
+            await Get<GetRoomByIdResponse>(Route.GetRoom + roomId);
+
         public async Task<ApplicationResponse<ICollection<string>>> GetRoomTypes() =>
             await Get<ICollection<string>>(Route.GetRoomTypes);
 
