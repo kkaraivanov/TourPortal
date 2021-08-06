@@ -15,16 +15,18 @@
                 <ColumnComponent Title=""/>
             </Columns>
             <Row Context="employe">
-                <td>@employe.FirstName</td>
-                <td>@employe.MidleName</td>
-                <td>@employe.LastName</td>
-                <td>@employe.Sity</td>
-                <td>@employe.Address</td>
-                <td>@employe.PhoneNumber</td>
-                <td>@employe.CreatedOn.ToShortDateString()</td>
-                <td class="d-flex justify-content-end p-0 pt-2">
-                    <button class="btn btn-info" @onclick="@(() => SendEmployeId(employe.Id))">Редактирай</button>
-                </td>
+                <tr>
+                    <td>@employe.FirstName</td>
+                    <td>@employe.MidleName</td>
+                    <td>@employe.LastName</td>
+                    <td>@employe.Sity</td>
+                    <td>@employe.Address</td>
+                    <td>@employe.PhoneNumber</td>
+                    <td>@employe.CreatedOn.ToShortDateString()</td>
+                    <td class="d-flex justify-content-end p-0 pt-2">
+                        <button class="btn btn-info" @onclick="@(() => SendEmployeId(employe.Id))">Редактирай</button>
+                    </td>
+                </tr>
             </Row>
         </TableComponent>
     </div>

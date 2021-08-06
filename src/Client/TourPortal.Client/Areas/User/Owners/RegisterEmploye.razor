@@ -1,4 +1,5 @@
-﻿<EditForm OnValidSubmit="OnSubmit" Model="register" Context="RegisterForm">
+﻿@using TourPortal.Infrastructure.Shared.Models.Response
+<EditForm OnValidSubmit="OnSubmit" Model="register" Context="RegisterForm">
 	<DataAnnotationsValidator />
     <div class="d-flex flex-column justify-content-between h-50 h-md-100">
         <div class="row">
@@ -73,6 +74,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await Refresh();
+
         if (string.IsNullOrEmpty(employeRole.RoleId) || string.IsNullOrEmpty(employeRole.RoleName))
         {
             var request = await ApiService.GetUserRoles();
@@ -97,19 +100,17 @@
     {
         register.RoleId = employeRole.RoleId;
         var registerRequest = await ApiService.RegisterEmploye(register);
-        if (registerRequest.IsOk)
+        var responseData = registerRequest.ResponseData;
+
+        if (responseData is null)
         {
-            var result = registerRequest.ResponseData;
-            if (result is null)
-            {
-                //TODO: return error
-            }
-            else
-            {
-                var message = $"Провилът на {register.FirstName} {register.LastName} е създаден!";
-                await EmployeHasAdded.InvokeAsync(message);
-                await Refresh();
-            }
+            //TODO: return error
+        }
+        else
+        {
+            var message = $"Провилът на {register.FirstName} {register.LastName} е създаден!";
+            await EmployeHasAdded.InvokeAsync(message);
+            await Refresh();
         }
     }
 

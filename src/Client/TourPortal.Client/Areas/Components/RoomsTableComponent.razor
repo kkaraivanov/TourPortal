@@ -10,7 +10,7 @@
         <ColumnComponent Title="Тип на стаята"/>
     </Columns>
     <Row Context="roomResponse">
-        <tr @onclick="@(() => OpenRoom(roomResponse.Id))">
+        <tr class="btn-row" @onclick="@(() => OpenRoom(roomResponse.Id))">
             @if (roomResponse.RoomImages.Any())
             {
                 var imageUrl = roomResponse.RoomImages.FirstOrDefault();
@@ -146,7 +146,7 @@
 }
 
 <style>
-    thead.bg-head {
-
+    .btn-row {
+        cursor: pointer;
     }
 </style>
