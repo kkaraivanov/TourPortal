@@ -39,6 +39,12 @@
     private GetEmployeResponse employe = new GetEmployeResponse();
     private List<GetEmployeResponse> employes = new List<GetEmployeResponse>();
 
+    public async Task AddEmploye()
+    {
+        await LoadData();
+        StateHasChanged();
+    }
+
     private async Task SendEmployeId(string employeId)
     {
         await ChangeEmployeId.InvokeAsync(employeId);
@@ -57,9 +63,10 @@
     {
         var request = await ApiService.GetEmployes();
         var responseData = request.ResponseData;
-        ;
+        
         if (responseData != null)
         {
+            employes = new List<GetEmployeResponse>();
             employes.AddRange(responseData);
         }
     }

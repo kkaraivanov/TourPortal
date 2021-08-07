@@ -181,6 +181,10 @@
         {
             var employe = await _userService.GetEmployeData(employeId);
 
+            if (employe is null)
+            {
+                return new ApplicationResponse<FullUserDataModel>(new ApplicationError("", "Employe data is null."));
+            }
             return employe.ToResponse();
         }
 

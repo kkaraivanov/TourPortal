@@ -1,6 +1,9 @@
 ﻿@attribute [Authorize(Roles = Security.Role.Owner)]
 @page "/user/employe"
 @using static TourPortal.Infrastructure.Global.Global.AllertClass
+@using TourPortal.Client.Helpers
+@using TourPortal.Infrastructure.Shared.Models.Hotel
+@using Newtonsoft.Json
 
 <PageModelComponent>
     <PageHeader>
@@ -17,7 +20,7 @@
                     </div>
                 </div>
             </div>
-            <EmployesTableComponent ChangeEmployeId="OnChangeEmploye"/>
+            <EmployesTableComponent @ref="employeTable" ChangeEmployeId="OnChangeEmploye"/>
         }
         else
         {
@@ -27,11 +30,12 @@
 </PageModelComponent>
 
 @code {
-    private string EmployeId = string.Empty;
+    private EmployesTableComponent employeTable;
     private string message = string.Empty;
     private string alertClass = string.Empty;
     private bool alertView;
 
+    public string EmployeId { get; set; }
     // TODO: change register call back
 
     protected override async Task OnInitializedAsync()
@@ -41,9 +45,11 @@
 
     private void OnChangeEmploye(string employeId) => EmployeId = employeId;
 
-    private void EmployeHasAdded(string arg)
+    private async Task EmployeHasAdded(string message)
     {
-        AlertMessage(arg);
+        await employeTable.AddEmploye();
+
+        AlertMessage(message);
         alertClass = Success;
     }
     
