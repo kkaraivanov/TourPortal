@@ -6,6 +6,7 @@ namespace TourPortal.Client
     using Blazored.LocalStorage;
     using Blazored.Modal;
     using BlazorStrap;
+    using Data;
     using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.DependencyInjection;
@@ -36,7 +37,8 @@ namespace TourPortal.Client
             builder.Services
                 .AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>()
                 .AddScoped<IApiService, ApiService>()
-                .AddSingleton<ILogedUserService, LogedUserService>();
+                .AddSingleton<ILogedUserService, LogedUserService>()
+                .AddSingleton<IRoomCache, RoomModelCache>();
 
             builder.Services
                 .AddHttpClient<IApiService, ApiService>(x =>

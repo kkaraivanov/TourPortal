@@ -2,6 +2,7 @@ namespace TourPortal.Server
 {
     using System;
     using System.Text;
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -80,7 +81,11 @@ namespace TourPortal.Server
                 AdditionalUserClaimsPrincipalFactory>();
 
             services.SetCookiePolicy();
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+                    {
+                        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    })
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -92,6 +97,19 @@ namespace TourPortal.Server
                         ValidIssuer = Configuration["JwtSecurity:JwtIssuer"],
                         ValidAudience = Configuration["JwtSecurity:JwtAudience"],
                         IssuerSigningKey = jwtKey
+                    };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                            {
+                                context.Response.Headers.Add("Token-Expired", "true");
+                            }
+
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 

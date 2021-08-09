@@ -1,6 +1,5 @@
 ﻿namespace TourPortal.Server.Controllers
 {
-    using System.Linq;
     using System.Threading.Tasks;
     using Infrastructure.Global.Types;
     using Infrastructure.Services;
@@ -10,44 +9,40 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Newtonsoft.Json;
-    using Services;
     using Storage;
 
-    [Authorize(Roles = Security.Role.Employe)]
-    public class EmployeController : ApiController
+    [Authorize(Roles = Security.Role.Administrator)]
+    public class AdministratorController : ApiController
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IHotelService _hotelService;
         private readonly IAccountService _accountService;
 
-        public EmployeController(
-            ApplicationDbContext context,
+        public AdministratorController(
+            ApplicationDbContext context, 
             UserManager<ApplicationUser> userManager, 
-            IHotelService hotelService, 
             IAccountService accountService)
         {
-            _userManager = userManager;
-            _hotelService = hotelService;
-            _accountService = accountService;
             _context = context;
+            _userManager = userManager;
+            _accountService = accountService;
         }
 
-        [HttpGet]
+        [HttpPost]
+        [AllowAnonymous]
         [Route("[action]")]
-        public async Task<ApplicationResponse<EmployeInfoResponse>> GetInfo()
+        public async Task<ApplicationResponse<bool>> DeleteUser([FromBody] DeletableUserModel model)
         {
+            if (model is null || !ModelState.IsValid)
+            {
+                return ModelStateErrors<bool>();
+            }
+
             var userId = _userManager.GetUserId(User);
-            var employe = _context.Employes
-                .FirstOrDefault(x => x.Profile.UserId == userId);
 
-            var serialize = JsonConvert.SerializeObject(employe);
-            var response = JsonConvert.DeserializeObject<EmployeInfoResponse>(serialize);
 
-            return response.ToResponse();
+            var result = await _accountService.DeleteUserData(userId);
+            return result.ToResponse();
         }
-
-        
     }
 }

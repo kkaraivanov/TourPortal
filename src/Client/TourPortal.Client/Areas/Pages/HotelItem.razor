@@ -9,15 +9,15 @@
             <h3>@headerTitle</h3>
         </PageHeader>
         <PageBody>
-            @if (isAddRoom)
+            @if (isRoomItem)
             {
-                <NewRoomComponent RoomIsAdded="@AddRoom" />
+                <RoomComponent RoomIsSaved="@AddRoom" />
             }
             
-            @if (isAddHotel)
+            @if (isHotelItem)
             {
                 <EditForm OnValidSubmit="AddHotelToDatabase" Model="hotelModel" Context="AddHotelForm">
-                    <HotelCardComponent HotelModel="@hotelModel" IsAddHotel="@isAddHotel" IsEditable="@isAddHotel" OnChangedHotelModel="@HotelIsChanged">
+                    <HotelCardComponent HotelModel="@hotelModel" IsAddHotel="@isHotelItem" IsEditable="@isHotelItem" OnChangedHotelModel="@HotelIsChanged">
                         <ButtonSection>
                             <div class="row d-flex flex-row justify-content-end">
                                 <div>
@@ -47,18 +47,18 @@
 	public string Hotel { get; set; }
 
     private AddHotelModel hotelModel = new AddHotelModel();
-    private bool isAddRoom => Item == "room".ToLower();
-    private bool isAddHotel => Item == "hotel".ToLower();
+    private bool isRoomItem => Item == "room".ToLower();
+    private bool isHotelItem => Item == "hotel".ToLower();
     private string headerTitle = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        if (isAddRoom)
+        if (isRoomItem)
         {
             headerTitle = "Добавяне на нова стая";
         }
 
-        if (isAddHotel)
+        if (isHotelItem)
         {
             headerTitle = "Добавяне на нова хотел";
         }

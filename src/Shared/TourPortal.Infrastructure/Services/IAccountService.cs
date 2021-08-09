@@ -31,5 +31,7 @@
             byte[] profilaImage);
 
         Task<bool> ChangeUserPassword(string userId, string oldPassword, string newPassword);
+
+        Task<bool> DeleteUserData(string userId);
     }
 }

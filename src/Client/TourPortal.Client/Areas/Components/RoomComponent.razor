@@ -3,15 +3,18 @@
 	<div class="container col-12 col-md-8 border-primary p-2">
 		<h1 style="margin: 2%; text-align: center;">Стая @roomNumber</h1>
 		<div style="padding: 5%;">
-            <EditForm OnValidSubmit="AddRoom" Model="roomModel" Context="AddRoomForm">
+            <EditForm OnValidSubmit="SaveRoom" Model="roomModel" Context="AddRoomForm">
                 <DataAnnotationsValidator />
                 <div class="form-group">
                     @if (!string.IsNullOrEmpty(roomNumberExist))
                     {
                         <input type="text" readonly class="form-control-plaintext text-danger" value="@roomNumberExist">
                     }
-                    <label for="roomNumber">Стая №</label>
-                    <input type="number" class="form-control" id="roomNumber" name="roomNumber" @bind-value="roomModel.RoomNumber" @oncuechange="@(args => ChangeRoomNumber(args))" placeholder="Номер на стаята">
+                    @if (!roomIsEdit)
+                    {
+                        <label for="roomNumber">Стая №</label>
+                        <input type="number" class="form-control" id="roomNumber" name="roomNumber" @bind-value="roomModel.RoomNumber" @oncuechange="@(args => ChangeRoomNumber(args))" placeholder="Номер на стаята">
+                    }
                 </div>
                 <div class="form-group">
                     <label for="countOfBeds">Брой легла</label>
@@ -39,7 +42,7 @@
                         <option value="" disabled selected hidden>Изберете тип стая</option>
                         @foreach (var roomType in RoomTypes)
                         {
-                            <option value="@roomType">@ParsType(roomType))</option>
+                            <option value="@roomType">@ParsType(roomType)</option>
                         }
                     </InputSelect>
                     <ValidationMessage For="@(() => roomModel.RoomType)"/>
@@ -88,11 +91,11 @@
                         }
                     </div>
                 </div>
-                @if (!DisableAddButton)
+                @if (!DisableSavedButton)
                 {
                     <div class="row d-flex justify-content-end">
                         <RadzenButton style="margin: 0 1rem 1rem 0" type="submit" Click="@(() => Cancel())" Text="Отказ" ButtonStyle="ButtonStyle.Secondary"/>
-                        <RadzenButton style="margin: 0 1rem 1rem 0" type="submit" Click="@(() => AddRoom())" Text="Запази" ButtonStyle="ButtonStyle.Primary"/>
+                        <RadzenButton style="margin: 0 1rem 1rem 0" type="submit" Click="@(() => SaveRoom())" Text="Запази" ButtonStyle="ButtonStyle.Primary"/>
                     </div>
                 }
             </EditForm>
@@ -102,16 +105,20 @@
 
 @code {
     [Parameter]
-	public EventCallback<bool> RoomIsAdded { get; set; }
+	public EventCallback<bool> RoomIsSaved { get; set; }
 
     [Parameter]
-    public bool DisableAddButton { get; set; }
+    public bool DisableSavedButton { get; set; }
+
+    [Parameter]
+    public bool RoomIsEdit { get; set; }
 
 	private List<string> RoomTypes = new List<string>();
 	private RoomModel roomModel = new RoomModel();
 	private string roomNumber = string.Empty;
 	private string roomNumberExist = string.Empty;
 	private string roomImage = string.Empty;
+    private bool roomIsEdit;
 
     protected override async Task OnInitializedAsync()
     {
@@ -123,37 +130,69 @@
                 RoomTypes.AddRange(request.ResponseData);
             }
         }
+
+        if (RoomIsEdit)
+        {
+            roomModel = RoomCache.RoomModel;
+            roomIsEdit = true;
+        }
     }
 
     private async Task Cancel()
     {
-        await RoomIsAdded.InvokeAsync(true);
+        await RoomIsSaved.InvokeAsync(false);
     }
 
-	private async Task AddRoom()
+	private async Task SaveRoom()
 	{
-	    var response = await ApiService.AddNewRoom(roomModel);
-	    if (response.IsOk)
+	    if (!roomIsEdit)
 	    {
-	        var result = response.ResponseData;
-	        roomNumberExist = string.Empty;
-            StateHasChanged();
-
-	        if (result)
-	        {
-	            await RoomIsAdded.InvokeAsync(true);
-	        }
-	        else
-	        {
-                // TODO: Alert error message and add new room agayn
-	        }
+	        await AddNewRoom();
 	    }
 	    else
 	    {
-	        roomNumberExist = "Стая стози номер вече съществува";
-	        StateHasChanged();
+	        await EditRoom();
 	    }
 	}
+
+    private async Task AddNewRoom()
+    {
+        var response = await ApiService.AddNewRoom(roomModel);
+        if (response.IsOk)
+        {
+            var result = response.ResponseData;
+            roomNumberExist = string.Empty;
+            StateHasChanged();
+
+            if (result)
+            {
+                await RoomIsSaved.InvokeAsync(true);
+            }
+            else
+            {
+                // TODO: Alert error message and add new room agayn
+            }
+        }
+        else
+        {
+            roomNumberExist = "Стая стози номер вече съществува";
+            StateHasChanged();
+        }
+    }
+
+    private async Task EditRoom()
+    {
+        var request = await ApiService.ChangedRoom(roomModel);
+        var responseData = request.ResponseData;
+        if (responseData)
+        {
+            await RoomIsSaved.InvokeAsync(true);
+        }
+        else
+        {
+            await RoomIsSaved.InvokeAsync(false);
+        }
+    }
 
     private string ParsType(string roomType) => roomType switch
     {

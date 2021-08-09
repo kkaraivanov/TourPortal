@@ -26,7 +26,9 @@
 
         Task UpdateHotlContacts(List<Contact> contacts, string hotelId);
 
-        Task<bool> AddNewRooms(RoomModel roomModel, Hotel hotel);
+        Task<bool> AddNewRoom(RoomModel roomModel, Hotel hotel);
+
+        Task<bool> ChangeRoom(RoomModel roomModel, Hotel hotel);
 
         Task<ICollection<Room>> GetRooms(string hotelId);
 

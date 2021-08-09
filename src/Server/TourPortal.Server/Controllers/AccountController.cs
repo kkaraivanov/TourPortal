@@ -163,6 +163,26 @@
             return true.ToResponse();
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<bool>> DeleteUserData([FromBody] UserSettingModel model)
+        {
+            if (model is null || !ModelState.IsValid)
+            {
+                return ModelStateErrors<bool>();
+            }
+
+            var userId = _userManager.GetUserId(User);
+            if (userId != model.Id)
+            {
+                return new ApplicationResponse<bool>(new ApplicationError("", $"User {model.UserName} does not match this account."));
+            }
+
+            var result = await _accountService.DeleteUserData(userId);
+            return result.ToResponse();
+        }
+
         [HttpGet]
         [AllowAnonymous]
         [Route("[action]")]

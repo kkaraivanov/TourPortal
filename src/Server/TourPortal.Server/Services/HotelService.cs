@@ -173,22 +173,16 @@
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> AddNewRooms(RoomModel roomModel, Hotel hotel)
+        public async Task<bool> AddNewRoom(RoomModel roomModel, Hotel hotel)
         {
             if (roomModel is null)
             {
                 return false;
             }
 
-            var room = new Room
-            {
-                RoomNumber = roomModel.RoomNumber,
-                CountOfBeds = roomModel.CountOfBeds,
-                CountOfPersons = roomModel.CountOfPersons,
-                Price = roomModel.Price,
-                Hotel = hotel,
-                HotelId = hotel.Id
-            };
+            var room = GetNewRoom(roomModel);
+            room.Hotel = hotel;
+            room.HotelId = hotel.Id;
 
             foreach (var roomImage in roomModel.RoomImages)
             {
@@ -209,6 +203,73 @@
             _context.SaveChanges();
 
             return true;
+        }
+
+        public async Task<bool> ChangeRoom(RoomModel roomModel, Hotel hotel)
+        {
+            if (roomModel is null)
+            {
+                return false;
+            }
+
+            var room = _context.Rooms
+                .FirstOrDefault(x => x.RoomNumber == roomModel.RoomNumber && x.HotelId == hotel.Id);
+
+            if (room is null)
+            {
+                return false;
+            }
+
+            room.CountOfBeds = roomModel.CountOfBeds;
+            room.CountOfPersons = roomModel.CountOfPersons;
+            room.Price = roomModel.Price;
+
+            var roomImages  = _context.RoomImageses
+                .Where(x => x.RoomId == room.Id && x.IsDeleted == false);
+            
+            if (!roomImages.Any())
+            {
+                foreach (var roomImage in roomModel.RoomImages)
+                {
+                    room.RoomImages.Add(new RoomImages { ImageUrl = roomImage });
+                }
+            }
+            else
+            {
+                foreach (var roomImage in roomImages)
+                {
+                    if (roomModel.RoomImages.Contains(roomImage.ImageUrl))
+                    {
+                        var image = roomModel.RoomImages.First(x => x.Equals(roomImage.ImageUrl));
+                        roomModel.RoomImages.Remove(image);
+                        continue;
+                    }
+                    else
+                    {
+                        roomImage.IsDeleted = true;
+                        roomImage.DeletedOn = DateTime.Now;
+                        _context.RoomImageses.Update(roomImage);
+                    }
+                }
+            }
+
+            if (roomModel.RoomImages.Any())
+            {
+                foreach (var roomImage in roomModel.RoomImages)
+                {
+                    room.RoomImages.Add(new RoomImages { ImageUrl = roomImage });
+                }
+            }
+
+            var roomType = _context.RoomTypes.FirstOrDefault(x => x.Type == roomModel.RoomType);
+            var roomInType = _context.RoomsInType.FirstOrDefault(x => x.RoomId == room.Id);
+            roomInType.RoomType = roomType;
+            roomInType.RoomTypeId = roomType.Id;
+
+            _context.RoomsInType.Update(roomInType);
+            _context.Rooms.Update(room);
+
+            return _context.SaveChanges() > 0;
         }
 
         public async Task<Room> GetRoom(string roomId) =>
@@ -240,6 +301,15 @@
             _context.Reservations
                 .Any(x => x.RoomId == roomId && x.IsCompleted == false);
 
+        private Room GetNewRoom(RoomModel roomModel) =>
+            new Room
+            {
+                RoomNumber = roomModel.RoomNumber,
+                CountOfBeds = roomModel.CountOfBeds,
+                CountOfPersons = roomModel.CountOfPersons,
+                Price = roomModel.Price
+            };
+
         private string GetOwnerId(string userId) =>
             GetOwner(userId)?.Id;
 
@@ -268,7 +338,5 @@
 
             return rooms;
         }
-            
-
     }
 }

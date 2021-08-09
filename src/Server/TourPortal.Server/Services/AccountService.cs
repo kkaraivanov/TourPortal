@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
+    using System.Text;
     using System.Threading.Tasks;
     using IdentityModel;
     using Infrastructure.Services;
@@ -18,20 +19,22 @@
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public AccountService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public AccountService(
+            ApplicationDbContext context, 
+            UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
         public async Task AddNewUser(
-            string userName, 
-            string email, 
-            string password, 
-            string phoneNumber, 
-            string firstName, 
+            string userName,
+            string email,
+            string password,
+            string phoneNumber,
+            string firstName,
             string midleName,
-            string lastName, 
+            string lastName,
             string roleName)
         {
             try
@@ -222,6 +225,53 @@
             var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
 
             return result.Succeeded;
+        }
+
+        public async Task<bool> DeleteUserData(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            var userProfile = _context.UserProfiles.FirstOrDefault(x => x.UserId == user.Id);
+            userProfile.Address = EncryptField(userProfile.Address);
+            userProfile.Sity = EncryptField(userProfile.Sity);
+            userProfile.ProfilaImage = new byte[0];
+            userProfile.ModifiedOn = DateTime.Now;
+            user.FirstName = EncryptField(user.FirstName);
+            user.MidleName = EncryptField(user.MidleName);
+            user.LastName = EncryptField(user.LastName);
+            user.PhoneNumber = EncryptField(user.PhoneNumber);
+            user.DeletedOn = DateTime.Now;
+            user.IsDeleted = true;
+            user.Profile = userProfile;
+            
+            var userIsDeleted = await _userManager.UpdateAsync(user);
+
+            return userIsDeleted.Succeeded;
+        }
+
+        private string EncryptField(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                return null;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in data.ToCharArray())
+                sb.Append(Convert.ToString(c, 2).PadLeft(8, '0'));
+            return sb.ToString();
+        }
+
+        private string DencryptField(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                return null;
+            }
+
+            List<byte> bytes = new List<byte>();
+            for (int i = 0; i < data.Length; i += 8)
+                bytes.Add(Convert.ToByte(data.Substring(i, 8), 2));
+            return Encoding.ASCII.GetString(bytes.ToArray());
         }
     }
 }

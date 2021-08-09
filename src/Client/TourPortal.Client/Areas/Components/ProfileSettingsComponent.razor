@@ -77,12 +77,15 @@
                                     <div class="img-thumbnail text-center"><img class="img-responsive" src="@ProfileImages.GetImageUrl(userProfile.ProfilaImage)" alt="#"/></div>
                                 }
                             </div>
-                            <div class="form-group d-flex justify-content-end">
-                                <label for="file-upload" class="btn btn-primary">
-                                    <i class="fa fa-cloud-upload"></i> Качи снимка
-                                </label>
-                                <InputFile name="file-upload" id="file-upload" OnChange="FileForUploadSelected" accept="image/*"/>
-                            </div>
+                            @if (isThisUser)
+                            {
+                                <div class="form-group d-flex justify-content-end">
+                                    <label for="file-upload" class="btn btn-primary">
+                                        <i class="fa fa-cloud-upload"></i> Качи снимка
+                                    </label>
+                                    <InputFile name="file-upload" id="file-upload" OnChange="FileForUploadSelected" accept="image/*"/>
+                                </div>
+                            }
                         </div>
 
                         <div class="form-group">
@@ -100,8 +103,20 @@
                     </div>
                 </div>
                 <div class="row d-flex justify-content-end">
-                    <RadzenButton style="margin: 0 1rem 1rem 0" Click="@(() => Deleted())" Text="Изтрии" ButtonStyle="ButtonStyle.Danger"/>
-                    <RadzenButton style="margin: 0 1rem 1rem 0" type="submit" Click="@(() => OnSubmit())" Text="Редактирай" ButtonStyle="ButtonStyle.Primary"/>
+                    @if (isThisUser)
+                    {
+                        <RadzenButton style="margin: 0 1rem 1rem 0" Click="@(() => Deleted())" Text="Изтрии" ButtonStyle="ButtonStyle.Danger"/>
+                        <RadzenButton style="margin: 0 1rem 1rem 0" type="submit" Click="@(() => OnSubmit())" Text="Редактирай" ButtonStyle="ButtonStyle.Primary"/>
+                    }
+                    else
+                    {
+                        <AuthorizeView Roles="@Security.Role.Administrator">
+                            <RadzenButton style="margin: 0 1rem 1rem 0" Click="@(() => DeletedUser())" Text="Изтрии" ButtonStyle="ButtonStyle.Danger"/>
+                        </AuthorizeView>
+                        <AuthorizeView Roles="@Security.Role.Owner">
+                            <RadzenButton style="margin: 0 1rem 1rem 0" Click="@(() => DeletedEmploye())" Text="Изтрии" ButtonStyle="ButtonStyle.Danger"/>
+                        </AuthorizeView>
+                    }
                     <RadzenButton style="margin: 0 1rem 1rem 0" Click="@(() => Cancel())" Text="Отказ" ButtonStyle="ButtonStyle.Secondary"/>
                 </div>
             </div>
@@ -182,6 +197,7 @@
 
 @code {
     private UserSettingModel userProfile = new UserSettingModel();
+    private bool isThisUser;
 	
     [Parameter]
 	public TModel Model { get; set; }
@@ -202,6 +218,7 @@
     {
         var serialize = JsonConvert.SerializeObject(Model);
         userProfile = JsonConvert.DeserializeObject<UserSettingModel>(serialize);
+        isThisUser = User.User.Id == userProfile.Id;
         base.OnInitialized();
     }
 
@@ -225,26 +242,50 @@
         var request = await ApiService.ChangeUserData(userProfile);
         var responsData = request.ResponseData;
 
-        if (responsData != null)
+        if (responsData)
         {
             var message = $"Профилът на {userProfile.FirstName} {userProfile.LastName} беше променен!";
-            await ChangeProfile.InvokeAsync(message);
-            await CancelChanged.InvokeAsync(false);
-
+            await OnSubmitMessage(message);
             await SetUserInfo.InvokeAsync();
         }
         else
         {
-            var message = $"{string.Join(Environment.NewLine, request.Errors.Select(x => x.Error))}";
-            await ChangeProfile.InvokeAsync(message);
-            await CancelChanged.InvokeAsync(false);
+            var message = $"Промените на са приложени!";
+            await OnSubmitMessage(message);
         }
     }
     
     private async Task Deleted()
     {
-        var message = $"Профилът на {userProfile.FirstName} {userProfile.LastName} беше изтрит!";
-        await ChangeProfile.InvokeAsync(message);
+        var request = await ApiService.DeleteUserData(userProfile);
+        var responseData = request.ResponseData;
+        
+        if (responseData)
+        {
+            await Logout();
+        }
+    }
+
+    private async Task DeletedEmploye()
+    {
+        var deleteModel = new DeletableUserModel
+        {
+            DeletableId = User.User.Id,
+            DeletedUser = userProfile
+        };
+        var request = await ApiService.DeleteEmploye(deleteModel);
+        var responseData = request.ResponseData;
+
+        if (responseData)
+        {
+            var message = $"Профилът на {userProfile.FirstName} {userProfile.LastName} беше изтрит!";
+            await ChangeProfile.InvokeAsync(message);
+        }
+    }
+    
+    private async Task DeletedUser()
+    {
+
     }
 
     private async Task Cancel()
@@ -252,6 +293,21 @@
         var message = "Промени по профила са отказани!";
         await ChangeProfile.InvokeAsync(message);
         await CancelChanged.InvokeAsync(false);
+    }
+
+    private async Task OnSubmitMessage(string message)
+    {
+        await ChangeProfile.InvokeAsync(message);
+        await CancelChanged.InvokeAsync(false);
+    }
+
+    private async Task Logout()
+    {
+        var message = $"Профилът на {userProfile.FirstName} {userProfile.LastName} беше изтрит!";
+        await _jsRuntime.InvokeVoidAsync("ShowAlertBox", message);
+        await ApiService.Logout();
+        StateHasChanged();
+        await ChangeProfile.InvokeAsync(message);
     }
 }
 

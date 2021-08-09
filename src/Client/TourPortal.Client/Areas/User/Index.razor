@@ -7,7 +7,7 @@
             <AuthorizeView Roles="@Security.Role.User">
                 <HotelSearch SerchHotels="@hotels" OnChanged="@Change" />
             </AuthorizeView>
-            <AuthorizeView Roles="@Security.Role.Owner">
+            <AuthorizeView Roles="@(Security.Role.Owner + "," + Security.Role.Employe)">
                 <h3>Начало</h3>
             </AuthorizeView>
         </div>

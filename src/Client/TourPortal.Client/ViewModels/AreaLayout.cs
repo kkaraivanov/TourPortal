@@ -43,6 +43,20 @@
             await LoadUserData();
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (!firstRender)
+            {
+                var checkValidateToken = await ApiService.ValidateToken();
+                if (!checkValidateToken)
+                {
+                    await ApiService.Logout();
+                    StateHasChanged();
+                    NavigationManager.NavigateTo("/", true);
+                }
+            }
+        }
+
         protected override async Task OnInitializedAsync()
         {
             var module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
@@ -114,6 +128,7 @@
             var state = await _state.GetAuthenticationStateAsync();
             var userData = state.User.Identity.Name;
             var request = await ApiService.GetUserInfo(userData);
+
             if (request.IsOk)
             {
                 var responseData = request.ResponseData;

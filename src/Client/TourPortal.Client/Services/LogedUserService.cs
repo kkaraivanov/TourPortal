@@ -9,9 +9,9 @@
 
         public HotelInfoModel Hotel { get; private set; }
 
-        public bool IsLoggedIn => User != null;
+        public bool IsLoggedIn => !string.IsNullOrEmpty(User?.Id);
 
-        public bool IsHotelExist => Hotel != null;
+        public bool IsHotelExist => !string.IsNullOrEmpty(Hotel?.Id);
 
         public void LogedInUser(LogedUserModel user)
         {

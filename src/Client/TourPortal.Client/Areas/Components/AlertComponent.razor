@@ -1,6 +1,6 @@
 ﻿@if (AlertShow)
 {
-    <div class="alert @CssClass alert-dismissible fade show" role="alert">
+    <div id="alert-message" class="alert @CssClass alert-dismissible fade show" role="alert">
         <strong>@User.User.ProfileName! </strong>@Message
         <button type="button" class="close" data-dismiss="alert" aria-label="Close" @onclick="@OnAlertButtonClick">
             <span aria-hidden="true">&times;</span>
@@ -17,6 +17,11 @@
 
     [Parameter]
     public string CssClass { get; set; } = AllertClass.Primary;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _jsRuntime.InvokeVoidAsync("CloseMessage");
+    }
 
     private void OnAlertButtonClick()
     {

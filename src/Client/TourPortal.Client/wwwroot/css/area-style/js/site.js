@@ -30,3 +30,14 @@
         });
     });
 })(jQuery);
+
+function ShowAlertBox(message) {
+    alert(`${message}`);
+    window.location.href = '/account/logout';
+}
+
+function CloseMessage() {
+    setTimeout(function () {
+        $('#alert-message').hide();
+    }, 8000);
+}

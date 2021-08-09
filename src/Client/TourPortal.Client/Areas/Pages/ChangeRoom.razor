@@ -1,0 +1,62 @@
+﻿@attribute [Authorize(Roles = Security.Role.Owner)]
+@page "/user/{from}/edit/room"
+@using TourPortal.Infrastructure.Shared.Models.Hotel
+
+@if (RoomIsEdit)
+{
+    <PageModelComponent>
+        <PageHeader>
+            <h3>Промяна на стая №: @RoomCache.RoomModel.RoomNumber</h3>
+        </PageHeader>
+        <PageBody>
+            @if (RoomIsEdit)
+            {
+                <RoomComponent RoomIsEdit="@RoomIsEdit" RoomIsSaved="@RoomIsSaved" />
+            }
+        </PageBody>
+    </PageModelComponent>
+}
+
+@code {
+    [Parameter]
+	public string From { get; set; }
+
+    public bool RoomIsEdit { get; set; }
+    private string uri = string.Empty;
+
+	protected override async Task OnInitializedAsync()
+	{
+	    if (RoomCache.RoomModel is null)
+	    {
+	        NavigationManager.NavigateTo($"/user");
+	    }
+	    else
+	    {
+	        RoomIsEdit = true;
+	    }
+	}
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!firstRender && !string.IsNullOrEmpty(uri))
+        {
+            NavigationManager.NavigateTo(uri);
+        }
+    }
+
+    private void RoomIsSaved(bool arg)
+    {
+        if(!arg)
+        {
+            NavigationManager.NavigateTo($"/user/{From}");
+        }
+
+        if (arg && RoomCache.RoomId != null)
+        {
+            var id = RoomCache.RoomId;
+            uri = $"/user/{From}/room/{id}";
+            RoomCache.RoomId = null;
+            RoomCache.RoomModel = null;
+        }
+    }
+}

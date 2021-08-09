@@ -18,6 +18,16 @@
 @code {
     private string hotelName = string.Empty;
 
+    protected override void OnInitialized()
+    {
+        if (User.User.Id is null)
+        {
+            NavigationManager.NavigateTo("/user");
+        }
+
+        base.OnInitialized();
+    }
+
     private void CheckHotelName(string name)
     {
         if (!string.IsNullOrEmpty(name))

@@ -9,6 +9,8 @@
 
     public interface IApiService
     {
+        Task<bool> ValidateToken();
+
         Task<ApplicationResponse<LoginResponseModel>> Login(LoginModel loginModel);
 
         Task Logout();
@@ -31,9 +33,11 @@
 
         Task<ApplicationResponse<bool>> AddNewRoom(RoomModel roomModel);
 
+        Task<ApplicationResponse<bool>> ChangedRoom(RoomModel roomModel);
+
         Task<ApplicationResponse<IEnumerable<RoomResponse>>> GetRooms(string hotelId, int skip, int take);
 
-        Task<ApplicationResponse<GetRoomByIdResponse>> GetRoom(string roomId);
+        Task<ApplicationResponse<GetRoomByIdResponse>> GetRoomById(string roomId);
 
         Task<ApplicationResponse<int>> GetRoomsCount(string hotelId);
 
@@ -48,5 +52,11 @@
         Task<ApplicationResponse<FullUserDataModel>> GetUserData();
 
         Task<ApplicationResponse<bool>> ChangeUserData(UserSettingModel model);
+
+        Task<ApplicationResponse<bool>> DeleteUserData(UserSettingModel model);
+
+        Task<ApplicationResponse<bool>> DeleteEmploye(DeletableUserModel model);
+
+        Task<ApplicationResponse<bool>> DeleteUser(DeletableUserModel model);
     }
 }

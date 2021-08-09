@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Net.Http.Json;
@@ -16,7 +17,8 @@
     using Infrastructure.Shared.Models.Authentication;
     using Infrastructure.Shared.Models.Hotel;
     using Infrastructure.Shared.Models.Response;
-
+    using Microsoft.AspNetCore.Components;
+    using Microsoft.JSInterop;
     using static Infrastructure.Global.Global;
 
     class ApiService : IApiService
@@ -81,6 +83,30 @@
             _httpClient.DefaultRequestHeaders.Authorization = null;
         }
 
+        public async Task<bool> ValidateToken()
+        {
+            var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var token = await _localStorage.GetItemAsync<string>(ApplicationConstants.AuthenticatedTokenString);
+
+            if (state.User.Identity.IsAuthenticated)
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+
+            var response = await _httpClient.GetAsync("api/token");
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized && response.Headers.Contains("Token-Expired"))
+            {
+                return false;
+            }
+
+            return false;
+        }
+
         #region GET requests
 
         public async Task<ApplicationResponse<UserRolesRespons>> GetUserRoles() =>
@@ -92,8 +118,8 @@
         public async Task<ApplicationResponse<IEnumerable<RoomResponse>>> GetRooms(string hotelId, int skip, int take) =>
             await Get<IEnumerable<RoomResponse>>($"{Route.GetRooms}hotelId={hotelId}&skip={skip}&take={take}");
 
-        public async Task<ApplicationResponse<GetRoomByIdResponse>> GetRoom(string roomId) =>
-            await Get<GetRoomByIdResponse>(Route.GetRoom + roomId);
+        public async Task<ApplicationResponse<GetRoomByIdResponse>> GetRoomById(string roomId) =>
+            await Get<GetRoomByIdResponse>(Route.GetRoomById + roomId);
 
         public async Task<ApplicationResponse<ICollection<string>>> GetRoomTypes() =>
             await Get<ICollection<string>>(Route.GetRoomTypes);
@@ -137,9 +163,21 @@
 
         public async Task<ApplicationResponse<bool>> AddNewRoom(RoomModel roomModel) =>
             await Post<RoomModel, bool>(Route.AddNewRoom, roomModel);
+        
+        public async Task<ApplicationResponse<bool>> ChangedRoom(RoomModel roomModel) =>
+            await Post<RoomModel, bool>(Route.ChangedRoom, roomModel);
 
         public async Task<ApplicationResponse<bool>> ChangeUserData(UserSettingModel model) =>
             await Post<UserSettingModel, bool>(Route.ChangeUserData, model);
+
+        public async Task<ApplicationResponse<bool>> DeleteUserData(UserSettingModel model) =>
+            await Post<UserSettingModel, bool>(Route.ChangeUserData, model);
+        
+        public async Task<ApplicationResponse<bool>> DeleteEmploye(DeletableUserModel model) =>
+            await Post<DeletableUserModel, bool>(Route.DeleteEmployeData, model);
+        
+        public async Task<ApplicationResponse<bool>> DeleteUser(DeletableUserModel model) =>
+            await Post<DeletableUserModel, bool>(Route.DeleteUser, model);
 
         #endregion
 
@@ -149,7 +187,7 @@
         {
             var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
             var token = await _localStorage.GetItemAsync<string>(ApplicationConstants.AuthenticatedTokenString);
-
+            
             if (state.User.Identity.IsAuthenticated)
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -157,7 +195,11 @@
 
             try
             {
-                return await _httpClient.GetFromJsonAsync<ApplicationResponse<T>>(url);
+                var response = await _httpClient.GetFromJsonAsync<ApplicationResponse<T>>(url);
+
+                ;
+
+                return response;
             }
             catch (Exception ex)
             {

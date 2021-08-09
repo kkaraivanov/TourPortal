@@ -27,7 +27,7 @@
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var getSavedToken = await _localStorage.GetItemAsync<string>(ApplicationConstants.AuthenticatedTokenString);
-
+            
             if (string.IsNullOrWhiteSpace(getSavedToken))
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(ApplicationConstants.TokenType, getSavedToken);

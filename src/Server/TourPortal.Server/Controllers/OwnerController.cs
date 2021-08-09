@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using IdentityModel;
     using Infrastructure.Global.Types;
     using Infrastructure.Services;
     using Infrastructure.Shared.Models;
@@ -136,6 +137,36 @@
         }
 
         [HttpPost]
+        [AllowAnonymous]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<bool>> DeleteEmployeData([FromBody] DeletableUserModel model)
+        {
+            if (model is null || !ModelState.IsValid)
+            {
+                return ModelStateErrors<bool>();
+            }
+
+            var ownerId = _userManager.GetUserId(User);
+            var employe = _context.Hotels
+                .Where(x => x.Id == _hotelService.GetHotelId(ownerId))
+                .SelectMany(x => _context.Employes
+                    .Where(e => e.HotelId == x.Id))
+                .Where(x => x.Profile.UserId == model.DeletedUser.Id)
+                .Select(x => _context.Users.
+                    FirstOrDefault(u =>
+                        u.Profile.Employe.Id == x.Id))
+                .FirstOrDefault();
+            
+            if (employe is null)
+            {
+                return new ApplicationResponse<bool>(new ApplicationError("", "This employe is not in owner group."));
+            }
+
+            var result = await _accountService.DeleteUserData(employe.Id);
+            return result.ToResponse();
+        }
+
+        [HttpPost]
         [Route("[action]")]
         public async Task<ApplicationResponse<bool>> AddNewRoom([FromBody] RoomModel roomModel)
         {
@@ -153,7 +184,22 @@
                 return new ApplicationResponse<bool>(new ApplicationError("", $"Room number {roomModel.RoomNumber} already exist."));
             }
 
-            var response = await _hotelService.AddNewRooms(roomModel, hotel);
+            var response = await _hotelService.AddNewRoom(roomModel, hotel);
+
+            return response.ToResponse();
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<ApplicationResponse<bool>> ChangedRoom([FromBody] RoomModel roomModel)
+        {
+            if (roomModel is null || !ModelState.IsValid)
+            {
+                return ModelStateErrors<bool>();
+            }
+
+            var hotel = await _hotelService.GetHotelByOwnerId(UserId);
+            var response = await _hotelService.ChangeRoom(roomModel, hotel);
 
             return response.ToResponse();
         }

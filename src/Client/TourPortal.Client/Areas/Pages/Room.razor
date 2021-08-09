@@ -1,5 +1,6 @@
 ﻿@page "/user/{from}/room/{roomId}"
 @using TourPortal.Infrastructure.Shared.Models.Hotel
+@using Newtonsoft.Json
 <PageModelComponent>
 	<PageHeader>
 		@if (roomModel != null)
@@ -59,7 +60,7 @@
                     </AuthorizeView>
                     <AuthorizeView Roles="@Security.Role.Owner">
                         <div class="p-2">
-                            <RadzenButton style="margin: 1rem 0 1rem 0;" type="submit" Click="@(() => GoBack())" Text="Редактирай" ButtonStyle="ButtonStyle.Primary"/>
+                            <RadzenButton style="margin: 1rem 0 1rem 0;" type="submit" Click="@(() => EditRoom())" Text="Редактирай" ButtonStyle="ButtonStyle.Primary"/>
                         </div>
                     </AuthorizeView>
                 </div>
@@ -68,7 +69,7 @@
 	</PageBody>
 </PageModelComponent>
 @code {
-	[Parameter]
+    [Parameter]
 	public string From { get; set; }
 
 	[Parameter]
@@ -81,7 +82,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var request = await ApiService.GetRoom(RoomId);
+		var request = await ApiService.GetRoomById(RoomId);
 		var responsData = request.ResponseData;
 
 		if (responsData is null)
@@ -97,6 +98,7 @@
 		        TopImageUrl = firstImage;
 		        responsData.RoomImages.Remove(firstImage);
 		    }
+
 			roomModel = responsData;
 		}
 	}
@@ -104,6 +106,15 @@
     private void GoBack()
     {
 		NavigationManager.NavigateTo($"/user/{From}");
+    }
+    
+    private void EditRoom()
+    {
+        var serialize = JsonConvert.SerializeObject(roomModel);
+        var cacheModel = JsonConvert.DeserializeObject<RoomModel>(serialize);
+        RoomCache.RoomModel = cacheModel;
+        RoomCache.RoomId = RoomId;
+		NavigationManager.NavigateTo($"/user/{From}/edit/room");
     }
 
 	private string ParsType(string roomType) => roomType switch

@@ -39,22 +39,25 @@
                 .FirstOrDefault());
 
         public async Task<IEnumerable<UserDataModel>> GetEmployes(string hotelId) =>
-            await Task.Run(() => _context.Users
-                .Where(x => x.IsDeleted == false)
-                .Where(x => x.Profile.Employe.HotelId == hotelId)
-                .Select(x => new UserDataModel
-                {
-                    Id = x.Profile.Employe.Id,
-                    FirstName = x.FirstName,
-                    MidleName = x.MidleName,
-                    LastName = x.LastName,
-                    Sity = x.Profile.Sity,
-                    Address = x.Profile.Address,
-                    PhoneNumber = x.PhoneNumber,
-                    CreatedOn = x.Profile.CreatedOn
-                })
-                .ToList());
-
+            await Task.Run(() => _context.Employes
+                 .Where(e => e.HotelId == hotelId)
+                 .SelectMany(e => _context.UserProfiles.Where(up => up.Id == e.ProfileId))
+                 .SelectMany(up => _context.Users
+                      .Where(au => au.Profile.Id == up.Id && au.IsDeleted == false)
+                      .Select(x => new UserDataModel
+                      {
+                          Id = up.Employe.Id,
+                          FirstName = x.FirstName,
+                          MidleName = x.MidleName,
+                          LastName = x.LastName,
+                          PhoneNumber = x.PhoneNumber,
+                          IsDeleted = x.IsDeleted,
+                          Sity = up.Sity,
+                          Address = up.Address,
+                          CreatedOn = up.CreatedOn,
+                          ModifiedOn = up.ModifiedOn
+                      }))
+                 .ToList());
 
         private readonly Func<ApplicationDbContext, ApplicationUser, FullUserDataModel> ToFullDataModel = (context, user) =>
                 context.Users

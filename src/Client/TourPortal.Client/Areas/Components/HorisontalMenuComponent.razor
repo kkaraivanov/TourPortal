@@ -73,6 +73,7 @@
         NavigationManager.NavigateTo($"{HomeUrl}/profile/settings");
     }
 
+    [JSInvokable]
     private void Logout()
     {
         ApiService.Logout();
