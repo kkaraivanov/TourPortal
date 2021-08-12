@@ -1,18 +1,19 @@
 ﻿@page "/user/{from}/room/{roomId}"
 @using TourPortal.Infrastructure.Shared.Models.Hotel
 @using Newtonsoft.Json
+
 <PageModelComponent>
-	<PageHeader>
-		@if (roomModel != null)
-		{
+    <PageHeader>
+        @if (roomModel != null)
+        {
             <h3>Стая №: @roomModel.RoomNumber</h3>
-		}
-	</PageHeader>
-	<PageBody>
-		<AlertComponent AlertShow="@alert" Message="@alertMessage" />
-		@if (roomModel != null)
-		{
-		    <div class="card card border-primary mb-3 p-2">
+        }
+    </PageHeader>
+    <PageBody>
+        <AlertComponent AlertShow="@alert" Message="@alertMessage" />
+        @if (roomModel != null)
+        {
+            <div class="card card border-primary mb-3 p-2">
                 <div class="d-flex flex-column align-items-center">
                     @if (!string.IsNullOrEmpty(TopImageUrl))
                     {
@@ -65,9 +66,10 @@
                     </AuthorizeView>
                 </div>
             </div>
-		}
-	</PageBody>
+        }
+    </PageBody>
 </PageModelComponent>
+
 @code {
     [Parameter]
 	public string From { get; set; }

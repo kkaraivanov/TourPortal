@@ -5,7 +5,7 @@
     <PageHeader>
         <div class="d-flex justify-content-between">
             <AuthorizeView Roles="@Security.Role.User">
-                <HotelSearch SerchHotels="@hotels" OnChanged="@Change" />
+                <HotelSearchComponent SerchHotels="@hotels" OnChanged="@Change" />
             </AuthorizeView>
             <AuthorizeView Roles="@(Security.Role.Owner + "," + Security.Role.Employe)">
                 <h3>Начало</h3>
