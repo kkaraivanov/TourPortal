@@ -39,6 +39,8 @@
 
         Task<ApplicationResponse<GetRoomByIdResponse>> GetRoomById(string roomId);
 
+        Task<ApplicationResponse<List<RoomResponse>>> GetRoomByRoomNumber(string hotelId, string roomNumber);
+
         Task<ApplicationResponse<int>> GetRoomsCount(string hotelId);
 
         Task<ApplicationResponse<ICollection<string>>> GetRoomTypes();

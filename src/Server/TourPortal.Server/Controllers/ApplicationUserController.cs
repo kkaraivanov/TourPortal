@@ -63,11 +63,20 @@
 
         [HttpGet]
         [Route("[action]")]
-        public async Task<ApplicationResponse<List<RoomResponse>>> GetRoomsByRoomNumber(string hotelId, int roomNumber)
+        public async Task<ApplicationResponse<List<RoomResponse>>> GetRoomByRoomNumber(string hotelId, string roomNumber)
         {
             var rooms = await _hotelService.GetRooms(hotelId);
-            rooms = rooms.Where(x => x.RoomNumber == roomNumber).ToList();
-            var roomsToResponse = await GetRoomsToRespone(rooms);
+            var result = new List<Room>();
+            foreach (var room in rooms)
+            {
+                var current = string.Concat(room.RoomNumber);
+                if (current.StartsWith(roomNumber))
+                {
+                    result.Add(room);
+                }
+            }
+
+            var roomsToResponse = await GetRoomsToRespone(result);
 
             return roomsToResponse.ToResponse();
         }

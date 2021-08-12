@@ -213,8 +213,10 @@
                 return false;
             }
 
-            var room = _context.Rooms
-                .FirstOrDefault(x => x.RoomNumber == roomModel.RoomNumber && x.HotelId == hotel.Id);
+            //var room = _context.Rooms
+            //    .FirstOrDefault(x => x.RoomNumber == roomModel.RoomNumber && x.HotelId == hotel.Id);
+            var getRooms = await GetRooms(hotel.Id);
+            var room = getRooms.FirstOrDefault(x => x.RoomNumber == roomModel.RoomNumber);
 
             if (room is null)
             {
@@ -226,7 +228,8 @@
             room.Price = roomModel.Price;
 
             var roomImages  = _context.RoomImageses
-                .Where(x => x.RoomId == room.Id && x.IsDeleted == false);
+                .Where(x => x.RoomId == room.Id && x.IsDeleted == false)
+                .ToList();
             
             if (!roomImages.Any())
             {
@@ -237,11 +240,11 @@
             }
             else
             {
-                foreach (var roomImage in roomImages)
+                foreach (var roomImage in roomImages.OrderBy(x => x.ImageUrl))
                 {
                     if (roomModel.RoomImages.Contains(roomImage.ImageUrl))
                     {
-                        var image = roomModel.RoomImages.First(x => x.Equals(roomImage.ImageUrl));
+                        var image = roomModel.RoomImages.First(x => x == roomImage.ImageUrl);
                         roomModel.RoomImages.Remove(image);
                         continue;
                     }
@@ -250,13 +253,14 @@
                         roomImage.IsDeleted = true;
                         roomImage.DeletedOn = DateTime.Now;
                         _context.RoomImageses.Update(roomImage);
+                        _context.SaveChanges();
                     }
                 }
             }
 
             if (roomModel.RoomImages.Any())
             {
-                foreach (var roomImage in roomModel.RoomImages)
+                foreach (var roomImage in roomModel.RoomImages.Distinct())
                 {
                     room.RoomImages.Add(new RoomImages { ImageUrl = roomImage });
                 }

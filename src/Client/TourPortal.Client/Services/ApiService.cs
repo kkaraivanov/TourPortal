@@ -17,8 +17,6 @@
     using Infrastructure.Shared.Models.Authentication;
     using Infrastructure.Shared.Models.Hotel;
     using Infrastructure.Shared.Models.Response;
-    using Microsoft.AspNetCore.Components;
-    using Microsoft.JSInterop;
     using static Infrastructure.Global.Global;
 
     class ApiService : IApiService
@@ -120,6 +118,9 @@
 
         public async Task<ApplicationResponse<GetRoomByIdResponse>> GetRoomById(string roomId) =>
             await Get<GetRoomByIdResponse>(Route.GetRoomById + roomId);
+        
+        public async Task<ApplicationResponse<List<RoomResponse>>> GetRoomByRoomNumber(string hotelId, string roomNumber) =>
+            await Get<List<RoomResponse>>($"{Route.GetRoomByRoomNumber}hotelId={hotelId}&roomNumber={roomNumber}");
 
         public async Task<ApplicationResponse<ICollection<string>>> GetRoomTypes() =>
             await Get<ICollection<string>>(Route.GetRoomTypes);

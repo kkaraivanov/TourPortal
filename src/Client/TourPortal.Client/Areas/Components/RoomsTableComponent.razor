@@ -1,4 +1,5 @@
 ﻿@using TourPortal.Infrastructure.Shared.Models.Hotel
+@using Newtonsoft.Json
 
 <TableComponent Items="rooms" IsHover="true" IsHeaderTextCenter="true">
     <Columns>
@@ -55,14 +56,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var requestRoomsCount = await ApiService.GetRoomsCount(HotelId);
-
-        if (requestRoomsCount.IsOk)
-        {
-            count = requestRoomsCount.ResponseData;
-            TotalPages = (int)Math.Ceiling(count / (decimal)PageSize);
-        }
-
+        await GetCount();
         await GetData();
     }
 
@@ -75,6 +69,22 @@
         }
     
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task GetCount()
+    {
+        var requestRoomsCount = await ApiService.GetRoomsCount(HotelId);
+
+        if (requestRoomsCount.IsOk)
+        {
+            ChangeCount(requestRoomsCount.ResponseData);
+        }
+    }
+
+    private void ChangeCount(int newCount)
+    {
+        count = newCount;
+        TotalPages = (int)Math.Ceiling(count / (decimal)PageSize);
     }
 
     private void OpenRoom(string roomId)
@@ -128,20 +138,28 @@
         await UpdateList(CurrentPage);
     }
 
-    private void OnSearchChanged(ChangeEventArgs onChanged, string columnName)
+    private async Task OnSearchChanged(ChangeEventArgs onChanged, string columnName)
     {
         var stringFromEvent = onChanged.Value.ToString();
         isSearchChanged = true;
-        // TODO: add filter search
         if (!string.IsNullOrEmpty(stringFromEvent))
         {
-            var roomNumber = int.Parse(stringFromEvent);
-            rooms = selectRooms.Where(x => x.RoomNumber == roomNumber).ToList();
+            var request = await ApiService.GetRoomByRoomNumber(HotelId, stringFromEvent);
+            var requestData = request.ResponseData;
+            if (requestData != null)
+            {
+                rooms = requestData;
+                selectRooms = rooms.ToList();
+                ChangeCount(rooms.Count);
+            }
         }
         else
         {
-            rooms = selectRooms.ToList();
+            await GetCount();
+            await GetData();
         }
+
+        StateHasChanged();
     }
 }
 

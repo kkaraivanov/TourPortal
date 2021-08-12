@@ -26,6 +26,7 @@
             public const string GetRoomById = "api/applicationUser/getRoom?roomId=";
             public const string GetRoomsCount = "api/applicationUser/getRoomsCout?hotelId=";
             public const string GetHotelInfo = "api/applicationUser/getHotelInfo";
+            public const string GetRoomByRoomNumber = "api/applicationUser/getRoomByRoomNumber?";
             public const string GetHotelCardInfo = "api/applicationUser/getHotelCardInfo?hotelId=";
             public const string GetEmployeInfo = "api/employe/getInfo";
         }
