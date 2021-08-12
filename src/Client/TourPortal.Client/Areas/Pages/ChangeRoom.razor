@@ -40,6 +40,8 @@
     {
         if (!firstRender && !string.IsNullOrEmpty(uri))
         {
+            RoomCache.RoomId = null;
+            RoomCache.RoomModel = null;
             NavigationManager.NavigateTo(uri);
         }
     }
@@ -50,13 +52,13 @@
         {
             NavigationManager.NavigateTo($"/user/{From}");
         }
-
-        if (arg && RoomCache.RoomId != null)
+        else if (arg)
         {
-            var id = RoomCache.RoomId;
-            uri = $"/user/{From}/room/{id}";
-            RoomCache.RoomId = null;
-            RoomCache.RoomModel = null;
+            if (!string.IsNullOrEmpty(RoomCache.RoomId))
+            {
+                var id = RoomCache.RoomId;
+                uri = $"/user/{From}/room/{id}";
+            }
         }
     }
 }

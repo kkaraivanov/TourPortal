@@ -1,5 +1,6 @@
 ﻿namespace TourPortal.Client.Areas.Shared
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Components;
@@ -45,6 +46,7 @@
 
         protected override async Task OnInitializedAsync()
         {
+            Console.WriteLine("Hallo from OnInitialized!");
             var module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
 
             if (!areaIsReady)
@@ -68,45 +70,45 @@
 
             await LoadUserData();
 
-            if (state.User.IsInRole(Security.Role.Owner))
-            {
-                var hotelInfoRequest = await ApiService.GetHotelInfo();
-
-                if (hotelInfoRequest.IsOk)
-                {
-                    var responseData = hotelInfoRequest.ResponseData;
-                   
-                    if (responseData != null)
-                    {
-                        var serialize = JsonConvert.SerializeObject(responseData);
-                        var hotel = JsonConvert.DeserializeObject<HotelInfoModel>(serialize);
-
-                        User.AddHotel(hotel);
-                        StateHasChanged();
-                    }
-                }
-            }
-
-            if (state.User.IsInRole(Security.Role.Employe))
-            {
-                var employeInfoRequest = await ApiService.GetEmployeInfo();
-                var responseData = employeInfoRequest.ResponseData;
-
-                if (responseData != null)
-                {
-                    var hoteCardlInfo = await ApiService.GetHotelCardInfo(responseData.HotelId);
-                    var hotelResponseData = hoteCardlInfo.ResponseData;
-
-                    if (hotelResponseData != null)
-                    {
-                        var serialize = JsonConvert.SerializeObject(hotelResponseData);
-                        var hotel = JsonConvert.DeserializeObject<HotelInfoModel>(serialize);
-
-                        User.AddHotel(hotel);
-                        StateHasChanged();
-                    }
-                }
-            }
+            //if (state.User.IsInRole(Security.Role.Owner))
+            //{
+            //    var hotelInfoRequest = await ApiService.GetHotelInfo();
+            //
+            //    if (hotelInfoRequest.IsOk)
+            //    {
+            //        var responseData = hotelInfoRequest.ResponseData;
+            //
+            //        if (responseData != null)
+            //        {
+            //            var serialize = JsonConvert.SerializeObject(responseData);
+            //            var hotel = JsonConvert.DeserializeObject<HotelInfoModel>(serialize);
+            //
+            //            User.AddHotel(hotel);
+            //            StateHasChanged();
+            //        }
+            //    }
+            //}
+            //
+            //if (state.User.IsInRole(Security.Role.Employe))
+            //{
+            //    var employeInfoRequest = await ApiService.GetEmployeInfo();
+            //    var responseData = employeInfoRequest.ResponseData;
+            //
+            //    if (responseData != null)
+            //    {
+            //        var hoteCardlInfo = await ApiService.GetHotelCardInfo(responseData.HotelId);
+            //        var hotelResponseData = hoteCardlInfo.ResponseData;
+            //
+            //        if (hotelResponseData != null)
+            //        {
+            //            var serialize = JsonConvert.SerializeObject(hotelResponseData);
+            //            var hotel = JsonConvert.DeserializeObject<HotelInfoModel>(serialize);
+            //
+            //            User.AddHotel(hotel);
+            //            StateHasChanged();
+            //        }
+            //    }
+            //}
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -119,6 +121,20 @@
                     await ApiService.Logout();
                     StateHasChanged();
                     NavigationManager.NavigateTo("/", true);
+                }
+            }
+            else
+            {
+                var state = await _state.GetAuthenticationStateAsync();
+
+                if (state.User.IsInRole(Security.Role.Owner))
+                {
+                    await LoadOwnerData();
+                }
+
+                if (state.User.IsInRole(Security.Role.Employe))
+                {
+                    await LoadEmplyeData();
                 }
             }
         }
@@ -151,6 +167,46 @@
                 UserRole = User.User.UserRole;
 
                 StateHasChanged();
+            }
+        }
+
+        private async Task LoadOwnerData()
+        {
+            var hotelInfoRequest = await ApiService.GetHotelInfo();
+
+            if (hotelInfoRequest.IsOk)
+            {
+                var responseData = hotelInfoRequest.ResponseData;
+
+                if (responseData != null)
+                {
+                    var serialize = JsonConvert.SerializeObject(responseData);
+                    var hotel = JsonConvert.DeserializeObject<HotelInfoModel>(serialize);
+
+                    User.AddHotel(hotel);
+                    StateHasChanged();
+                }
+            }
+        }
+
+        private async Task LoadEmplyeData()
+        {
+            var employeInfoRequest = await ApiService.GetEmployeInfo();
+            var responseData = employeInfoRequest.ResponseData;
+
+            if (responseData != null)
+            {
+                var hoteCardlInfo = await ApiService.GetHotelCardInfo(responseData.HotelId);
+                var hotelResponseData = hoteCardlInfo.ResponseData;
+
+                if (hotelResponseData != null)
+                {
+                    var serialize = JsonConvert.SerializeObject(hotelResponseData);
+                    var hotel = JsonConvert.DeserializeObject<HotelInfoModel>(serialize);
+
+                    User.AddHotel(hotel);
+                    StateHasChanged();
+                }
             }
         }
 

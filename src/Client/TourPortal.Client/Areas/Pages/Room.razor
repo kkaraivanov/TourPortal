@@ -82,6 +82,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+	    await Task.Delay(500);
 		var request = await ApiService.GetRoomById(RoomId);
 		var responsData = request.ResponseData;
 
