@@ -3,12 +3,12 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Components;
-    using Data;
-    using Infrastructure.Global.Types;
     using Microsoft.AspNetCore.Components;
     using Microsoft.JSInterop;
     using Newtonsoft.Json;
+
+    using Data;
+    using Infrastructure.Global.Types;
 
     public partial class AreaLayout
     {
@@ -70,45 +70,15 @@
 
             await LoadUserData();
 
-            //if (state.User.IsInRole(Security.Role.Owner))
-            //{
-            //    var hotelInfoRequest = await ApiService.GetHotelInfo();
-            //
-            //    if (hotelInfoRequest.IsOk)
-            //    {
-            //        var responseData = hotelInfoRequest.ResponseData;
-            //
-            //        if (responseData != null)
-            //        {
-            //            var serialize = JsonConvert.SerializeObject(responseData);
-            //            var hotel = JsonConvert.DeserializeObject<HotelInfoModel>(serialize);
-            //
-            //            User.AddHotel(hotel);
-            //            StateHasChanged();
-            //        }
-            //    }
-            //}
-            //
-            //if (state.User.IsInRole(Security.Role.Employe))
-            //{
-            //    var employeInfoRequest = await ApiService.GetEmployeInfo();
-            //    var responseData = employeInfoRequest.ResponseData;
-            //
-            //    if (responseData != null)
-            //    {
-            //        var hoteCardlInfo = await ApiService.GetHotelCardInfo(responseData.HotelId);
-            //        var hotelResponseData = hoteCardlInfo.ResponseData;
-            //
-            //        if (hotelResponseData != null)
-            //        {
-            //            var serialize = JsonConvert.SerializeObject(hotelResponseData);
-            //            var hotel = JsonConvert.DeserializeObject<HotelInfoModel>(serialize);
-            //
-            //            User.AddHotel(hotel);
-            //            StateHasChanged();
-            //        }
-            //    }
-            //}
+            if (state.User.IsInRole(Security.Role.Owner))
+            {
+                await LoadOwnerData();
+            }
+
+            if (state.User.IsInRole(Security.Role.Employe))
+            {
+                await LoadEmplyeData();
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -125,17 +95,7 @@
             }
             else
             {
-                var state = await _state.GetAuthenticationStateAsync();
-
-                if (state.User.IsInRole(Security.Role.Owner))
-                {
-                    await LoadOwnerData();
-                }
-
-                if (state.User.IsInRole(Security.Role.Employe))
-                {
-                    await LoadEmplyeData();
-                }
+              
             }
         }
 
