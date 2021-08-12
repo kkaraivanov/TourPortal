@@ -29,7 +29,8 @@ namespace TourPortal.Server
 
         public IConfiguration Configuration { get; }
 
-        public Startup(IWebHostEnvironment environment,
+        public Startup(
+            IWebHostEnvironment environment,
             IConfiguration configuration)
         {
             Environment = environment;

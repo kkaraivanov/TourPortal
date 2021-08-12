@@ -6,17 +6,23 @@
 
     public class Message : IAuditable, ISoftDelete
     {
-        public int Id { get; set; }
+        public Message()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+
+        public string Id { get; set; }
 
         [Required]
-        public string UserName { get; set; }
+        public string RecipientId { get; set; }
 
         [Required]
         public string TextMessage { get; set; }
 
         public DateTime When { get; set; }
 
-        public string UserID { get; set; }
+        [Required]
+        public string SenderId { get; set; }
 
         public ApplicationUser Sender { get; set; }
 

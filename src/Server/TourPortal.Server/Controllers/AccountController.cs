@@ -112,7 +112,6 @@
             await Register(model);
 
         [HttpPost]
-        [AllowAnonymous]
         [Route("[action]")]
         public async Task<ApplicationResponse<bool>> ChangeUserData([FromBody] UserSettingModel model)
         {
@@ -164,7 +163,6 @@
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [Route("[action]")]
         public async Task<ApplicationResponse<bool>> DeleteUserData([FromBody] UserSettingModel model)
         {
@@ -205,7 +203,7 @@
         [Route("[action]")]
         public async Task<ApplicationResponse<UserInfoResponse>> GetUserInfo(string userEmail)
         {
-            if (userEmail is null)
+            if (string.IsNullOrEmpty(userEmail))
             {
                 return new ApplicationResponse<UserInfoResponse>(new ApplicationError("", "Parameter can't by null"));
             }

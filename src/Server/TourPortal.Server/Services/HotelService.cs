@@ -5,12 +5,13 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+
     using Infrastructure.Shared.Enums;
     using Infrastructure.Shared.Models.Hotel;
     using Infrastructure.Shared.Models.Response;
     using Infrastructure.Storage.Models;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
     using Storage;
 
     public class HotelService : IHotelService

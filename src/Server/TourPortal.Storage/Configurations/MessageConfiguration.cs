@@ -8,7 +8,7 @@
     {
         public void Configure(EntityTypeBuilder<Message> builder)
         {
-            builder.Property(g => g.UserName)
+            builder.Property(g => g.RecipientId)
                 .IsRequired();
 
             builder.Property(g => g.TextMessage)
@@ -16,7 +16,7 @@
 
             builder.HasOne(a => a.Sender)
                 .WithMany(m => m.Messages)
-                .HasForeignKey(u => u.UserID);
+                .HasForeignKey(u => u.SenderId);
         }
     }
 }

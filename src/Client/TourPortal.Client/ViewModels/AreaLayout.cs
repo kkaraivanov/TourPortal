@@ -43,20 +43,6 @@
             await LoadUserData();
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (!firstRender)
-            {
-                var checkValidateToken = await ApiService.ValidateToken();
-                if (!checkValidateToken)
-                {
-                    await ApiService.Logout();
-                    StateHasChanged();
-                    NavigationManager.NavigateTo("/", true);
-                }
-            }
-        }
-
         protected override async Task OnInitializedAsync()
         {
             var module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
@@ -119,6 +105,20 @@
                         User.AddHotel(hotel);
                         StateHasChanged();
                     }
+                }
+            }
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (!firstRender)
+            {
+                var checkValidateToken = await ApiService.ValidateToken();
+                if (!checkValidateToken)
+                {
+                    await ApiService.Logout();
+                    StateHasChanged();
+                    NavigationManager.NavigateTo("/", true);
                 }
             }
         }
