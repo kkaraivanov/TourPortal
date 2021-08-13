@@ -170,6 +170,12 @@
             }
         }
 
+        private async Task RemoveElementsFromTemplate(IJSObjectReference module)
+        {
+            await module.InvokeVoidAsync("removeScripts");
+            await module.InvokeVoidAsync("removeCss");
+        }
+
         private async Task AddStyles(IJSObjectReference module)
         {
             foreach (var cssPath in cssPaths)
@@ -184,12 +190,6 @@
             {
                 await module.InvokeVoidAsync("addScripts", scriptPath);
             }
-        }
-
-        private async Task RemoveElementsFromTemplate(IJSObjectReference module)
-        {
-            await module.InvokeVoidAsync("removeScripts");
-            await module.InvokeVoidAsync("removeCss");
         }
     }
 }

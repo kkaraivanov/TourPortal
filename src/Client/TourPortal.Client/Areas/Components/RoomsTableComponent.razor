@@ -143,6 +143,7 @@
         isSearchChanged = true;
         if (!string.IsNullOrEmpty(stringFromEvent))
         {
+            // TODO: hire can open SignalR connection
             var request = await ApiService.GetRoomByRoomNumber(HotelId, stringFromEvent);
             var requestData = request.ResponseData;
             if (requestData != null)
