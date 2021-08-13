@@ -1,14 +1,14 @@
 ## 👓 Project Introduction
 ***
-**Tour Posrtal** is my defense project for **ASP.NET Core** course at [SoftUni](https://softuni.bg/ "SoftUni") (June-August 2021). The website is part of a major project, and it consists of 2 parts (**TourPortal Client** and **TourPortal Server**). Each of the two parts is starts independently, **giving functionality to a Single Page Application (SPA)**.
+**Tour Posrtal** is my defense project for **ASP.NET Core** course at [SoftUni](https://softuni.bg/ "SoftUni") (June-August 2021). The website is a part of a major project, that consists of 2 parts (**TourPortal Client** and **TourPortal Server**). Each of the two starts independently, **giving functionality to a Single Page Application (SPA)**.
 
-## &copy; Tour Posrtal 2021
 ![](https://res.cloudinary.com/dwxsoifb5/image/upload/v1628846476/TourPortal/slider_breed0.png)
 <br />
 
 ## ✏️ Overview
 ***
-**Tour Portal** is a site that is a represents platform for gathering people looking for a hotel to visit and hoteliers offering their services. Each customer of the site at his registration can be defined as a ***user*** or ***owner*** to receive the desired functionality from the platform. The main idea is to organize a space in which business get a working environment in which to offer and sell their services, and consumers have easy access to them.
+**Tour Portal** is a site that represents a platform for gathering people looking for a hotel to visit and hoteliers offering their services. By registering to the website, each user can choose a role between being a ***user*** or an ***owner*** so they can receive different functionality from the platform.
+The main idea is to organize a space in which businesses can get a working environment, offering and selling their services, and consumers having easy access to them..
 <br />
 
 >Each hotel **owner** can register the services he offers, as well as his employees.
@@ -74,6 +74,32 @@ There is only one registered administrator in the platform. It receives informat
 ![](https://res.cloudinary.com/dwxsoifb5/image/upload/v1628855727/TourPortal/profile-view_vzmcaz.jpg)
 - Profile edit
 ![](https://res.cloudinary.com/dwxsoifb5/image/upload/v1628855728/TourPortal/profile-edit_hem69w.jpg)
+<br />
+
+## 🔧Setup of the application
+***
+***To start the application you need to follow the following steps:***
+### 1. In appsethings.json file on the TourPortal.Server change the connection string to your database
+>```Json
+>{
+>  "ConnectionStrings": {
+>    "DefaultConnection": "Server=.\\YourServer;Initial Catalog=DbName;User Id=userName;Password=password;MultipleActiveResultSets=true"
+>  },
+>
+>  "JwtSecurity": {
+>    "JwtSecurityKey": "set your secret key",
+>    "JwtIssuer": "https://localhost",
+>    "JwtAudience": "https://localhost",
+>    "JwtExpiryInDays": 10
+>  }
+>}
+### 2. In wwwroot/appsethings.json file on the TourPortal.Client change the url to your TourPortal.Server host
+>```Json
+>{
+>  "apiUrl": "http://localhost:5000/"
+>}
+### 3. In the Solution -> Set Startup Projects -> use radio button Multiple startup projects and selectеd the action for Cliend and Server to run simultaneously
+
 <br />
 
 ## 🔧Setup of the layouts
