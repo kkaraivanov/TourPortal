@@ -44,6 +44,18 @@
             await LoadUserData();
         }
 
+        public async Task CheckAuthentication(bool isAuthenticated, bool isLogaout = false)
+        {
+            if (!isAuthenticated && !isLogaout)
+            {
+                NavigationManager.NavigateTo("/error/notauthorized", true);
+            }
+            else if (!isAuthenticated && isLogaout)
+            {
+                NavigationManager.NavigateTo("/account/logout", true);
+            }
+        }
+
         protected override async Task OnInitializedAsync()
         {
             Console.WriteLine("Hallo from OnInitialized!");
@@ -63,18 +75,14 @@
 
             var state = await _state.GetAuthenticationStateAsync();
 
-            if (!state.User.Identity.IsAuthenticated)
-            {
-                NavigationManager.NavigateTo("/error/notauthorized", true);
-            }
-
+            await CheckAuthentication(state.User.Identity.IsAuthenticated);
             await LoadUserData();
 
             if (state.User.IsInRole(Security.Role.Owner))
             {
                 await LoadOwnerData();
             }
-
+            
             if (state.User.IsInRole(Security.Role.Employe))
             {
                 await LoadEmplyeData();
@@ -95,8 +103,13 @@
             }
             else
             {
-              
+                
             }
+        }
+
+        private async Task Logout(bool arg)
+        {
+            await CheckAuthentication(false, arg);
         }
 
         private async Task LoadUserData()

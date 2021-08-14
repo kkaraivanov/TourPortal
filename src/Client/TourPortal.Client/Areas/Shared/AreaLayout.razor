@@ -26,10 +26,10 @@
             </VerticalMenueRenderer>
             <HorisontalMenueRenderer>
                 <AuthorizeView Policy="IsUser">
-                    <HorisontalMenuComponent HomeUrl="/user" ProfileName="@ProfileName" ProfileImg="@ProfileImage" Id="@Id"/>
+                    <HorisontalMenuComponent IsLogout="@Logout" HomeUrl="/user" ProfileName="@ProfileName" ProfileImg="@ProfileImage" Id="@Id"/>
                 </AuthorizeView>
                 <AuthorizeView Policy="IsAdministrator">
-                    <HorisontalMenuComponent HomeUrl="/administrator" ProfileName="@ProfileName" ProfileImg="@ProfileImage" Id="@Id"/>
+                    <HorisontalMenuComponent IsLogout="@Logout" HomeUrl="/administrator" ProfileName="@ProfileName" ProfileImg="@ProfileImage" Id="@Id"/>
                 </AuthorizeView>
             </HorisontalMenueRenderer>
             <BodyRenderer>

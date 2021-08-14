@@ -1,5 +1,4 @@
-﻿@using static TourPortal.Infrastructure.Global.Global
-<nav class="navbar navbar-expand-lg navbar-light">
+﻿<nav class="navbar navbar-expand-lg navbar-light">
     <div class="full">
         <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
         <div class="logo_section">
@@ -58,6 +57,9 @@
     [Parameter]
     public string Id { get; set; }
 
+    [Parameter]
+    public EventCallback<bool> IsLogout { get; set; }
+
     protected override void OnParametersSet()
     {
         
@@ -73,11 +75,11 @@
         NavigationManager.NavigateTo($"{HomeUrl}/profile/settings");
     }
 
-    private void Logout()
+    private async Task Logout()
     {
-        ApiService.Logout();
+        await ApiService.Logout();
+        await Task.Delay(200);
+        await IsLogout.InvokeAsync(true);
         StateHasChanged();
-        Task.Delay(200);
-        NavigationManager.NavigateTo("/account/logout", true);
     }
 }
