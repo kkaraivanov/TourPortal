@@ -1,6 +1,7 @@
 namespace TourPortal.Server
 {
     using System;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -130,8 +131,15 @@ namespace TourPortal.Server
             }
 
             app.UseRouting();
+            var getCorsAddres = Configuration.GetSection("corsAddress");
+            var corsAddreses = getCorsAddres
+                .AsEnumerable()
+                .Where(x => x.Value != null)
+                .Select(x => x.Value)
+                .ToArray();
+            
             app.UseCors(cors => cors
-                .WithOrigins("https://localhost:44378", "http://localhost:49996", "*")
+                .WithOrigins(corsAddreses)
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .SetIsOriginAllowed(origin => true)
