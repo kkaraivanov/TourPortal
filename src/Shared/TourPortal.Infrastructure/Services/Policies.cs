@@ -1,7 +1,8 @@
 ﻿namespace TourPortal.Infrastructure.Services
 {
-    using Global.Types;
     using Microsoft.AspNetCore.Authorization;
+
+    using Global.Types;
 
     public static class Policies
     {

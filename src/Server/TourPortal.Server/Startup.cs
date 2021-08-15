@@ -13,14 +13,14 @@ namespace TourPortal.Server
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.IdentityModel.Tokens;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
 
     using Infrastructure.Security.Authentication;
     using Infrastructure.Security.Authorization;
     using Infrastructure.Services;
     using Infrastructure.Storage;
     using Infrastructure.Storage.Models;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Services;
     using Storage;
 

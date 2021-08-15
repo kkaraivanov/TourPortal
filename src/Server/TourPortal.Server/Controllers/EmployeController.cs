@@ -2,15 +2,15 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
-    using Infrastructure.Global.Types;
-    using Infrastructure.Services;
-    using Infrastructure.Shared.Models;
-    using Infrastructure.Shared.Models.Response;
-    using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
+
+    using Infrastructure.Global.Types;
+    using Infrastructure.Services;
+    using Infrastructure.Shared.Models.Response;
+    using Infrastructure.Storage.Models;
     using Services;
     using Storage;
 

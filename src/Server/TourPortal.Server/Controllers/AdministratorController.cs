@@ -1,14 +1,15 @@
 ﻿namespace TourPortal.Server.Controllers
 {
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+
     using Infrastructure.Global.Types;
     using Infrastructure.Services;
     using Infrastructure.Shared.Models;
     using Infrastructure.Shared.Models.Response;
     using Infrastructure.Storage.Models;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Mvc;
     using Storage;
 
     [Authorize(Roles = Security.Role.Administrator)]

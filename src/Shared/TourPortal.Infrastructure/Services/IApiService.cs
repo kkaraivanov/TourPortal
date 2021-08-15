@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
     using Shared.Models;
     using Shared.Models.Authentication;
     using Shared.Models.Hotel;

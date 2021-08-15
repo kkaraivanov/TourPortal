@@ -3,18 +3,18 @@ namespace TourPortal.Client
     using System;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using Blazored.LocalStorage;
-    using Blazored.Modal;
-    using BlazorStrap;
-    using Data;
     using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.DependencyInjection;
+    using Blazored.LocalStorage;
+    using Blazored.Modal;
+    using BlazorStrap;
 
     using Infrastructure.Global.Types;
     using Infrastructure.Services;
     using Radzen;
     using Services;
+    using Data;
 
     public class Program
     {

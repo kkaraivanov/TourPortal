@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
     using Infrastructure.Shared.Models.Hotel;
     using Infrastructure.Shared.Models.Response;
     using Infrastructure.Storage.Models;

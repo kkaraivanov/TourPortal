@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Options;
+
     using Storage.Models;
 
     public class AdditionalUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>

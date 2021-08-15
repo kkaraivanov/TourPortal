@@ -1,9 +1,10 @@
 ﻿namespace TourPortal.Server.Controllers
 {
-    using Infrastructure.Global.Types;
-    using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
+
+    using Infrastructure.Global.Types;
+    using Infrastructure.Storage.Models;
     using Services;
     using Storage;
 

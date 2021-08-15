@@ -1,23 +1,21 @@
 ﻿namespace TourPortal.Server.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Net.Http.Json;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using IdentityModel;
-    using Infrastructure.Global.Types;
-    using Infrastructure.Services;
-    using Infrastructure.Shared.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Identity;
+    using Newtonsoft.Json;
 
     using Infrastructure.Shared.Models.Authentication;
     using Infrastructure.Shared.Models.Response;
     using Infrastructure.Storage.Models;
-    using Newtonsoft.Json;
+    using Infrastructure.Shared.Models;
+    using IdentityModel;
+    using Infrastructure.Global.Types;
+    using Infrastructure.Services;
     using Services;
     using Storage;
 
@@ -316,7 +314,5 @@
 
             return userData.ToResponse();
         }
-
-
     }
 }

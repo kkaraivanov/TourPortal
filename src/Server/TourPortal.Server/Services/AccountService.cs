@@ -6,12 +6,12 @@
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
-    using IdentityModel;
-    using Infrastructure.Services;
-    using Infrastructure.Shared.Models.Response;
-    using Infrastructure.Storage.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+
+    using IdentityModel;
+    using Infrastructure.Services;
+    using Infrastructure.Storage.Models;
     using Storage;
 
     public class AccountService : IAccountService

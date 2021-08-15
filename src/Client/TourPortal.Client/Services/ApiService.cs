@@ -8,8 +8,8 @@
     using System.Net.Http.Json;
     using System.Text.Json;
     using System.Threading.Tasks;
-    using Blazored.LocalStorage;
     using Microsoft.AspNetCore.Components.Authorization;
+    using Blazored.LocalStorage;
 
     using Infrastructure.Global;
     using Infrastructure.Services;

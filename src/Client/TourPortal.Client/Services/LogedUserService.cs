@@ -1,6 +1,7 @@
 ﻿namespace TourPortal.Client.Services
 {
     using System;
+
     using Data;
 
     class LogedUserService : ILogedUserService
